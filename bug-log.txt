@@ -1,0 +1,29 @@
+#book-management.jsx 
+  Status: DONE
+
+  Init:
+    When: Hot-reload
+    Server: All OK
+    Client:
+      - Where: mutationGetBooks
+      - What: Missing categories field --> [undefined]
+      - Why: data cache(?)
+    Fix: check condition on client
+    Need: find out exactly `Why`
+
+  Fixed:
+    How: used deep copy with listOfBooks
+
+  
+#table-admin-book.jsx, ...
+  Status: PENDING
+
+  Init:
+    When: Delete last item in the table pagination
+    Client:
+      What: Show no data after delete instead of show previous page
+    Fix: No
+    Need: Handle logic loadListBooks after delete
+
+#TODO:
+  Loading state when log-in
