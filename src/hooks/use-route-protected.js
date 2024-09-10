@@ -1,10 +1,10 @@
 import { useLocation } from "react-router-dom";
-import { routeProtected } from "@/configs/route.config";
+import { routeAdmin } from "@/configs/route.config";
 
 export const useRouteProtected = () => {
   const { pathname } = useLocation();
 
-  const arrayRoutes = Object.values(routeProtected).map(
+  const arrayRoutes = Object.values(routeAdmin).map(
     (route) => route.pathname
   );
 

@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, useCallback } from "react";
 import { ConfigProvider, theme, message } from "antd";
 
 export const AntDesignContext = createContext();
@@ -6,8 +6,18 @@ export const AntDesignContext = createContext();
 export default function AntDesignProvider({ children }) {
   const [globalMessageApi, contextHolder] = message.useMessage();
 
+  const msgApi = useCallback(
+    (type, content) => {
+      globalMessageApi[type]({
+        type,
+        content,
+      });
+    },
+    [globalMessageApi]
+  );
+
   const value = {
-    globalMessageApi,
+    msgApi,
   };
 
   return (
@@ -15,15 +25,17 @@ export default function AntDesignProvider({ children }) {
       theme={{
         algorithm: theme.darkAlgorithm,
         token: {
-          colorPrimary: "#F97300",
+          colorPrimary: "#fb3453",
         },
         components: {
           Menu: {
-            darkItemBg: "#141414",
-            darkItemSelectedBg: "#F97300",
+            darkItemBg: "transparent",
+            darkItemSelectedBg: "#fb3453",
+            darkItemHoverBg: "#3b3b3b",
+            colorBorder: "transparent",
           },
           Layout: {
-            siderBg: "#141414",
+            siderBg: "transparent",
           },
         },
       }}

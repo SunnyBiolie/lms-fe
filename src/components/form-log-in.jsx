@@ -5,8 +5,8 @@ import { Alert, Button, Form, Input } from "antd";
 import { createStyles } from "antd-style";
 import {
   routeAuth,
-  routePrivate,
-  routeProtected,
+  routeUser,
+  routeAdmin,
 } from "@/configs/route.config";
 import { logInService } from "@/services/auth/log-in";
 import { useAntDesign } from "@/hooks/use-ant-design";
@@ -33,7 +33,7 @@ const useStyles = createStyles(({ _, css }) => ({
 export const FormLogIn = () => {
   const { styles, cx } = useStyles();
 
-  const { globalMessageApi } = useAntDesign();
+  const { msgApi } = useAntDesign();
   const { setCurrentAccount } = useCurrentAccount();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -50,17 +50,12 @@ export const FormLogIn = () => {
     setIsLoading(true);
     mutationLogIn.mutate(values, {
       onSuccess: (axiosResponse) => {
-        globalMessageApi.open({
-          type: "success",
-          content: axiosResponse.data.message
-            ? axiosResponse.data.message
-            : "Success",
-        });
+        msgApi("success", axiosResponse.data.message);
         setCurrentAccount(axiosResponse.data.accountInfo);
         navigate(
           axiosResponse.data.accountInfo.role === "ADMIN"
-            ? routeProtected.bookMangement.pathname
-            : routePrivate.dashboard.pathname
+            ? routeAdmin.bookMangement.pathname
+            : routeUser.dashboard.pathname
         );
       },
       onError: (error) => {

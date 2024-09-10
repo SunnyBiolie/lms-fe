@@ -1,18 +1,22 @@
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { Button, Popconfirm, Skeleton, Space, Table } from "antd";
+import { Skeleton, Space, Table } from "antd";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { getBooksService } from "@/services/books/get";
-import { returnBookService } from "@/services/transactions/return";
-import { useAntDesign } from "@/hooks/use-ant-design";
-import { useCurrentAccount } from "@/hooks/use-current-account";
-import { ModalRenewalBook } from "./modal-renewal-book";
-import { rules } from "@/configs/admin.config";
-import { useBooks } from "@/hooks/use-books";
+import {
+  Table_Book,
+  Table_Renewal,
+  Table_Transaction,
+} from "@/configs/db.config";
+import { BtnRenewal } from "./table-borrowing-books/btn-renewal";
+import { BtnReturnBook } from "./table-borrowing-books/btn-return-book";
 
-export const TableBorrowingBooks = ({ transactions }) => {
-  const bookIds = transactions.map((tr) => tr.bookId);
+export const TableBorrowingBooks = ({
+  currentBorrowing,
+  loadListBorrowing,
+}) => {
+  const bookIds = currentBorrowing.map((tr) => tr.bookId);
 
   const mutationGetBooks = useMutation({ mutationFn: getBooksService });
 
@@ -28,11 +32,11 @@ export const TableBorrowingBooks = ({ transactions }) => {
       {
         onSuccess: (axiosResponse) => {
           const listBooks = axiosResponse.data.books;
-          const tableData = transactions.map((t) => {
+          const tableData = currentBorrowing.map((t) => {
             const index = listBooks.findIndex((b) => b.id === t.bookId);
             return {
-              bookName: listBooks[index].name,
-              author: listBooks[index].author,
+              title: listBooks[index][Table_Book.title],
+              author: listBooks[index][Table_Book.author],
               ...t,
             };
           });
@@ -44,34 +48,38 @@ export const TableBorrowingBooks = ({ transactions }) => {
     );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transactions]);
+  }, [currentBorrowing]);
 
   const colums = [
     {
-      title: "Book name",
-      dataIndex: "bookName",
+      title: "Title",
+      dataIndex: Table_Book.title,
       key: 0,
     },
     {
       title: "Author",
-      dataIndex: "author",
+      dataIndex: Table_Book.author,
     },
     {
       title: "Borrowed at",
-      dataIndex: "borrowedAt",
+      dataIndex: Table_Transaction.borrowedAt,
       width: 250,
-      render: (values) => {
+      render: (value) => {
         dayjs.extend(localizedFormat);
-        return dayjs(values).format("llll");
+        return dayjs(value).format("llll");
       },
     },
     {
       title: "Return before",
-      dataIndex: "expectedReturnAt",
+      dataIndex: Table_Transaction.dueDate,
       width: 250,
-      render: (values) => {
+      render: (value, record) => {
         dayjs.extend(localizedFormat);
-        return dayjs(values[values.length - 1]).format("llll");
+        const r =
+          record[Table_Transaction.Renewals].length > 0
+            ? record[Table_Transaction.Renewals][0][Table_Renewal.dueDate]
+            : value;
+        return dayjs(r).format("llll");
       },
     },
     {
@@ -79,14 +87,16 @@ export const TableBorrowingBooks = ({ transactions }) => {
       key: "action",
       fixed: "right",
       width: 200,
-      render: (_, record, index) => {
+      render: (_, record) => {
         return (
           <Space>
-            <RenewalButton transaction={record} />
-            <ReturnBookButton
-              record={record}
-              setTableData={setTableData}
-              index={index}
+            <BtnRenewal
+              borrowingRecord={record}
+              loadListBorrowing={loadListBorrowing}
+            />
+            <BtnReturnBook
+              borrowingRecord={record}
+              loadListBorrowing={loadListBorrowing}
             />
           </Space>
         );
@@ -110,73 +120,5 @@ export const TableBorrowingBooks = ({ transactions }) => {
         hideOnSinglePage: true,
       }}
     />
-  );
-};
-
-const RenewalButton = ({ transaction }) => {
-  const { globalMessageApi } = useAntDesign();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleOpenModal = () => {
-    const renewalCount = transaction.expectedReturnAt.length - 1;
-    if (renewalCount >= rules.maxTimesOfRenewal) {
-      globalMessageApi.error({
-        type: "error",
-        content: "You reached the maximum number of renewals for this book",
-      });
-      return;
-    }
-    setIsModalOpen(true);
-  };
-  const handleCloseModal = () => setIsModalOpen(false);
-
-  return (
-    <>
-      <Button size="small" onClick={handleOpenModal}>
-        Renewal
-      </Button>
-      <ModalRenewalBook
-        isModalOpen={isModalOpen}
-        onCloseModal={handleCloseModal}
-        transaction={transaction}
-      />
-    </>
-  );
-};
-
-const ReturnBookButton = ({ record, setTableData, index }) => {
-  const { globalMessageApi } = useAntDesign();
-  const { currentAccount } = useCurrentAccount();
-  const { loadListOfBooks } = useBooks();
-  const mutationReturnBook = useMutation({ mutationFn: returnBookService });
-
-  const confirm = async () => {
-    await mutationReturnBook.mutateAsync(
-      { ...record, userName: currentAccount.userName },
-      {
-        onSuccess: () => {
-          globalMessageApi.success({
-            type: "success",
-            content: "Return book successfully",
-          });
-          setTableData((prev) => {
-            prev.splice(index, 1);
-            return [...prev];
-          });
-          loadListOfBooks();
-        },
-      }
-    );
-  };
-
-  return (
-    <Popconfirm
-      title="Return book"
-      description="Return this book now"
-      placement="topRight"
-      onConfirm={confirm}
-    >
-      <Button size="small">Return</Button>
-    </Popconfirm>
   );
 };

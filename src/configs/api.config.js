@@ -6,7 +6,8 @@ const apiRoute = {
   books: "/books",
   categories: "/categories",
   transactions: "/transactions",
-  logs: "/log",
+  renewals: "/renewals",
+  histories: "/histories",
 };
 
 export const apiAuthRoute = {
@@ -18,6 +19,9 @@ export const apiAuthRoute = {
 
 export const apiAccountsRoute = {
   getByListIds: `${apiRoute.accounts}/get-by-list-ids`,
+  editInfor: `${apiRoute.accounts}/edit-infor`,
+  changePwd: `${apiRoute.accounts}/change-pwd`,
+  delete: `${apiRoute.accounts}/delete`,
 };
 
 export const apiBooksRoute = {
@@ -29,20 +33,32 @@ export const apiBooksRoute = {
 };
 
 export const apiCategoriesRoute = {
-  getAll: `${apiRoute.categories}/get-all`,
+  create: `${apiRoute.categories}/create`,
+  getWithConditions: `${apiRoute.categories}/get-w-conditions`,
+  edit: `${apiRoute.categories}/edit`,
+  delete: `${apiRoute.categories}/delete`,
 };
 
 export const apiTransactionsRoute = {
   create: `${apiRoute.transactions}/create`,
-  get: `${apiRoute.transactions}/get`,
+  getBorrowingByAccountId: `${apiRoute.transactions}/get-borrowing-by-account-id`,
   return: `${apiRoute.transactions}/return`,
   renewal: `${apiRoute.transactions}/renewal`,
-  getByBookId: `${apiRoute.transactions}/get-by-book-id`,
+  getBorrowingByBookId: `${apiRoute.transactions}/get-borrowing-by-book-id`,
   countByBookId: `${apiRoute.transactions}/count-by-book-id`,
+  getReturnedByAccountId: `${apiRoute.transactions}/get-returned-by-account-id`,
+  getTransactionsByDateRange: `${apiRoute.transactions}/get-transactions-by-date-range`,
 };
 
-export const apiLogsRoute = {
-  get: `${apiRoute.logs}/get`,
+export const apiRenewalsRoute = {
+  countByTransactionId: `${apiRoute.renewals}/count-by-transaction-id`,
+  getByTransactionId: `${apiRoute.renewals}/get-by-transaction-id`,
+  create: `${apiRoute.renewals}/create`,
+};
+
+export const apiHistoriesRoute = {
+  getByAccountId: `${apiRoute.histories}/get-by-account-id`,
+  getByDateRange: `${apiRoute.histories}/get-by-date-range`,
 };
 
 export default apiRoot;

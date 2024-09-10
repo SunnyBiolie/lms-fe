@@ -1,17 +1,13 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { Button, Popconfirm, Skeleton, Space, Table, Tag, Tooltip } from "antd";
-import {
-  DeleteOutlined,
-  EditOutlined,
-  InfoCircleOutlined,
-} from "@ant-design/icons";
-import { deleteBookService } from "@/services/books/delete";
+import { Button, Skeleton, Space, Table, Tag, Tooltip } from "antd";
+import { EditOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { useBooks } from "@/hooks/use-books";
 import { useCurrentAccount } from "@/hooks/use-current-account";
-import { ModalDetailBook } from "./modal-detail-book";
+import { ModalDetailBook } from "./table-books/modal-detail-book";
 import { ModalEditBook } from "./modal-edit-book";
-import { ModalBorrowBook } from "./modal-borrow-book";
+import { Table_Book } from "@/configs/db.config";
+import { BtnDeleteBook } from "./table-books/btn-delete-book";
+import { BtnBorrowBook } from "./table-books/btn-borrow-book";
 
 export const TableBooks = ({
   listOfCategories,
@@ -27,7 +23,6 @@ export const TableBooks = ({
 
   const [isModalDetailOpen, setIsModalDetailOpen] = useState(false);
   const [isModalEditOpen, setIsModalEditOpen] = useState(false);
-  const [isModalBorrowOpen, setIsModalBorrowOpen] = useState(false);
 
   if (!currentAccount || !listOfBooks) return <Skeleton active />;
 
@@ -38,7 +33,7 @@ export const TableBooks = ({
   const columns = [
     {
       title: "#",
-      dataIndex: "id",
+      dataIndex: Table_Book[0],
       width: 50,
       fixed: "left",
       render: (_, __, index) => {
@@ -50,18 +45,18 @@ export const TableBooks = ({
       },
     },
     {
-      title: "Name",
-      dataIndex: "name",
+      title: "Title",
+      dataIndex: Table_Book.title,
       width: 250,
     },
     {
       title: "Author",
-      dataIndex: "author",
+      dataIndex: Table_Book.author,
       width: 220,
     },
     {
       title: "Categories",
-      dataIndex: "categories",
+      dataIndex: Table_Book[9],
       width: 250,
       render: (categories) => {
         const formatedCategories = categories.map((c) => c.name);
@@ -85,11 +80,12 @@ export const TableBooks = ({
     },
     {
       title: currentAccount.role === "ADMIN" ? "Publisher" : "Avaliable",
-      dataIndex: "publisher",
+      dataIndex: Table_Book[3],
       width: 220,
-      render: (value, record) => {
-        if (currentAccount.role === "ADMIN") return value;
-        else return record.allQuantity - record._count.transactions;
+      render: (publisher, record) => {
+        if (currentAccount.role === "ADMIN") return publisher;
+        else
+          return record[Table_Book[7]] - record._count[Table_Book.Transactions];
       },
     },
     {
@@ -115,14 +111,14 @@ export const TableBooks = ({
               <>
                 <Tooltip
                   title={
-                    record._count.transactions !== 0
+                    record._count[Table_Book.Transactions] > 0
                       ? "This book is being borrowed"
                       : ""
                   }
                   placement="topLeft"
                 >
                   <Button
-                    disabled={record._count.transactions !== 0}
+                    disabled={record._count[Table_Book.Transactions] > 0}
                     size="small"
                     type="default"
                     icon={<EditOutlined />}
@@ -134,39 +130,18 @@ export const TableBooks = ({
                     }}
                   />
                 </Tooltip>
-                <DeleteBookButton
-                  disabled={record._count.transactions !== 0}
+                <BtnDeleteBook
+                  disabled={record._count[Table_Book.Transactions] > 0}
                   isLast={
                     current === Math.ceil(total / pageSize) &&
                     total % (pageSize * (current - 1)) === 1
                   }
-                  bookId={record.id}
+                  bookId={record[Table_Book[0]]}
                   loadListOfBooks={loadListOfBooks}
                 />
               </>
             ) : (
-              <>
-                <Button
-                  disabled={
-                    currentAccount.transactions.findIndex(
-                      (t) => t.bookId === record.id
-                    ) !== -1
-                  }
-                  size="small"
-                  onClick={() => {
-                    setIsModalBorrowOpen(true);
-                    setModalData({
-                      bookData: record,
-                    });
-                  }}
-                >
-                  {currentAccount.transactions.findIndex(
-                    (t) => t.bookId === record.id
-                  ) !== -1
-                    ? "Borrowed"
-                    : "Borrow"}
-                </Button>
-              </>
+              <BtnBorrowBook book={record} />
             )}
           </Space>
         );
@@ -209,57 +184,8 @@ export const TableBooks = ({
           />
         </>
       ) : (
-        <ModalBorrowBook
-          isModalOpen={isModalBorrowOpen}
-          setIsModalOpen={setIsModalBorrowOpen}
-          data={modalData}
-        />
+        <></>
       )}
-    </>
-  );
-};
-
-const DeleteBookButton = ({ disabled, isLast, bookId, loadListOfBooks }) => {
-  const mutationDeleteBook = useMutation({ mutationFn: deleteBookService });
-
-  if (disabled)
-    return (
-      <Tooltip title={"This book is being borrowed"} placement="topLeft">
-        <Button
-          disabled
-          size="small"
-          type="default"
-          icon={<DeleteOutlined />}
-        />
-      </Tooltip>
-    );
-
-  const handleDeleteBook = async () => {
-    await mutationDeleteBook.mutateAsync(
-      {
-        params: { id: bookId },
-      },
-      {
-        onSuccess: () => {
-          if (isLast) loadListOfBooks("deleteLastItem");
-          else loadListOfBooks();
-        },
-      }
-    );
-  };
-
-  return (
-    <>
-      <Popconfirm
-        title="Delete this book"
-        description="Are you sure to delete this book?"
-        placement="topRight"
-        okType="danger"
-        okText="Delete"
-        onConfirm={handleDeleteBook}
-      >
-        <Button size="small" type="default" icon={<DeleteOutlined />} danger />
-      </Popconfirm>
     </>
   );
 };

@@ -66,7 +66,7 @@ export const FormSighUp = ({ prevStep, userInfor }) => {
           )}
           <Form.Item
             name="userName"
-            label="User Name"
+            label="Username"
             rules={[
               {
                 required: true,

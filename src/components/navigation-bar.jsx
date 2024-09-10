@@ -1,28 +1,24 @@
 import { Link, useLocation } from "react-router-dom";
-import { Button, Flex, Menu } from "antd";
-import {
-  routeAuth,
-  routePrivate,
-  routeProtected,
-} from "@/configs/route.config";
-import { useCurrentAccount } from "@/hooks/use-current-account";
-import { LogoutOutlined } from "@ant-design/icons";
 import { useMutation } from "@tanstack/react-query";
+import { Button, Flex, Menu } from "antd";
+import { LogoutOutlined } from "@ant-design/icons";
+import { routeAuth, routeUser, routeAdmin } from "@/configs/route.config";
 import { logOutService } from "@/services/auth/log-out";
+import { useCurrentAccount } from "@/hooks/use-current-account";
 
-// const allItem = Object.values(routePrivate)
-//   .concat(Object.values(routeProtected))
+// const allItem = Object.values(routeUser)
+//   .concat(Object.values(routeAdmin))
 //   .map((route) => ({
 //     label: <Link to={route.pathname}>{route.label}</Link>,
 //     key: route.pathname,
 //   }));
 
-const adminItem = Object.values(routeProtected).map((route) => ({
+const adminItem = Object.values(routeAdmin).map((route) => ({
   label: <Link to={route.pathname}>{route.label}</Link>,
   key: route.pathname,
 }));
 
-const userItem = Object.values(routePrivate).map((route) => ({
+const userItem = Object.values(routeUser).map((route) => ({
   label: <Link to={route.pathname}>{route.label}</Link>,
   key: route.pathname,
 }));
@@ -45,26 +41,28 @@ export const NavigationBar = () => {
   };
 
   return (
-    <Flex
-      vertical
-      justify="space-between"
-      style={{ height: "100%", padding: "12px 12px 24px" }}
-    >
-      <Menu
-        theme="dark"
-        defaultSelectedKeys={[location.pathname]}
-        mode="inline"
-        items={currentAccount.role === "ADMIN" ? adminItem : userItem}
-      />
-      <Button
-        size="large"
-        type="text"
-        icon={<LogoutOutlined />}
-        iconPosition="end"
-        onClick={handleLogOut}
-      >
-        Log out
-      </Button>
+    <Flex vertical className="h-full" style={{ padding: "12px 12px 24px" }}>
+      <div style={{ height: "64px" }}>Book Library</div>
+      <Flex vertical justify="space-between" className="h-full">
+        <Menu
+          theme="dark"
+          selectedKeys={[location.pathname]}
+          mode="inline"
+          items={currentAccount.role === "ADMIN" ? adminItem : userItem}
+          style={{
+            border: "none",
+          }}
+        />
+        <Button
+          size="large"
+          type="text"
+          icon={<LogoutOutlined />}
+          iconPosition="end"
+          onClick={handleLogOut}
+        >
+          Log out
+        </Button>
+      </Flex>
     </Flex>
   );
 };

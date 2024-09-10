@@ -22,7 +22,7 @@ export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
     setSearchValues(values);
   };
 
-  if (!listOfCategories) return <Skeleton active />
+  if (!listOfCategories) return <Skeleton active />;
 
   return (
     <Form
@@ -30,13 +30,8 @@ export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
       form={form}
       layout="vertical"
       size="small"
-      style={{
-        width: "100%",
-        backgroundColor: "#141414",
-        padding: "16px",
-        borderRadius: "8px",
-      }}
       onFinish={handleFinish}
+      className="section"
     >
       <Row>
         <Typography.Title level={5} style={{ margin: "4px 0 12px" }}>
@@ -45,7 +40,7 @@ export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
       </Row>
       <Row gutter={{ xs: 8, md: 16 }}>
         <Col xs={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }}>
-          <Form.Item name="name" label="Name">
+          <Form.Item name="title" label="Title">
             <Input />
           </Form.Item>
         </Col>
@@ -60,6 +55,7 @@ export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
               mode="multiple"
               options={listOfCategories}
               maxCount={3}
+              optionFilterProp="label"
               suffixIcon={"Max 3"}
             ></Select>
           </Form.Item>
@@ -70,8 +66,8 @@ export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
           </Form.Item>
         </Col>
         <Col xs={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }}>
-          <Form.Item name="yearOfPublication" label="Year Of Publication">
-            <DatePicker.RangePicker style={{ width: "100%" }} />
+          <Form.Item name="publicationDate" label="Year Of Publication">
+            <DatePicker.RangePicker picker="year" style={{ width: "100%" }} />
           </Form.Item>
         </Col>
       </Row>

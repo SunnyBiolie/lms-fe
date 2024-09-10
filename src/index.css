@@ -5,12 +5,14 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #111111;
+  background-color: #141414;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --primary: #fb3453;
 }
 
 #root {
@@ -30,9 +32,41 @@ body {
 .form-card {
   padding: 16px 24px;
   border-radius: 8px;
-  background-color: #242424;
-  box-shadow: 0 0 24px 4px #99999933;
+  background-color: #222222;
+  box-shadow: 0 0 24px 4px #fafafa40;
   overflow: hidden;
+}
+
+.section {
+  background-color: #141414;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.custom-tooltip {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #141414;
+  padding: 4px;
+  border-radius: 4px;
 }
 
 /* a {

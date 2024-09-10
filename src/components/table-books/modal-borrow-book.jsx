@@ -1,20 +1,23 @@
+import { useState } from "react";
 import dayjs from "dayjs";
+import { useMutation } from "@tanstack/react-query";
 import { DatePicker, Form, Modal, Typography } from "antd";
 import { rules } from "@/configs/admin.config";
-import { useMutation } from "@tanstack/react-query";
-import { createTransactionService } from "@/services/transactions/create";
+import { Table_Book, Table_Transaction } from "@/configs/db.config";
+import { createBorrowingService } from "@/services/transaction/create";
 import { useCurrentAccount } from "@/hooks/use-current-account";
-import { useState } from "react";
 import { useAntDesign } from "@/hooks/use-ant-design";
 import { useBooks } from "@/hooks/use-books";
+import { useTransactions } from "@/hooks/use-transactions";
 
-export const ModalBorrowBook = ({ isModalOpen, setIsModalOpen, data }) => {
+export const ModalBorrowBook = ({ isModalOpen, setIsModalOpen, book }) => {
+  const { msgApi } = useAntDesign();
   const { currentAccount } = useCurrentAccount();
   const { loadListOfBooks } = useBooks();
-  const { globalMessageApi } = useAntDesign();
+  const { loadListCurrentBorrowing } = useTransactions();
   const [form] = Form.useForm();
-  const mutationCreateTransaction = useMutation({
-    mutationFn: createTransactionService,
+  const mutationCreateBorrowing = useMutation({
+    mutationFn: createBorrowingService,
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -28,26 +31,21 @@ export const ModalBorrowBook = ({ isModalOpen, setIsModalOpen, data }) => {
 
   const handleSubmit = (formValues) => {
     setIsLoading(true);
-    mutationCreateTransaction.mutate(
+    mutationCreateBorrowing.mutate(
       {
         ...formValues,
-        bookId: data.bookData.id,
+        bookId: book.id,
         accountId: currentAccount.id,
       },
       {
         onSuccess: (axiosResponse) => {
-          globalMessageApi.success({
-            type: "success",
-            content: axiosResponse.data.message,
-          });
+          msgApi("success", axiosResponse.data.message);
           loadListOfBooks();
+          loadListCurrentBorrowing();
           handleCancel();
         },
         onError: (axiosError) => {
-          globalMessageApi.error({
-            type: "error",
-            content: axiosError.response.data.message,
-          });
+          msgApi("error", axiosError.response.data.message);
         },
         onSettled: () => {
           setIsLoading(false);
@@ -58,10 +56,11 @@ export const ModalBorrowBook = ({ isModalOpen, setIsModalOpen, data }) => {
 
   return (
     <Modal
+      destroyOnClose
       open={isModalOpen}
       title={
         <Typography.Title level={5} style={{ margin: 0 }}>
-          Borrow &quot;{data?.bookData.name}&quot;
+          Borrow &quot;{book[Table_Book.title]}&quot;
         </Typography.Title>
       }
       onCancel={handleCancel}
@@ -73,7 +72,7 @@ export const ModalBorrowBook = ({ isModalOpen, setIsModalOpen, data }) => {
     >
       <Typography.Paragraph style={{ textAlign: "center" }}>
         written by{" "}
-        <Typography.Text strong>{data?.bookData.author}</Typography.Text>
+        <Typography.Text strong>{book[Table_Book.author]}</Typography.Text>
       </Typography.Paragraph>
       <Form
         clearOnDestroy
@@ -85,8 +84,8 @@ export const ModalBorrowBook = ({ isModalOpen, setIsModalOpen, data }) => {
         onFinish={handleSubmit}
       >
         <Form.Item
-          name="expectedReturnAt"
-          label="Book return date"
+          name={Table_Transaction.dueDate}
+          label="Return date"
           rules={[
             {
               required: true,

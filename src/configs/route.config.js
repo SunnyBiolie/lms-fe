@@ -7,18 +7,22 @@ export const routeAuth = {
   },
 };
 
-export const routePrivate = {
+export const routeUser = {
   dashboard: {
     pathname: "/",
     label: "Dashboard",
   },
-  borrowing: {
+  history: {
     pathname: "/history",
     label: "History",
   },
+  statistic: {
+    pathname: "/statistic",
+    label: "Statistic",
+  },
 };
 
-export const routeProtected = {
+export const routeAdmin = {
   bookMangement: {
     pathname: "/admin/book-management",
     label: "Book Mangement",

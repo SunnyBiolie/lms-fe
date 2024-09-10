@@ -5,6 +5,8 @@ import dayjs from "dayjs";
 import { editBookService } from "@/services/books/edit";
 import { rules } from "@/configs/admin.config";
 import { useBooks } from "@/hooks/use-books";
+import { useAntDesign } from "@/hooks/use-ant-design";
+import { Table_Book } from "@/configs/db.config";
 
 export const ModalEditBook = ({
   isModalOpen,
@@ -12,6 +14,7 @@ export const ModalEditBook = ({
   listOfCategories,
   data,
 }) => {
+  const { msgApi } = useAntDesign();
   const { loadListOfBooks } = useBooks();
   const [form] = Form.useForm();
   const mutationEditBook = useMutation({ mutationFn: editBookService });
@@ -19,18 +22,20 @@ export const ModalEditBook = ({
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (data) {
+    if (data && isModalOpen) {
       form.setFieldsValue({
         ...data.bookData,
-        categories: data.bookData.categories.map((item) => {
+        Categories: data.bookData[Table_Book[9]].map((item) => {
           const id = listOfCategories.findIndex(
-            (cat) => cat.label === item.name
+            (cat) => cat.label.toLowerCase() === item.name.toLowerCase()
           );
           return listOfCategories[id].value;
         }),
-        yearOfPublication: dayjs(data.bookData.yearOfPublication, "YYYY-MM-DD"),
+        [Table_Book.publicationDate]: dayjs(data.bookData[Table_Book.publicationDate], "YYYY-MM-DD"),
       });
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const handleCancel = () => {
@@ -45,22 +50,25 @@ export const ModalEditBook = ({
     setIsLoading(true);
     mutationEditBook.mutate(
       {
-        id: data.bookData.id,
+        id: data.bookData[Table_Book[0]],
         ...values,
       },
       {
-        onSuccess: () => {
-          setIsLoading(false);
+        onSuccess: (axiosResponse) => {
           loadListOfBooks();
           handleCancel();
+          msgApi("success", axiosResponse.data.message);
         },
+        onError: (axiosError) =>
+          msgApi("error", axiosError.response.data.message),
+        onSettled: () => setIsLoading(false),
       }
     );
   };
 
   return (
     <Modal
-      // loading={!data}
+      destroyOnClose
       title="Edit book"
       open={isModalOpen}
       onCancel={handleCancel}
@@ -85,8 +93,8 @@ export const ModalEditBook = ({
         {data && (
           <>
             <Form.Item
-              name="name"
-              label="Name of book"
+              name={[Table_Book.title]}
+              label="Title of book"
               rules={[
                 {
                   required: true,
@@ -97,7 +105,7 @@ export const ModalEditBook = ({
               <Input />
             </Form.Item>
             <Form.Item
-              name="author"
+              name={[Table_Book.author]}
               label="Author"
               rules={[
                 {
@@ -109,7 +117,7 @@ export const ModalEditBook = ({
               <Input />
             </Form.Item>
             <Form.Item
-              name="publisher"
+              name={[Table_Book[3]]}
               label="Publisher"
               rules={[
                 {
@@ -121,7 +129,7 @@ export const ModalEditBook = ({
               <Input />
             </Form.Item>
             <Form.Item
-              name="categories"
+              name={[Table_Book[9]]}
               label="Categories"
               rules={[
                 {
@@ -138,7 +146,23 @@ export const ModalEditBook = ({
               />
             </Form.Item>
             <Form.Item
-              name="allQuantity"
+              name={[Table_Book.publicationDate]}
+              label="Year of publication"
+              rules={[
+                {
+                  required: true,
+                  message: "Please select a year of publication",
+                },
+              ]}
+            >
+              <DatePicker
+                picker="year"
+                maxDate={dayjs(Date.now())}
+                style={{ width: "100%" }}
+              />
+            </Form.Item>
+            <Form.Item
+              name={[Table_Book[7]]}
               label="Number of books"
               initialValue={data.bookData.allQuantity}
               rules={[
@@ -152,23 +176,11 @@ export const ModalEditBook = ({
               <InputNumber
                 min={rules.minQuantityOfBooks}
                 max={rules.maxQuantityOfBooks}
-                style={{ width: "100%" }}
+                className="w-full"
               />
             </Form.Item>
-            <Form.Item
-              name="yearOfPublication"
-              label="Year of publication"
-              rules={[
-                {
-                  required: true,
-                  message: "Please select a year of publication",
-                },
-              ]}
-            >
-              <DatePicker
-                maxDate={dayjs(Date.now())}
-                style={{ width: "100%" }}
-              />
+            <Form.Item name={[Table_Book[5]]} label="Pages">
+              <InputNumber className="w-full" />
             </Form.Item>
           </>
         )}

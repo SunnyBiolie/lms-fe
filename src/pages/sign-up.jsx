@@ -17,8 +17,7 @@ const useStyles = createStyles(({ _, css }) => ({
   `,
   steps: css`
     width: 100%;
-    padding-top: 32px;
-    padding-bottom: 32px;
+    padding: 32px 0;
   `,
   content: css`
     flex-grow: 1;
@@ -32,7 +31,7 @@ const useStyles = createStyles(({ _, css }) => ({
       &:hover {
         text-decoration: underline;
       }
-    };
+    }
   `,
 }));
 
@@ -71,7 +70,11 @@ export default function SignUpPage() {
       <div className={styles.content}>
         <div style={{ width: "100%" }}>
           {signUpSteps[currentStep].key === 1 ? (
-            <FormUserInfor nextStep={nextStep} userInfor={userInfor} setUserInfor={setUserInfor} />
+            <FormUserInfor
+              nextStep={nextStep}
+              userInfor={userInfor}
+              setUserInfor={setUserInfor}
+            />
           ) : (
             <FormSighUp prevStep={prevStep} userInfor={userInfor} />
           )}

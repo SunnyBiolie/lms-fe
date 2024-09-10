@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { Flex, Spin } from "antd";
 import { routeAuth } from "@/configs/route.config";
@@ -10,7 +10,7 @@ export const CurrentAccountContext = createContext();
 
 export default function CurrentAccountProvider({ children }) {
   const [currentAccount, setCurrentAccount] = useState();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const { inAuthRoutes } = useRouteAuth();
 
@@ -25,7 +25,8 @@ export default function CurrentAccountProvider({ children }) {
       } else {
         setCurrentAccount(null);
         if (axiosResponse.data.redirectToAuth && !inAuthRoutes) {
-          navigate(routeAuth.logIn);
+          // navigate(routeAuth.logIn);
+          window.location.href = routeAuth.logIn.pathname;
         }
       }
     });

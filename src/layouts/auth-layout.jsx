@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { createStyles } from "antd-style";
 import { useCurrentAccount } from "@/hooks/use-current-account";
-import { routePrivate } from "@/configs/route.config";
+import { routeUser } from "@/configs/route.config";
 
 // eslint-disable-next-line no-unused-vars
 const useStyles = createStyles(({ _, css }) => ({
@@ -34,7 +34,7 @@ export default function AuthLayout() {
 
   const { currentAccount } = useCurrentAccount();
 
-  if (currentAccount) return <Navigate to={routePrivate.dashboard.pathname} replace />;
+  if (currentAccount) return <Navigate to={routeUser.dashboard.pathname} replace />;
 
   return (
     <div className={styles.container}>

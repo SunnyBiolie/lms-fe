@@ -4,9 +4,11 @@ import { Skeleton, Table } from "antd";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { getBooksService } from "@/services/books/get";
+import { Table_Book } from "@/configs/db.config";
+import { useTransactions } from "@/hooks/use-transactions";
 
-export const TableReturnedBooks = ({ listReturned }) => {
-  const bookIds = listReturned.map((tr) => tr.bookId);
+export const TableReturnedBooks = () => {
+  const { currentReturned } = useTransactions();
 
   const mutationGetBooks = useMutation({ mutationFn: getBooksService });
 
@@ -14,6 +16,10 @@ export const TableReturnedBooks = ({ listReturned }) => {
   const [isLoading, setIsLoading] = useState();
 
   useEffect(() => {
+    if (!currentReturned) return;
+
+    const bookIds = currentReturned.map((tr) => tr.bookId);
+
     setIsLoading(true);
     mutationGetBooks.mutate(
       {
@@ -23,12 +29,12 @@ export const TableReturnedBooks = ({ listReturned }) => {
         onSuccess: (axiosResponse) => {
           const listBooks = axiosResponse.data.books;
 
-          const tableData = listReturned.map((t) => {
+          const tableData = currentReturned.map((t) => {
             const index = listBooks.findIndex((b) => b.id === t.bookId);
 
             return {
-              bookName: listBooks[index].name,
-              author: listBooks[index].author,
+              bookTitle: listBooks[index][Table_Book.title],
+              author: listBooks[index][Table_Book.author],
               ...t,
             };
           });
@@ -40,12 +46,12 @@ export const TableReturnedBooks = ({ listReturned }) => {
     );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listReturned]);
+  }, [currentReturned]);
 
   const colums = [
     {
-      title: "Book name",
-      dataIndex: "bookName",
+      title: "Book title",
+      dataIndex: "bookTitle",
       key: 0,
     },
     {
@@ -53,26 +59,26 @@ export const TableReturnedBooks = ({ listReturned }) => {
       dataIndex: "author",
     },
     {
-      title: "Borrow at",
+      title: "Borrowed at",
       dataIndex: "borrowedAt",
       width: 250,
-      render: (values) => {
+      render: (value) => {
         dayjs.extend(localizedFormat);
-        return dayjs(values).format("llll");
+        return dayjs(value).format("llll");
       },
     },
     {
-      title: "Return at",
-      dataIndex: "actualReturnedAt",
+      title: "Returned at",
+      dataIndex: "returnedAt",
       width: 250,
-      render: (values) => {
+      render: (value) => {
         dayjs.extend(localizedFormat);
-        return dayjs(values).format("llll");
+        return dayjs(value).format("llll");
       },
     },
     {
       title: "Renewal",
-      dataIndex: "expectedReturnAt",
+      dataIndex: "dueDates",
       render: (values) => {
         return values.length - 1;
       },

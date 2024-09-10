@@ -1,3 +1,4 @@
+import { Rule_phoneNumber } from "@/configs/rules.config";
 import { Button, DatePicker, Flex, Form, Input } from "antd";
 import { createStyles } from "antd-style";
 import dayjs from "dayjs";
@@ -23,13 +24,13 @@ export const FormUserInfor = ({ nextStep, userInfor, setUserInfor }) => {
       name="user-infor"
       layout="vertical"
       className={cx(styles.container, "form-card")}
-      variant="filled"
+      // variant="filled"
       initialValues={userInfor}
       onFinish={handleFinish}
     >
       <Form.Item
-        name="name"
-        label="Name"
+        name="fullName"
+        label="Fullname"
         rules={[
           {
             required: true,
@@ -52,17 +53,7 @@ export const FormUserInfor = ({ nextStep, userInfor, setUserInfor }) => {
       <Form.Item
         name="phoneNumber"
         label="Phone number"
-        rules={[
-          {
-            required: true,
-            message: "Please enter Phone number",
-          },
-          {
-            // eslint-disable-next-line no-useless-escape
-            pattern: /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/g,
-            message: "Invalid Phone Number",
-          },
-        ]}
+        rules={Rule_phoneNumber}
       >
         <Input placeholder="ex: 888-579-5910" />
       </Form.Item>
@@ -82,7 +73,7 @@ export const FormUserInfor = ({ nextStep, userInfor, setUserInfor }) => {
         <Input placeholder="ex: johndoe@email.com" />
       </Form.Item>
       <Form.Item
-        name="dateOfBirth"
+        name="birthDate"
         label="Date of birth"
         rules={[
           {
