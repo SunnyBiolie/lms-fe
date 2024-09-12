@@ -1,7 +1,7 @@
 import { Table_Account } from "@/configs/db.config";
 import { useCurrentAccount } from "@/hooks/use-current-account";
 import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Layout, List, Popover, Space } from "antd";
+import { Avatar, Layout, List, Popover, Space, Typography } from "antd";
 import { createStyles } from "antd-style";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -22,7 +22,11 @@ const useStyles = createStyles(({ _, css }) => ({
     background-color: #000;
   `,
   avatar: css`
-    background-color: var(--primary);
+    background-color: #f1f1f1;
+    border: 1px solid var(--primary);
+  `,
+  icon: css`
+    color: var(--primary);
   `,
 }));
 
@@ -38,24 +42,48 @@ export const Header = () => {
     setIsOpen(open);
   };
 
+  const closePopover = () => {
+    setIsOpen(false);
+  };
+
   return (
     <Layout.Header className={styles.header}>
       <Space size="middle">
-        <span>Hello, {currentAccount[Table_Account.fullName]}</span>
+        <Typography.Text strong>
+          Hello, {currentAccount[Table_Account.fullName]}
+        </Typography.Text>
         <Popover
           destroyTooltipOnHide
           trigger="click"
           open={isOpen}
           placement="bottomRight"
           onOpenChange={handleOpenChange}
+          className="cursor-pointer"
+          color="#333"
           content={
             <List
               dataSource={[
                 {
-                  title: <Link to={"/profile"}>Manage account</Link>,
+                  title: (
+                    <Link
+                      to={"/profile"}
+                      onClick={closePopover}
+                      className="link-text"
+                    >
+                      Manage account
+                    </Link>
+                  ),
                 },
                 {
-                  title: "Change password",
+                  title: (
+                    <Link
+                      to={"/profile?tab=change-pwd"}
+                      onClick={closePopover}
+                      className="link-text"
+                    >
+                      Change password
+                    </Link>
+                  ),
                 },
               ]}
               renderItem={(item) => <List.Item>{item.title}</List.Item>}
@@ -63,7 +91,7 @@ export const Header = () => {
           }
         >
           <Avatar gap={2} className={styles.avatar}>
-            <UserOutlined />
+            <UserOutlined className={styles.icon} />
           </Avatar>
         </Popover>
       </Space>

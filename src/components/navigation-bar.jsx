@@ -42,7 +42,7 @@ export const NavigationBar = () => {
 
   return (
     <Flex vertical className="h-full" style={{ padding: "12px 12px 24px" }}>
-      <div style={{ height: "64px" }}>Book Library</div>
+      <div style={{ height: "64px", lineHeight: "64px",  }}>Book Library</div>
       <Flex vertical justify="space-between" className="h-full">
         <Menu
           theme="dark"

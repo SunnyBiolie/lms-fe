@@ -16,6 +16,7 @@ import HistoryPage from "@/pages/history";
 import ProfilePage from "@/pages/profile";
 import TestPage from "@/pages/test";
 import StatisticPage from "@/pages/statistic";
+import AccountManagementPage from "@/pages/account-management";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -28,14 +29,14 @@ const router = createBrowserRouter(
         <Route path="/" element={<WithNavBarLayout />}>
           <Route path="admin" element={<AdminLayout />}>
             <Route path="book-management" element={<BookManagementPage />} />
-            <Route path="user-management" element={<></>} />
+            <Route path="user-management" element={<AccountManagementPage />} />
+            <Route path="statistic" element={<StatisticPage />} />
           </Route>
           <Route path="/" element={<UserLayout />}>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/history" element={<HistoryPage />} />
           </Route>
           <Route path="profile" element={<ProfilePage />} />
-          <Route path="statistic" element={<StatisticPage />} />
         </Route>
         <Route path="/test" element={<TestPage />} />
       </Route>

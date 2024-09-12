@@ -27,7 +27,7 @@ export default function StatisticPage() {
   const [filter, setFilter] = useState();
 
   const [topBook, setTopBook] = useState("5");
-  const [type, setType] = useState("category");
+  const [type, setType] = useState("book");
 
   const fetchTransactions = async (values = {}) => {
     setIsLoading(true);
@@ -116,14 +116,27 @@ export default function StatisticPage() {
 
   return (
     <>
-      <Row gutter={24} className="h-full">
-        <Col span={24} lg={{ span: 8, push: 16 }} xl={{ span: 6, push: 18 }}>
+      <Row className="h-full w-full">
+        <Col
+          span={24}
+          lg={{ span: 8, push: 16 }}
+          xl={{ span: 6, push: 18 }}
+          className="section"
+        >
           <Form
             name="form_statistic"
             onValuesChange={handleValuesChange}
             onFieldsChange={handleFieldsChange}
           >
             <Row gutter={24}>
+              <Col span={24}>
+                <Form.Item name="type" initialValue={type}>
+                  <Radio.Group buttonStyle="solid">
+                    <Radio.Button value="book">Book</Radio.Button>
+                    <Radio.Button value="category">Category</Radio.Button>
+                  </Radio.Group>
+                </Form.Item>
+              </Col>
               <Col span={24}>
                 <Form.Item name="range">
                   <DatePicker.RangePicker
@@ -133,14 +146,6 @@ export default function StatisticPage() {
                     }}
                     className="w-full"
                   />
-                </Form.Item>
-              </Col>
-              <Col span={24}>
-                <Form.Item name="type" initialValue={type}>
-                  <Radio.Group buttonStyle="solid">
-                    <Radio.Button value="book">Book</Radio.Button>
-                    <Radio.Button value="category">Category</Radio.Button>
-                  </Radio.Group>
                 </Form.Item>
               </Col>
               {type === "book" && (
@@ -168,7 +173,7 @@ export default function StatisticPage() {
           span={24}
           lg={{ span: 16, pull: 8 }}
           xl={{ span: 18, pull: 6 }}
-          style={{ position: "relative" }}
+          style={{ position: "relative", padding: "20px" }}
         >
           {isLoading ? (
             <div

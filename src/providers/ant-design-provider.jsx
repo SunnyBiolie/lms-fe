@@ -60,6 +60,7 @@ export default function AntDesignProvider({ children }) {
           width: "100%",
         },
       }}
+      
     >
       <AntDesignContext.Provider value={value}>
         {contextHolder}

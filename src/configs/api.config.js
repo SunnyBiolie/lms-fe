@@ -22,6 +22,10 @@ export const apiAccountsRoute = {
   editInfor: `${apiRoute.accounts}/edit-infor`,
   changePwd: `${apiRoute.accounts}/change-pwd`,
   delete: `${apiRoute.accounts}/delete`,
+  getByRole: `${apiRoute.accounts}/get-by-role`,
+  getById: `${apiRoute.accounts}/get-by-id`,
+  resetPassword: `${apiRoute.accounts}/reset-pwd`,
+  adminDelete: `${apiRoute.accounts}/admin-delete`,
 };
 
 export const apiBooksRoute = {

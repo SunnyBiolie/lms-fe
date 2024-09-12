@@ -13,23 +13,31 @@ export default function CurrentAccountProvider({ children }) {
   // const navigate = useNavigate();
 
   const { inAuthRoutes } = useRouteAuth();
-
   const mutationAccessToken = useMutation({
     mutationFn: accessTokenService,
   });
 
   useEffect(() => {
-    mutationAccessToken.mutateAsync().then((axiosResponse) => {
-      if (axiosResponse.data.currentAccount) {
-        setCurrentAccount(axiosResponse.data.currentAccount);
-      } else {
+    mutationAccessToken
+      .mutateAsync()
+      .then((axiosResponse) => {
+        if (axiosResponse.data.currentAccount) {
+          setCurrentAccount(axiosResponse.data.currentAccount);
+        } else {
+          setCurrentAccount(null);
+          if (axiosResponse.data.redirectToAuth && !inAuthRoutes) {
+            // navigate(routeAuth.logIn);
+            window.location.href = routeAuth.logIn.pathname;
+          }
+        }
+      })
+      .catch((err) => {
         setCurrentAccount(null);
-        if (axiosResponse.data.redirectToAuth && !inAuthRoutes) {
+        if (err.response.data.redirectToAuth && !inAuthRoutes) {
           // navigate(routeAuth.logIn);
           window.location.href = routeAuth.logIn.pathname;
         }
-      }
-    });
+      });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import { useMutation } from "@tanstack/react-query";
 import { Button, DatePicker, Flex, Form, Input } from "antd";
 import { createStyles } from "antd-style";
 import { Table_Account } from "@/configs/db.config";
@@ -8,8 +9,6 @@ import {
   Rule_phoneNumber,
   Rule_Required,
 } from "@/configs/rules.config";
-import { useCurrentAccount } from "@/hooks/use-current-account";
-import { useMutation } from "@tanstack/react-query";
 import { editAccountInforService } from "@/services/accounts/edit-infor";
 import { useAntDesign } from "@/hooks/use-ant-design";
 
@@ -24,10 +23,9 @@ const useStyles = createStyles(({ _, css }) => ({
   `,
 }));
 
-export const FormChangeProfile = () => {
+export const FormChangeProfile = ({ account, onAfterSaveChange }) => {
   const { styles } = useStyles();
   const { msgApi } = useAntDesign();
-  const { currentAccount, setCurrentAccount } = useCurrentAccount();
   const [form] = Form.useForm();
   const mutationEditAccountInfor = useMutation({
     mutationFn: editAccountInforService,
@@ -38,10 +36,10 @@ export const FormChangeProfile = () => {
 
   useEffect(() => {
     form.setFieldsValue({
-      ...currentAccount,
-      [Table_Account.birthDate]: dayjs(currentAccount[Table_Account.birthDate]),
+      ...account,
+      [Table_Account.birthDate]: dayjs(account[Table_Account.birthDate]),
     });
-  }, [currentAccount, form]);
+  }, [account, form]);
 
   const handleStartEdit = () => {
     setEditing(true);
@@ -56,13 +54,13 @@ export const FormChangeProfile = () => {
     mutationEditAccountInfor.mutate(
       {
         ...values,
-        id: currentAccount.id,
+        id: account.id,
       },
       {
         onSuccess: (axiosResponse) => {
           msgApi("success", axiosResponse.data.message);
-          setCurrentAccount(axiosResponse.data.data);
           setEditing(false);
+          onAfterSaveChange(axiosResponse);
         },
         onError: (axiosError) => {
           msgApi("success", axiosError.response.data.message);
@@ -82,7 +80,7 @@ export const FormChangeProfile = () => {
       className={styles.form}
       onFinish={handleFormSubmit}
     >
-      <div className={"section"}>
+      <div className={""}>
         <Form.Item
           name={Table_Account.fullName}
           label="Fullname"
@@ -112,7 +110,7 @@ export const FormChangeProfile = () => {
           label="Date of birth"
           rules={Rule_Required}
         >
-          <DatePicker maxDate={dayjs(Date.now())} />
+          <DatePicker maxDate={dayjs(Date.now())} format={"DD/MM/YYYY"} />
         </Form.Item>
       </div>
       <Flex justify="center" align="center" gap={8}>

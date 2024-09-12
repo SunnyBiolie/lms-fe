@@ -11,12 +11,12 @@ import TransactionsProvider from "@/providers/transactions-provider";
 // eslint-disable-next-line no-unused-vars
 const useStyles = createStyles(({ _, css }) => ({
   layout: css`
-    width: calc(100vw - 17px);
+    width: calc(100%);
   `,
   content: css`
     min-height: 360px;
-    padding: 16px 24px;
-    margin: 8px;
+    padding: 16px;
+    margin: 12px;
     margin-bottom: 0px;
     background-color: #222;
     border-radius: 8px 8px 0 0;

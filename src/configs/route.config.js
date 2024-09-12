@@ -16,10 +16,6 @@ export const routeUser = {
     pathname: "/history",
     label: "History",
   },
-  statistic: {
-    pathname: "/statistic",
-    label: "Statistic",
-  },
 };
 
 export const routeAdmin = {
@@ -30,5 +26,9 @@ export const routeAdmin = {
   userMangement: {
     pathname: "/admin/user-management",
     label: "User Mangement",
+  },
+  statistic: {
+    pathname: "/admin/statistic",
+    label: "Statistic",
   },
 };
