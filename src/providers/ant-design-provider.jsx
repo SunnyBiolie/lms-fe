@@ -1,10 +1,11 @@
-import { createContext, useCallback } from "react";
+import { createContext, useCallback, useState } from "react";
 import { ConfigProvider, theme, message } from "antd";
 
 export const AntDesignContext = createContext();
 
 export default function AntDesignProvider({ children }) {
   const [globalMessageApi, contextHolder] = message.useMessage();
+  const [currentTheme, setCurrentTheme] = useState("light");
 
   const msgApi = useCallback(
     (type, content) => {
@@ -16,6 +17,10 @@ export default function AntDesignProvider({ children }) {
     [globalMessageApi]
   );
 
+  const lightTheme = {
+
+  }
+
   const value = {
     msgApi,
   };
@@ -23,20 +28,25 @@ export default function AntDesignProvider({ children }) {
   return (
     <ConfigProvider
       theme={{
-        algorithm: theme.darkAlgorithm,
+        // algorithm: theme.defaultAlgorithm,
         token: {
           colorPrimary: "#fb3453",
+          colorBgLayout: "#f5f5f5"
         },
         components: {
           Menu: {
-            darkItemBg: "transparent",
-            darkItemSelectedBg: "#fb3453",
-            darkItemHoverBg: "#3b3b3b",
+            itemBg: "transparent",
+            // darkItemSelectedBg: "#fb3453",
+            // darkItemHoverBg: "#3b3b3b",
             colorBorder: "transparent",
           },
           Layout: {
             siderBg: "transparent",
           },
+          Steps: {
+            colorText: "rgba(255, 255, 255, 0.88)",
+            colorTextDescription: "rgba(255, 255, 255, 0.45)",
+          }
         },
       }}
       button={{
@@ -60,7 +70,6 @@ export default function AntDesignProvider({ children }) {
           width: "100%",
         },
       }}
-      
     >
       <AntDesignContext.Provider value={value}>
         {contextHolder}

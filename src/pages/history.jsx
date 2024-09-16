@@ -5,6 +5,7 @@ import { TableBorrowingBooks } from "@/components/table-borrowing-books";
 import { TableReturnedBooks } from "@/components/table-returned-books";
 import { useCurrentAccount } from "@/hooks/use-current-account";
 import { useTransactions } from "@/hooks/use-transactions";
+import { TableRequestingBook } from "@/components/table-requesting-book";
 
 export default function HistoryPage() {
   const { currentAccount } = useCurrentAccount();
@@ -45,6 +46,11 @@ export default function HistoryPage() {
                 loadListBorrowing={loadListCurrentBorrowing}
               />
             ),
+          },
+          {
+            label: "Requesting",
+            key: "requesting",
+            children: <TableRequestingBook />,
           },
           {
             label: `Returned`,

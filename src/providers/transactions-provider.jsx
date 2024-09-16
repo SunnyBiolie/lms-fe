@@ -2,7 +2,7 @@ import { createContext, useCallback, useEffect, useState } from "react";
 import { useCurrentAccount } from "@/hooks/use-current-account";
 import { useMutation } from "@tanstack/react-query";
 import { getBorrowingByAccountIdService } from "@/services/transaction/get-borrowing-by-account-id";
-import { Table_Account } from "@/configs/db.config";
+import { Table_Account, Table_Transaction } from "@/configs/db.config";
 import { useAntDesign } from "@/hooks/use-ant-design";
 import { getHistoriesByAccountIdService } from "@/services/histories/get-by-account-id";
 
@@ -19,6 +19,7 @@ export default function TransactionsProvider({ children }) {
   });
 
   const [currentBorrowing, setCurrentBorrowing] = useState();
+  const [passRequesting, setPassRequesting] = useState();
   const [isEmpty, setIsEmpty] = useState();
   const [currentReturned, setCurrentReturned] = useState();
 
@@ -40,7 +41,14 @@ export default function TransactionsProvider({ children }) {
       },
       {
         onSuccess: (axiosResponse) => {
-          setCurrentBorrowing(axiosResponse.data.data);
+          const borrowing = axiosResponse.data.data.filter(
+            (tran) => tran[Table_Transaction.receivedFrom] !== null
+          );
+          const requesting = axiosResponse.data.data.filter(
+            (tran) => tran[Table_Transaction.receivedFrom] === null
+          );
+          setCurrentBorrowing(borrowing);
+          setPassRequesting(requesting);
           setIsEmpty(axiosResponse.data.data.length === 0);
         },
         onError: (axiosError) => {
@@ -77,6 +85,7 @@ export default function TransactionsProvider({ children }) {
 
   const contextValues = {
     currentBorrowing,
+    passRequesting,
     isEmpty,
     currentReturned,
     loadListCurrentBorrowing,

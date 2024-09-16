@@ -1,7 +1,7 @@
 import { Table_Account } from "@/configs/db.config";
 import { useCurrentAccount } from "@/hooks/use-current-account";
 import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Layout, List, Popover, Space, Typography } from "antd";
+import { Avatar, Layout, List, Popover, Space, theme, Typography } from "antd";
 import { createStyles } from "antd-style";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -32,6 +32,7 @@ const useStyles = createStyles(({ _, css }) => ({
 
 export const Header = () => {
   const { styles } = useStyles();
+  const { token } = theme.useToken();
 
   const { currentAccount } = useCurrentAccount();
   const [isOpen, setIsOpen] = useState(false);
@@ -47,7 +48,10 @@ export const Header = () => {
   };
 
   return (
-    <Layout.Header className={styles.header}>
+    <Layout.Header
+      className={styles.header}
+      style={{ backgroundColor: token.colorBgLayout }}
+    >
       <Space size="middle">
         <Typography.Text strong>
           Hello, {currentAccount[Table_Account.fullName]}

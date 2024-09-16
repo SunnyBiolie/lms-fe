@@ -10,6 +10,13 @@ import {
   Skeleton,
   Typography,
 } from "antd";
+import {
+  maxAuthorLength,
+  maxBookTitleLength,
+  maxPublicationYear,
+  maxPublisherLength,
+  ruleMaxLength,
+} from "@/configs/rules.config";
 
 export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
   const [form] = Form.useForm();
@@ -26,7 +33,7 @@ export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
 
   return (
     <Form
-      name="search-book"
+      name="form-search-book"
       form={form}
       layout="vertical"
       size="small"
@@ -40,12 +47,20 @@ export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
       </Row>
       <Row gutter={{ xs: 8, md: 16 }}>
         <Col xs={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }}>
-          <Form.Item name="title" label="Title">
+          <Form.Item
+            name="title"
+            label="Title"
+            rules={[ruleMaxLength(maxBookTitleLength)]}
+          >
             <Input />
           </Form.Item>
         </Col>
         <Col xs={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }}>
-          <Form.Item name="author" label="Author">
+          <Form.Item
+            name="author"
+            label="Author"
+            rules={[ruleMaxLength(maxAuthorLength)]}
+          >
             <Input />
           </Form.Item>
         </Col>
@@ -61,13 +76,21 @@ export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
           </Form.Item>
         </Col>
         <Col xs={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }}>
-          <Form.Item name="publisher" label="Publisher">
+          <Form.Item
+            name="publisher"
+            label="Publisher"
+            rules={[ruleMaxLength(maxPublisherLength)]}
+          >
             <Input />
           </Form.Item>
         </Col>
         <Col xs={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }}>
           <Form.Item name="publicationDate" label="Year Of Publication">
-            <DatePicker.RangePicker picker="year" style={{ width: "100%" }} />
+            <DatePicker.RangePicker
+              picker="year"
+              style={{ width: "100%" }}
+              maxDate={maxPublicationYear}
+            />
           </Form.Item>
         </Col>
       </Row>

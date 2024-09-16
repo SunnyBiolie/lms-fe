@@ -18,7 +18,7 @@ const useStyles = createStyles(({ _, css }) => ({
     padding: 16px;
     margin: 12px;
     margin-bottom: 0px;
-    background-color: #222;
+    background-color: #eee;
     border-radius: 8px 8px 0 0;
   `,
   c: css``,

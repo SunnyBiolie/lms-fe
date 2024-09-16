@@ -13,7 +13,20 @@ export const BtnRenewal = ({ borrowingRecord, loadListBorrowing }) => {
     borrowingRecord[Table_Transaction.Renewals].length <
     rules.maxTimesOfRenewal;
 
+  const isPassed = borrowingRecord[Table_Transaction.passedFor] !== null;
+
+  const isReceiver =
+    borrowingRecord[Table_Transaction.receivedFrom] !== "SYSTEM";
+
   const handleOpenModal = () => {
+    if (isPassed) {
+      msgApi("error", "You passed this book for someone else");
+      return;
+    }
+    if (isReceiver) {
+      msgApi("error", "You did not borrow this book from the system");
+      return;
+    }
     if (!renewable) {
       msgApi(
         "error",
@@ -28,22 +41,34 @@ export const BtnRenewal = ({ borrowingRecord, loadListBorrowing }) => {
   return (
     <>
       <Tooltip
+        destroyTooltipOnHide
         title={
-          !renewable
+          isPassed
+            ? "You passed this book for someone else"
+            : isReceiver
+            ? "You did not borrow this book from the system"
+            : !renewable
             ? "You reached the maximum number of renewals for this book"
             : ""
         }
+        placement="bottomLeft"
       >
-        <Button disabled={!renewable} size="small" onClick={handleOpenModal}>
+        <Button
+          disabled={!renewable || isPassed || isReceiver}
+          size="small"
+          onClick={handleOpenModal}
+        >
           Renewal
         </Button>
       </Tooltip>
-      <ModalRenewalBook
-        isModalOpen={isModalOpen}
-        onCloseModal={handleCloseModal}
-        borrowingRecord={borrowingRecord}
-        loadListBorrowing={loadListBorrowing}
-      />
+      {!isPassed && (
+        <ModalRenewalBook
+          isModalOpen={isModalOpen}
+          onCloseModal={handleCloseModal}
+          borrowingRecord={borrowingRecord}
+          loadListBorrowing={loadListBorrowing}
+        />
+      )}
     </>
   );
 };

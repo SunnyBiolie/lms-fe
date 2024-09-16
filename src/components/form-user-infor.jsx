@@ -1,4 +1,12 @@
-import { Rule_phoneNumber } from "@/configs/rules.config";
+import { Table_Account } from "@/configs/db.config";
+import {
+  maxAddressLength,
+  Rule_email,
+  Rule_phoneNumber,
+  ruleMaxLength,
+  ruleMinLength,
+  ruleRequired,
+} from "@/configs/rules.config";
 import { Button, DatePicker, Flex, Form, Input } from "antd";
 import { createStyles } from "antd-style";
 import dayjs from "dayjs";
@@ -21,21 +29,16 @@ export const FormUserInfor = ({ nextStep, userInfor, setUserInfor }) => {
 
   return (
     <Form
-      name="user-infor"
+      name="form-user-infor"
       layout="vertical"
       className={cx(styles.container, "form-card")}
-      // variant="filled"
       initialValues={userInfor}
       onFinish={handleFinish}
     >
       <Form.Item
-        name="fullName"
-        label="Fullname"
-        rules={[
-          {
-            required: true,
-          },
-        ]}
+        name={Table_Account.fullName}
+        label="Full name"
+        rules={[ruleRequired("full name"), ruleMinLength(), ruleMaxLength()]}
       >
         <Input placeholder="ex: John Doe" />
       </Form.Item>
@@ -43,9 +46,9 @@ export const FormUserInfor = ({ nextStep, userInfor, setUserInfor }) => {
         name="address"
         label="Address"
         rules={[
-          {
-            required: true,
-          },
+          ruleRequired("address"),
+          ruleMinLength(),
+          ruleMaxLength(maxAddressLength),
         ]}
       >
         <Input placeholder="ex: 123 Maple Street Anytown" />
@@ -55,37 +58,23 @@ export const FormUserInfor = ({ nextStep, userInfor, setUserInfor }) => {
         label="Phone number"
         rules={Rule_phoneNumber}
       >
-        <Input placeholder="ex: 888-579-5910" />
+        <Input placeholder="ex: (880) 978-0446" />
       </Form.Item>
-      <Form.Item
-        name="email"
-        label="Email"
-        rules={[
-          {
-            required: true,
-          },
-          // {
-          //   type: "email",
-          //   message: "Invalid Email",
-          // },
-        ]}
-      >
+      <Form.Item name="email" label="Email" rules={Rule_email}>
         <Input placeholder="ex: johndoe@email.com" />
       </Form.Item>
       <Form.Item
         name="birthDate"
         label="Date of birth"
-        rules={[
-          {
-            required: true,
-          },
-        ]}
+        rules={[ruleRequired("date of birth")]}
       >
         <DatePicker
           maxDate={dayjs(Date.now())}
           style={{
             width: "100%",
           }}
+          format={"DD/MM/YYYY"}
+          placeholder="DD/MM/YYYY"
         />
       </Form.Item>
       <Flex justify="flex-end">

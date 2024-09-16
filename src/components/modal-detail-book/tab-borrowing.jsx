@@ -3,7 +3,11 @@ import { useMutation } from "@tanstack/react-query";
 import { Skeleton, Table } from "antd";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
-import { Table_Account, Table_Transaction } from "@/configs/db.config";
+import {
+  Table_Account,
+  Table_Renewal,
+  Table_Transaction,
+} from "@/configs/db.config";
 import { getAccountsByListIdsService } from "@/services/accounts/get-by-list-id";
 
 export const TabBorrowing = ({ isLoading, transaction }) => {
@@ -60,16 +64,21 @@ export const TabBorrowing = ({ isLoading, transaction }) => {
             width: 250,
             render: (value) => {
               dayjs.extend(localizedFormat);
-              return dayjs(value[value.length - 1]).format("llll");
+              return dayjs(value).format("llll");
             },
           },
           {
             title: "Return before",
-            dataIndex: Table_Transaction.dueDate,
+            dataIndex: Table_Transaction.Renewals,
             width: 250,
-            render: (value) => {
+            render: (value, record) => {
               dayjs.extend(localizedFormat);
-              return dayjs(value[value.length - 1]).format("llll");
+              if (value.length === 0) {
+                return dayjs(record[Table_Transaction.dueDate]).format("llll");
+              }
+              return dayjs(
+                value[value.length - 1][Table_Renewal.dueDate]
+              ).format("llll");
             },
           },
         ]}

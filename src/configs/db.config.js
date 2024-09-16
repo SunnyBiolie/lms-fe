@@ -68,11 +68,13 @@ export const Table_Category = {
 export const Table_Transaction = {
   id: "id",
   1: "accountId",
-  2: "bookId",
+  bookId: "bookId",
   borrowedAt: "borrowedAt",
   dueDate: "dueDate",
   5: "returnedAt",
-  6: "Account",
+  receivedFrom: "receivedFrom",
+  passedFor: "passedFor",
+  Account: "Account",
   7: "Book",
   Renewals: "Renewals",
 };

@@ -52,6 +52,11 @@ export const apiTransactionsRoute = {
   countByBookId: `${apiRoute.transactions}/count-by-book-id`,
   getReturnedByAccountId: `${apiRoute.transactions}/get-returned-by-account-id`,
   getTransactionsByDateRange: `${apiRoute.transactions}/get-transactions-by-date-range`,
+
+  reqForPass: `${apiRoute.transactions}/req-for-pass`,
+  cancelPassReq: `${apiRoute.transactions}/cancel-pass-req`,
+  getRequestingByBookId: `${apiRoute.transactions}/get-requesting-by-book-id`,
+  passBook: `${apiRoute.transactions}/pass-book`,
 };
 
 export const apiRenewalsRoute = {

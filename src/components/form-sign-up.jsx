@@ -1,4 +1,13 @@
 import { routeAuth } from "@/configs/route.config";
+import {
+  maxPasswordLength,
+  maxUserNameLength,
+  minPasswordLength,
+  minUserNameLength,
+  ruleMaxLength,
+  ruleMinLength,
+  ruleRequired,
+} from "@/configs/rules.config";
 import { signUpService } from "@/services/auth/sign-up";
 import { useMutation } from "@tanstack/react-query";
 import { Alert, Button, Flex, Form, Input, Result, Spin } from "antd";
@@ -53,7 +62,7 @@ export const FormSighUp = ({ prevStep, userInfor }) => {
         />
       ) : (
         <Form
-          name="sign-up"
+          name="form-sign-up"
           layout="vertical"
           className={cx(styles.container, "form-card")}
           onFieldsChange={handleFieldsChange}
@@ -68,10 +77,9 @@ export const FormSighUp = ({ prevStep, userInfor }) => {
             name="userName"
             label="Username"
             rules={[
-              {
-                required: true,
-                message: "Please enter User name",
-              },
+              ruleRequired("user name"),
+              ruleMinLength(minUserNameLength),
+              ruleMaxLength(maxUserNameLength),
             ]}
           >
             <Input />
@@ -80,10 +88,9 @@ export const FormSighUp = ({ prevStep, userInfor }) => {
             name="passWord"
             label="Password"
             rules={[
-              {
-                required: true,
-                message: "Please enter Password",
-              },
+              ruleRequired("password"),
+              ruleMinLength(minPasswordLength),
+              ruleMaxLength(maxPasswordLength),
             ]}
           >
             <Input.Password />

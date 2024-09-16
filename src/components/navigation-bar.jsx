@@ -45,7 +45,6 @@ export const NavigationBar = () => {
       <div style={{ height: "64px", lineHeight: "64px",  }}>Book Library</div>
       <Flex vertical justify="space-between" className="h-full">
         <Menu
-          theme="dark"
           selectedKeys={[location.pathname]}
           mode="inline"
           items={currentAccount.role === "ADMIN" ? adminItem : userItem}

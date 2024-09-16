@@ -72,7 +72,7 @@ export const FormLogIn = () => {
 
   return (
     <Form
-      name="log-in"
+      name="form-log-in"
       layout="vertical"
       className={cx(styles.container, "form-card")}
       onFieldsChange={handleFieldsChange}
@@ -85,7 +85,7 @@ export const FormLogIn = () => {
         rules={[
           {
             required: true,
-            message: "Please enter Username",
+            message: "Please enter username",
           },
         ]}
       >
@@ -97,7 +97,7 @@ export const FormLogIn = () => {
         rules={[
           {
             required: true,
-            message: "Please enter Password",
+            message: "Please enter password",
           },
         ]}
       >
