@@ -7,6 +7,7 @@ import { createStyles } from "antd-style";
 import BooksProvider from "@/providers/books-provider";
 import { Header } from "@/components/header";
 import TransactionsProvider from "@/providers/transactions-provider";
+import { DoubleLeftOutlined } from "@ant-design/icons";
 
 // eslint-disable-next-line no-unused-vars
 const useStyles = createStyles(({ _, css }) => ({
@@ -43,6 +44,7 @@ export default function WithNavBarLayout() {
           <Layout.Sider
             width={200}
             collapsible
+            trigger={<DoubleLeftOutlined />}
             style={{ height: "100vh", position: "sticky", left: 0, top: 0 }}
           >
             <NavigationBar />

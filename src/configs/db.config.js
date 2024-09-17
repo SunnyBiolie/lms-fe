@@ -18,7 +18,7 @@ export const Table_Account = {
   email: "email",
   birthDate: "birthDate",
   userName: "userName",
-  8: "role",
+  role: "role",
   Transactions: "Transactions",
 };
 
@@ -75,7 +75,7 @@ export const Table_Transaction = {
   receivedFrom: "receivedFrom",
   passedFor: "passedFor",
   Account: "Account",
-  7: "Book",
+  Book: "Book",
   Renewals: "Renewals",
 };
 

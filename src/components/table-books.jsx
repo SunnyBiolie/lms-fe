@@ -65,11 +65,7 @@ export const TableBooks = ({
           <>
             {formatedCategories.map((cat, index) => {
               return (
-                <Tag
-                  key={index}
-                  color={"#3b3b3b"}
-                  style={{ textTransform: "capitalize" }}
-                >
+                <Tag key={index} className="category-tag">
                   {cat}
                 </Tag>
               );

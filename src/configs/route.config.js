@@ -21,11 +21,15 @@ export const routeUser = {
 export const routeAdmin = {
   bookMangement: {
     pathname: "/admin/book-management",
-    label: "Book Mangement",
+    label: "Books",
   },
   userMangement: {
     pathname: "/admin/user-management",
-    label: "User Mangement",
+    label: "Accounts",
+  },
+  transactionsManagement: {
+    pathname: "/admin/transaction-management",
+    label: "Transactions",
   },
   statistic: {
     pathname: "/admin/statistic",

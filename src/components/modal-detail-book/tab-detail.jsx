@@ -9,7 +9,7 @@ const useStyles = createStyles(({ _, css }) => ({
     padding: 12px 0;
     margin: 0 8px !important;
     &:not(:last-child) {
-      border-bottom: 1px solid #333;
+      border-bottom: 1px solid #eee;
     }
   `,
   key: css`
@@ -46,7 +46,7 @@ export const TabDetail = ({ bookData }) => {
           <Col span={16}>
             {key === "Categories"
               ? values[index].map((c) => (
-                  <Tag key={c.id} color={"#3b3b3b"} className="capitalize">
+                  <Tag key={c.id} className="category-tag">
                     {c.name}
                   </Tag>
                 ))

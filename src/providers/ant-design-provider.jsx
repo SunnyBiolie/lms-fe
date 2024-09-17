@@ -17,9 +17,7 @@ export default function AntDesignProvider({ children }) {
     [globalMessageApi]
   );
 
-  const lightTheme = {
-
-  }
+  const lightTheme = {};
 
   const value = {
     msgApi,
@@ -31,7 +29,7 @@ export default function AntDesignProvider({ children }) {
         // algorithm: theme.defaultAlgorithm,
         token: {
           colorPrimary: "#fb3453",
-          colorBgLayout: "#f5f5f5"
+          colorBgLayout: "#f5f5f5",
         },
         components: {
           Menu: {
@@ -42,11 +40,13 @@ export default function AntDesignProvider({ children }) {
           },
           Layout: {
             siderBg: "transparent",
+            triggerBg: "transparent",
+            triggerColor: "#fb3453"
           },
           Steps: {
             colorText: "rgba(255, 255, 255, 0.88)",
             colorTextDescription: "rgba(255, 255, 255, 0.45)",
-          }
+          },
         },
       }}
       button={{

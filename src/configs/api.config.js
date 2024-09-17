@@ -57,6 +57,9 @@ export const apiTransactionsRoute = {
   cancelPassReq: `${apiRoute.transactions}/cancel-pass-req`,
   getRequestingByBookId: `${apiRoute.transactions}/get-requesting-by-book-id`,
   passBook: `${apiRoute.transactions}/pass-book`,
+
+  getAdmSearchTransOpts: `${apiRoute.transactions}/get-adm-search-trans-opts`,
+  getWithConditions: `${apiRoute.transactions}/get-w-conditions`,
 };
 
 export const apiRenewalsRoute = {

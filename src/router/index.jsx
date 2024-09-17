@@ -17,6 +17,7 @@ import ProfilePage from "@/pages/profile";
 import TestPage from "@/pages/test";
 import StatisticPage from "@/pages/statistic";
 import AccountManagementPage from "@/pages/account-management";
+import TransactionManagementPage from "@/pages/transaction-management";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -31,6 +32,10 @@ const router = createBrowserRouter(
             <Route path="book-management" element={<BookManagementPage />} />
             <Route path="user-management" element={<AccountManagementPage />} />
             <Route path="statistic" element={<StatisticPage />} />
+            <Route
+              path="transaction-management"
+              element={<TransactionManagementPage />}
+            />
           </Route>
           <Route path="/" element={<UserLayout />}>
             <Route path="/" element={<DashboardPage />} />

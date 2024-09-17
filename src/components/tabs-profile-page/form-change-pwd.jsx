@@ -5,6 +5,7 @@ import { Rule_Required } from "@/configs/rules.config";
 import { changePwdService } from "@/services/accounts/change-pwd";
 import { useCurrentAccount } from "@/hooks/use-current-account";
 import { useAntDesign } from "@/hooks/use-ant-design";
+import { routeAuth } from "@/configs/route.config";
 
 export const FormChangePassword = () => {
   const { msgApi } = useAntDesign();
@@ -25,6 +26,7 @@ export const FormChangePassword = () => {
         onSuccess: (axiosResponse) => {
           msgApi("success", axiosResponse.data.message);
           form.resetFields();
+          window.location.href = routeAuth.logIn.pathname;
         },
         onError: (axiosError) => {
           msgApi("error", axiosError.response.data.message);
