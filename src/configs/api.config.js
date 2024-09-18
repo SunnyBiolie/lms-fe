@@ -60,6 +60,7 @@ export const apiTransactionsRoute = {
 
   getAdmSearchTransOpts: `${apiRoute.transactions}/get-adm-search-trans-opts`,
   getWithConditions: `${apiRoute.transactions}/get-w-conditions`,
+  getById: `${apiRoute.transactions}/get-by-id`,
 };
 
 export const apiRenewalsRoute = {

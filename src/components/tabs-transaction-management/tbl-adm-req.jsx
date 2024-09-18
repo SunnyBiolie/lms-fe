@@ -1,12 +1,12 @@
 import { Table } from "antd";
-import { BtnAdmDetailTrans } from "./btn-adm-detail-trans";
 import {
   Table_Account,
   Table_Book,
   Table_Transaction,
 } from "@/configs/db.config";
+import dayjs from "dayjs";
 
-export const TblAdmBrwByAccId = ({ tableData, loading, type }) => {
+export const TblAdmReq = ({ tableData, loading }) => {
   const columns = [
     {
       title: "#",
@@ -27,21 +27,9 @@ export const TblAdmBrwByAccId = ({ tableData, loading, type }) => {
       },
     },
     {
-      title: "Relation",
-      render: (_, record) =>
-        record[Table_Transaction.receivedFrom] !== "SYSTEM"
-          ? "Receiver"
-          : record[Table_Transaction.passedFor] !== null
-          ? "Passer"
-          : "No",
-    },
-    {
-      title: "Action",
-      dataIndex: "id",
-      width: 100,
-      render: (_, record) => {
-        return <BtnAdmDetailTrans record={record} type={type} />;
-      },
+      title: "Requested at",
+      dataIndex: [Table_Transaction.borrowedAt],
+      render: (value) => dayjs(value).format("DD/MM/YYYY HH:mm:ss"),
     },
   ];
 

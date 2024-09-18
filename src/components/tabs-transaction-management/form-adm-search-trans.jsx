@@ -6,6 +6,8 @@ import { getTransWithConditionsService } from "@/services/transaction/get-w-cond
 import { getAdmSearchTransOptsService } from "@/services/transaction/get-adm-search-trans-opts";
 import { useAntDesign } from "@/hooks/use-ant-design";
 import { TblAdmBrwByAccId } from "./tbl-adm-brw-by-acc-id";
+import { TblAdmBrwByBookId } from "./tbl-adm-brw-by-book-id";
+import { TblAdmReq } from "./tbl-adm-req";
 
 const byOptions = [
   {
@@ -37,6 +39,7 @@ export const FormAdmSearchTrans = ({ type }) => {
   const getSearchOpts = (value) => {
     form.setFieldValue("id", null);
     setBy(value);
+    setTableData(null);
     mutationGetAdmSearchTransOpts.mutate(
       {
         params: {
@@ -74,6 +77,9 @@ export const FormAdmSearchTrans = ({ type }) => {
         onSuccess: (res) => {
           setTableData(res.data.data);
         },
+        onError: (err) => {
+          msgApi("error", err.response.data.message);
+        },
       }
     );
   };
@@ -82,7 +88,7 @@ export const FormAdmSearchTrans = ({ type }) => {
     <div>
       <Form
         form={form}
-        name="form-admin-search-transaction"
+        name={`form-admin-search-${type}`}
         className="section mb-4"
       >
         <Row gutter={24}>
@@ -110,17 +116,45 @@ export const FormAdmSearchTrans = ({ type }) => {
             </Form.Item>
           </Col>
         </Row>
-        <Row>{/* <Col>Total: 24</Col> */}</Row>
       </Form>
       {!by ? (
         <Empty />
+      ) : type === "borrowing" ? (
+        by === "account" ? (
+          <TblAdmBrwByAccId
+            tableData={tableData}
+            loading={mutationGetTransWithConditions.isPending}
+          />
+        ) : (
+          <TblAdmBrwByBookId
+            tableData={tableData}
+            loading={mutationGetTransWithConditions.isPending}
+          />
+        )
+      ) : type === "requesting" ? (
+        by === "account" ? (
+          <TblAdmReq
+            tableData={tableData}
+            loading={mutationGetTransWithConditions.isPending}
+          />
+        ) : (
+          <TblAdmReq
+            tableData={tableData}
+            loading={mutationGetTransWithConditions.isPending}
+          />
+        )
       ) : by === "account" ? (
         <TblAdmBrwByAccId
           tableData={tableData}
           loading={mutationGetTransWithConditions.isPending}
+          type={type}
         />
       ) : (
-        "Book"
+        <TblAdmBrwByBookId
+          tableData={tableData}
+          loading={mutationGetTransWithConditions.isPending}
+          type={type}
+        />
       )}
     </div>
   );

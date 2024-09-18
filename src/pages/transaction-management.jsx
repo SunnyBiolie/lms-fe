@@ -11,17 +11,17 @@ export default function TransactionManagementPage() {
     {
       key: keys[0],
       label: "Borrowing",
-      children: <TabBorrowing type={keys[0]} />,
+      children: <FormAdmSearchTrans type={keys[0]} />,
     },
     {
       key: "requesting",
       label: "Requesting",
-      children: <></>,
+      children: <FormAdmSearchTrans type={keys[1]} />,
     },
     {
       key: "returned",
       label: "Returned",
-      children: <></>,
+      children: <FormAdmSearchTrans type={keys[2]} />,
     },
   ];
 
@@ -40,11 +40,3 @@ export default function TransactionManagementPage() {
     </>
   );
 }
-
-const TabBorrowing = ({ type }) => {
-  return (
-    <>
-      <FormAdmSearchTrans type={type} />
-    </>
-  );
-};

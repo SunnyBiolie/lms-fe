@@ -6,18 +6,11 @@ import {
   Table_Transaction,
 } from "@/configs/db.config";
 
-export const TblAdmBrwByAccId = ({ tableData, loading, type }) => {
+export const TblAdmBrwByBookId = ({ tableData, loading, type }) => {
   const columns = [
     {
       title: "#",
       width: 50,
-    },
-    {
-      title: "Full name",
-      dataIndex: [Table_Transaction.Account],
-      render: (value) => {
-        return value[Table_Account.fullName];
-      },
     },
     {
       title: "Book title",
@@ -27,13 +20,16 @@ export const TblAdmBrwByAccId = ({ tableData, loading, type }) => {
       },
     },
     {
-      title: "Relation",
+      title: "Full name",
+      dataIndex: [Table_Transaction.Account],
+      render: (value) => {
+        return value[Table_Account.fullName];
+      },
+    },
+    {
+      title: "Is passed",
       render: (_, record) =>
-        record[Table_Transaction.receivedFrom] !== "SYSTEM"
-          ? "Receiver"
-          : record[Table_Transaction.passedFor] !== null
-          ? "Passer"
-          : "No",
+        record[Table_Transaction.passedFor] !== null ? "Yes" : "No",
     },
     {
       title: "Action",

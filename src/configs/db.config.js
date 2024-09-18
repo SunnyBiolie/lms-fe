@@ -71,7 +71,7 @@ export const Table_Transaction = {
   bookId: "bookId",
   borrowedAt: "borrowedAt",
   dueDate: "dueDate",
-  5: "returnedAt",
+  returnedAt: "returnedAt",
   receivedFrom: "receivedFrom",
   passedFor: "passedFor",
   Account: "Account",
