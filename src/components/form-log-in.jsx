@@ -1,13 +1,9 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { Alert, Button, Form, Input } from "antd";
 import { createStyles } from "antd-style";
-import {
-  routeAuth,
-  routeUser,
-  routeAdmin,
-} from "@/configs/route.config";
+import { routeAuth, routeUser, routeAdmin } from "@/configs/route.config";
 import { logInService } from "@/services/auth/log-in";
 import { useAntDesign } from "@/hooks/use-ant-design";
 import { useCurrentAccount } from "@/hooks/use-current-account";
@@ -39,6 +35,7 @@ export const FormLogIn = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [alert, setAlert] = useState();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const mutationLogIn = useMutation({ mutationFn: logInService });
 
@@ -52,11 +49,15 @@ export const FormLogIn = () => {
       onSuccess: (axiosResponse) => {
         msgApi("success", axiosResponse.data.message);
         setCurrentAccount(axiosResponse.data.accountInfo);
-        navigate(
-          axiosResponse.data.accountInfo.role === "ADMIN"
-            ? routeAdmin.bookMangement.pathname
-            : routeUser.dashboard.pathname
-        );
+        if (searchParams.get("redirect-from")) {
+          navigate(searchParams.get("redirect-from"));
+        } else {
+          navigate(
+            axiosResponse.data.accountInfo.role === "ADMIN"
+              ? routeAdmin.bookMangement.pathname
+              : routeUser.dashboard.pathname
+          );
+        }
       },
       onError: (error) => {
         setAlert({

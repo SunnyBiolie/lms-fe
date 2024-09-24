@@ -86,3 +86,10 @@ export const Table_Renewal = {
   dueDate: "dueDate",
   Transaction: "Transaction",
 };
+
+export const Table_Report = {
+  id: "id",
+  month: "month",
+  year: "year",
+  createdAt: "createdAt",
+};

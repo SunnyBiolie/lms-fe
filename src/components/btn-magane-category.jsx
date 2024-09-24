@@ -18,9 +18,14 @@ import { useAntDesign } from "@/hooks/use-ant-design";
 import { useBooks } from "@/hooks/use-books";
 import { editCategoryService } from "@/services/categories/edit";
 import { deleteCategoryService } from "@/services/categories/delete";
-import { rules } from "@/configs/admin.config";
 import { getCategoriesWithConditionsService } from "@/services/categories/get-w-conditions";
 import { Table_Category } from "@/configs/db.config";
+import {
+  maxCategoryLength,
+  ruleMaxLength,
+  ruleNotBlank,
+  ruleRequired,
+} from "@/configs/rules.config";
 
 export const BtnManageCategory = () => {
   const { msgApi } = useAntDesign();
@@ -133,7 +138,7 @@ const FormAddCategory = ({ searchListCategories }) => {
 
   return (
     <Form
-      name="add-category"
+      name="form-add-category"
       form={form}
       layout="vertical"
       onFinish={handleAddCategory}
@@ -143,19 +148,12 @@ const FormAddCategory = ({ searchListCategories }) => {
         name="name"
         label="Name"
         rules={[
-          {
-            required: true,
-            message: "Please enter category's name",
-          },
-          {
-            whitespace: true,
-          },
-          {
-            max: rules.maxCharOfCateName,
-          },
+          ruleRequired("category's name"),
+          ruleMaxLength(maxCategoryLength),
+          ruleNotBlank(),
         ]}
       >
-        <Input />
+        <Input maxLength={maxCategoryLength} />
       </Form.Item>
       <Flex justify="flex-end">
         <Button type="primary" htmlType="submit" loading={isLoading}>
@@ -237,11 +235,19 @@ const TableManageCategory = ({
 
   return (
     <>
-      <Form name="search-category" onFinish={handleSearch} disabled={editingId}>
+      <Form
+        name="form-search-category"
+        onFinish={handleSearch}
+        disabled={editingId}
+      >
         <Row gutter={8}>
           <Col span={18}>
-            <Form.Item name="name" label="Name">
-              <Input />
+            <Form.Item
+              name="name"
+              label="Name"
+              rules={[ruleMaxLength(maxCategoryLength)]}
+            >
+              <Input maxLength={maxCategoryLength} />
             </Form.Item>
           </Col>
           <Col span={6}>
@@ -316,7 +322,7 @@ const EditableCell = ({
     return (
       <Form
         form={form}
-        name="edit-category"
+        name="form-edit-category"
         size="small"
         onFinish={handleEditCategory}
       >
@@ -324,17 +330,12 @@ const EditableCell = ({
           name="name"
           style={{ marginBottom: 0 }}
           rules={[
-            {
-              required: true,
-              whitespace: true,
-              message: "Category is required",
-            },
-            {
-              max: rules.maxCharOfCateName,
-            },
+            ruleRequired(),
+            ruleNotBlank(),
+            ruleMaxLength(maxCategoryLength),
           ]}
         >
-          <Input />
+          <Input maxLength={maxCategoryLength} />
         </Form.Item>
       </Form>
     );

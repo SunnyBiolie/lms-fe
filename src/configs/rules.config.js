@@ -28,6 +28,8 @@ export const Rule_email = [
   },
 ];
 
+export const maxCategoryLength = 24;
+
 export const maxAddressLength = 50;
 export const minUserNameLength = 3;
 export const maxUserNameLength = 16;
@@ -54,4 +56,8 @@ export const ruleMinLength = (min = 3) => ({
 export const ruleMaxLength = (max = 24) => ({
   max,
   message: `A maximum length of ${max} is required`,
+});
+
+export const ruleNotBlank = () => ({
+  whitespace: true,
 });

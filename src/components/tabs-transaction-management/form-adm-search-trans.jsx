@@ -112,6 +112,7 @@ export const FormAdmSearchTrans = ({ type }) => {
                     ? "Loading"
                     : "Select to display"
                 }
+                optionFilterProp="label"
               ></Select>
             </Form.Item>
           </Col>

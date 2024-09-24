@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Skeleton, Space, Table, Tag, Tooltip } from "antd";
-import { EditOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { useBooks } from "@/hooks/use-books";
 import { useCurrentAccount } from "@/hooks/use-current-account";
 import { ModalDetailBook } from "./table-books/modal-detail-book";
@@ -101,7 +101,7 @@ export const TableBooks = ({
                   bookData: record,
                 });
               }}
-              icon={<InfoCircleOutlined />}
+              icon={<EyeOutlined />}
             />
             {currentAccount.role === "ADMIN" ? (
               <>

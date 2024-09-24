@@ -1,5 +1,5 @@
 import { Button, Col, Flex, Modal, Row, Spin, Typography } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { EyeOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -28,7 +28,7 @@ export const BtnAdmDetailTrans = ({ record, type }) => {
   return (
     <>
       <Button
-        icon={<InfoCircleOutlined />}
+        icon={<EyeOutlined />}
         size="small"
         onClick={handleClick}
       ></Button>

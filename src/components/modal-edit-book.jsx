@@ -81,7 +81,7 @@ export const ModalEditBook = ({
       <Form
         disabled={isLoading}
         form={form}
-        name="edit-book"
+        name="form-edit-book"
         onFinish={handleFinish}
         labelCol={{
           span: 8,

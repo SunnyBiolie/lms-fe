@@ -8,12 +8,24 @@ import {
   Modal,
   Select,
 } from "antd";
-import dayjs from "dayjs";
 import { useMutation } from "@tanstack/react-query";
 import { createBooksService } from "@/services/books/create";
 import { useAntDesign } from "@/hooks/use-ant-design";
 import { numberOfPages, rules } from "@/configs/admin.config";
 import { Table_Book } from "@/configs/db.config";
+import {
+  maxAuthorLength,
+  maxBookTitleLength,
+  maxPublicationYear,
+  maxPublisherLength,
+  minAuthorLength,
+  minBookTitleLength,
+  minPublisherLength,
+  ruleMaxLength,
+  ruleMinLength,
+  ruleNotBlank,
+  ruleRequired,
+} from "@/configs/rules.config";
 
 export const ModalAddBook = ({
   isModalOpen,
@@ -72,7 +84,7 @@ export const ModalAddBook = ({
       )}
     >
       <Form
-        name="add-book"
+        name="form-add-book"
         form={form}
         onFinish={handleFinish}
         disabled={isLoading}
@@ -84,20 +96,25 @@ export const ModalAddBook = ({
           name={Table_Book.title}
           label="Title"
           rules={[
-            {
-              required: true,
-            },
+            ruleRequired(),
+            ruleNotBlank(),
+            ruleMinLength(minBookTitleLength),
+            ruleMaxLength(maxBookTitleLength),
           ]}
         >
-          <Input />
+          <Input
+            minLength={minBookTitleLength}
+            maxLength={maxBookTitleLength}
+          />
         </Form.Item>
         <Form.Item
           name={Table_Book.author}
           label="Author"
           rules={[
-            {
-              required: true,
-            },
+            ruleRequired(),
+            ruleNotBlank(),
+            ruleMinLength(minAuthorLength),
+            ruleMaxLength(maxAuthorLength),
           ]}
         >
           <Input />
@@ -106,9 +123,10 @@ export const ModalAddBook = ({
           name={Table_Book[3]}
           label="Publisher"
           rules={[
-            {
-              required: true,
-            },
+            ruleRequired(),
+            ruleNotBlank(),
+            ruleMinLength(minPublisherLength),
+            ruleMaxLength(maxPublisherLength),
           ]}
         >
           <Input />
@@ -133,15 +151,11 @@ export const ModalAddBook = ({
         <Form.Item
           name={Table_Book.publicationDate}
           label="Year of publication"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
+          rules={[ruleRequired()]}
         >
           <DatePicker
             picker="year"
-            maxDate={dayjs(Date.now())}
+            maxDate={maxPublicationYear}
             style={{
               width: "100%",
             }}

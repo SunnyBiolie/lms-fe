@@ -8,6 +8,7 @@ const apiRoute = {
   transactions: "/transactions",
   renewals: "/renewals",
   histories: "/histories",
+  reports: "/reports",
 };
 
 export const apiAuthRoute = {
@@ -72,6 +73,11 @@ export const apiRenewalsRoute = {
 export const apiHistoriesRoute = {
   getByAccountId: `${apiRoute.histories}/get-by-account-id`,
   getByDateRange: `${apiRoute.histories}/get-by-date-range`,
+};
+
+export const apiReportsRoute = {
+  getAll: `${apiRoute.reports}/get-all`,
+  create: `${apiRoute.reports}/create`,
 };
 
 export default apiRoot;
