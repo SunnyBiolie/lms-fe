@@ -1,11 +1,14 @@
 import { useState } from "react";
 import {
   Button,
+  Checkbox,
+  Col,
   DatePicker,
   Form,
   Input,
   InputNumber,
   Modal,
+  Row,
   Select,
 } from "antd";
 import { useMutation } from "@tanstack/react-query";
@@ -15,10 +18,12 @@ import { numberOfPages, rules } from "@/configs/admin.config";
 import { Table_Book } from "@/configs/db.config";
 import {
   maxAuthorLength,
+  maxBookPrice,
   maxBookTitleLength,
   maxPublicationYear,
   maxPublisherLength,
   minAuthorLength,
+  minBookPrice,
   minBookTitleLength,
   minPublisherLength,
   ruleMaxLength,
@@ -181,6 +186,43 @@ export const ModalAddBook = ({
             }}
           />
         </Form.Item>
+        <Row gutter={24}>
+          <Col span={16}>
+            <Form.Item
+              name={Table_Book.price}
+              label="Price"
+              labelCol={{ span: 12 }}
+              wrapperCol={{ span: 12 }}
+              initialValue={minBookPrice}
+              rules={[
+                ruleRequired(),
+                {
+                  min: minBookPrice,
+                  max: maxBookPrice,
+                  type: "number",
+                },
+              ]}
+            >
+              <InputNumber
+                className="w-full"
+                min={minBookPrice}
+                max={maxBookPrice}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item
+              name={Table_Book.isSpecial}
+              label="Is special"
+              labelCol={{ span: 12 }}
+              wrapperCol={{ span: 12 }}
+              initialValue={false}
+              valuePropName="checked"
+            >
+              <Checkbox />
+            </Form.Item>
+          </Col>
+        </Row>
         <Form.Item
           name={Table_Book[5]}
           label="Number of pages"

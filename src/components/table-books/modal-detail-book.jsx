@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { Modal, Tabs } from "antd";
+import { Flex, Modal, Tabs, Typography } from "antd";
 import { getBorrowingByBookIdService } from "@/services/transaction/get-borrowing-by-book-id";
 import { TabBorrowing } from "@/components/modal-detail-book/tab-borrowing";
 import { TabDetail } from "@/components/modal-detail-book/tab-detail";
+import { Table_Book } from "@/configs/db.config";
+import { StarFilled } from "@ant-design/icons";
 
 export const ModalDetailBook = ({ isModalOpen, setIsModalOpen, data }) => {
   const mutationGetBorrowingByBookId = useMutation({
@@ -53,6 +55,12 @@ export const ModalDetailBook = ({ isModalOpen, setIsModalOpen, data }) => {
       cancelText="Close"
       onCancel={handleCancel}
     >
+      {data && data.bookData[Table_Book.isSpecial] && (
+        <Flex align="center" justify="center" gap={4}>
+          <Typography.Text>This is special book</Typography.Text>
+          <StarFilled style={{ color: "#fbdb14" }} />
+        </Flex>
+      )}
       <Tabs
         items={[
           {

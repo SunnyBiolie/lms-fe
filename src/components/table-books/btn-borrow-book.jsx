@@ -2,13 +2,24 @@ import { useState } from "react";
 import { Button, Tooltip } from "antd";
 import { useTransactions } from "@/hooks/use-transactions";
 import { ModalBorrowBook } from "./modal-borrow-book";
-import { Table_Transaction } from "@/configs/db.config";
+import {
+  Table_Account,
+  Table_Book,
+  Table_Transaction,
+} from "@/configs/db.config";
+import { useCurrentAccount } from "@/hooks/use-current-account";
+import { bookPriceForVIP } from "@/configs/rules.config";
 
 export const BtnBorrowBook = ({ book }) => {
   const { currentBorrowing, passRequesting } = useTransactions();
+  const { currentAccount } = useCurrentAccount();
   const [isModalOpen, setIsModalOpen] = useState();
 
-  if (!currentBorrowing || !passRequesting) return;
+  if (!currentAccount || !currentBorrowing || !passRequesting) return;
+
+  const isForVIP =
+    (book[Table_Book.isSpecial] || book[Table_Book.price] > bookPriceForVIP) &&
+    currentAccount[Table_Account.role] !== "VIP";
 
   const isBorrowing =
     currentBorrowing.findIndex(
@@ -30,6 +41,7 @@ export const BtnBorrowBook = ({ book }) => {
   const title = () => {
     if (isBorrowing) return "Borrowed";
     if (isRequesting) return "Cancel";
+    if (isForVIP) return "VIP only";
     return "Borrow";
   };
 
@@ -37,7 +49,7 @@ export const BtnBorrowBook = ({ book }) => {
     <>
       <Tooltip destroyTooltipOnHide title={tooltip()} placement="topRight">
         <Button
-          disabled={isBorrowing}
+          disabled={isBorrowing || isForVIP}
           size="small"
           onClick={() => {
             setIsModalOpen(true);
@@ -47,11 +59,13 @@ export const BtnBorrowBook = ({ book }) => {
           {title()}
         </Button>
       </Tooltip>
-      <ModalBorrowBook
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        book={book}
-      />
+      {(!isBorrowing || !isForVIP) && (
+        <ModalBorrowBook
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          book={book}
+        />
+      )}
     </>
   );
 };

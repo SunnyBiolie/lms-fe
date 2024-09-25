@@ -41,6 +41,8 @@ export const minAuthorLength = 3;
 export const maxAuthorLength = 64;
 export const minPublisherLength = 3;
 export const maxPublisherLength = 64;
+export const minBookPrice = 10000;
+export const maxBookPrice = 10000000;
 
 export const maxPublicationYear = dayjs(new Date().getFullYear().toString());
 
@@ -61,3 +63,5 @@ export const ruleMaxLength = (max = 24) => ({
 export const ruleNotBlank = () => ({
   whitespace: true,
 });
+
+export const bookPriceForVIP = 1000000;

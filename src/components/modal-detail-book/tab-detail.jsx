@@ -29,6 +29,10 @@ export const TabDetail = ({ bookData }) => {
       ["Publisher"]: bookData[Table_Book[3]],
       ["Categories"]: bookData[Table_Book[9]],
       ["Year Of Publication"]: bookData[Table_Book.publicationDate],
+      ["Value"]: bookData[Table_Book.price].toLocaleString("it-IT", {
+        style: "currency",
+        currency: "VND",
+      }),
       ["Quantity"]: bookData[Table_Book[7]],
     };
   };
@@ -51,7 +55,7 @@ export const TabDetail = ({ bookData }) => {
                   </Tag>
                 ))
               : key === "Year Of Publication"
-              ? dayjs(values[index]).format("YYYY-MM-DD")
+              ? dayjs(values[index]).format("YYYY")
               : values[index]}
           </Col>
         </Row>

@@ -10,7 +10,7 @@ import { useAntDesign } from "@/hooks/use-ant-design";
 export const ButtonReport = ({ lastReport }) => {
   const month = lastReport[Table_Report.month];
   const year = lastReport[Table_Report.year];
-  const disabledSubmit = new Date(Date.now()).getDate() < 3;
+  const disabledSubmit = new Date() < new Date(year, month);
 
   const { msgApi } = useAntDesign();
   const mutationMontlyReport = useMutation({
@@ -50,7 +50,9 @@ export const ButtonReport = ({ lastReport }) => {
       <Tooltip
         title={
           disabledSubmit
-            ? "You can only report between the 1st and the 3rd of each month"
+            ? `The time to report for ${Intl.DateTimeFormat("en", {
+                month: "long",
+              }).format(new Date(year, month - 1))} has not arrived yet`
             : ""
         }
         placement="topLeft"

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Button, Skeleton, Space, Table, Tag, Tooltip } from "antd";
-import { EditOutlined, EyeOutlined } from "@ant-design/icons";
+import { Button, Flex, Skeleton, Space, Table, Tag, Tooltip } from "antd";
+import { EditOutlined, EyeOutlined, StarFilled } from "@ant-design/icons";
 import { useBooks } from "@/hooks/use-books";
 import { useCurrentAccount } from "@/hooks/use-current-account";
 import { ModalDetailBook } from "./table-books/modal-detail-book";
@@ -75,9 +75,38 @@ export const TableBooks = ({
       },
     },
     {
+      title: (
+        <Flex align="center" justify="center">
+          Is Special
+        </Flex>
+      ),
+      dataIndex: Table_Book.isSpecial,
+      width: 100,
+      render: (value) => {
+        return (
+          value && (
+            <Flex align="center" justify="center">
+              <StarFilled style={{ color: "#fbdb14", fontSize: "16px" }} />
+            </Flex>
+          )
+        );
+      },
+    },
+    // {
+    //   title: "Value",
+    //   dataIndex: Table_Book.price,
+    //   width: 160,
+    //   render: (value) => {
+    //     return value.toLocaleString("it-IT", {
+    //       style: "currency",
+    //       currency: "VND",
+    //     });
+    //   },
+    // },
+    {
       title: currentAccount.role === "ADMIN" ? "Publisher" : "Avaliable",
       dataIndex: Table_Book[3],
-      width: 220,
+      width: currentAccount.role === "ADMIN" ? 220 : 100,
       render: (publisher, record) => {
         if (currentAccount.role === "ADMIN") return publisher;
         else

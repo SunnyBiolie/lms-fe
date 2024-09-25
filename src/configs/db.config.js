@@ -46,6 +46,8 @@ export const Table_Book = {
   7: "quantity",
   8: "createdAt",
   9: "Categories",
+  isSpecial: "isSpecial",
+  price: "price",
   Transactions: "Transactions",
 };
 
