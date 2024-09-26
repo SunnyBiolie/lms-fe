@@ -94,4 +94,7 @@ export const Table_Report = {
   month: "month",
   year: "year",
   createdAt: "createdAt",
+
+  ReportAccounts: "ReportAccounts",
+  ReportBooks: "ReportBooks",
 };
