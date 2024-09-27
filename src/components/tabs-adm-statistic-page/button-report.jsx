@@ -10,12 +10,13 @@ import { checkToLogOut } from "@/lib/check-to-log-out";
 import { calculateMembershipService } from "@/services/reports/calculate-membership";
 import { useSearchParams } from "react-router-dom";
 
-export const ButtonReport = ({ lastReport }) => {
+export const ButtonReport = ({ lastReport, refetch }) => {
   const month = lastReport[Table_Report.month];
   const year = lastReport[Table_Report.year];
   // const disabledSubmit = new Date() < new Date(year, month + 1);
   const disabledSubmit = new Date() < new Date(2024, 8, 25);
 
+  // eslint-disable-next-line no-unused-vars
   const [_, setSearchParams] = useSearchParams();
 
   const { msgApi } = useAntDesign();
@@ -76,7 +77,8 @@ export const ButtonReport = ({ lastReport }) => {
 
   const handleViewAllReports = () => {
     if (mutationCalculateMembership.data) {
-      setSearchParams({ view: "all-reports" }, { replace: true });
+      refetch();
+      setSearchParams({ year: "2024", month: "8" }, { replace: true });
       closeModal();
     }
   };

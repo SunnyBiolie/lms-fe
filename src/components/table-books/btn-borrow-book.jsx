@@ -9,6 +9,10 @@ import {
 } from "@/configs/db.config";
 import { useCurrentAccount } from "@/hooks/use-current-account";
 import { bookPriceForVIP } from "@/configs/rules.config";
+import {
+  bookNumberPriorForMember,
+  bookNumberPriorForVip,
+} from "@/configs/membership.config";
 
 export const BtnBorrowBook = ({ book }) => {
   const { currentBorrowing, passRequesting } = useTransactions();
@@ -21,6 +25,29 @@ export const BtnBorrowBook = ({ book }) => {
     (book[Table_Book.isSpecial] || book[Table_Book.price] > bookPriceForVIP) &&
     currentAccount[Table_Account.role] !== "VIP";
 
+  const isPrior = (function calculatePriority() {
+    const available =
+      book[Table_Book.quantity] - book._count[Table_Book.Transactions];
+    let result = true;
+    if (available <= bookNumberPriorForMember) {
+      switch (currentAccount[Table_Account.role]) {
+        case "USER":
+          result = false;
+          break;
+      }
+    } else if (available <= bookNumberPriorForVip) {
+      switch (currentAccount[Table_Account.role]) {
+        case "USER":
+          result = false;
+          break;
+        case "MEMBER":
+          result = false;
+          break;
+      }
+    }
+    return result;
+  })();
+
   const isBorrowing =
     currentBorrowing.findIndex(
       (t) => t.bookId === book.id && t[Table_Transaction.receivedFrom] !== null
@@ -32,6 +59,7 @@ export const BtnBorrowBook = ({ book }) => {
     ) !== -1;
 
   const tooltip = () => {
+    if (!isPrior) return "You do not have priority for borrowing this book";
     if (isBorrowing) return "You are borrowing this book";
     if (isRequesting)
       return "You are requesting the book to be passed by other users";
@@ -45,11 +73,13 @@ export const BtnBorrowBook = ({ book }) => {
     return "Borrow";
   };
 
+  const disabled = isBorrowing || isForVIP || !isPrior;
+
   return (
     <>
       <Tooltip destroyTooltipOnHide title={tooltip()} placement="topRight">
         <Button
-          disabled={isBorrowing || isForVIP}
+          disabled={disabled}
           size="small"
           onClick={() => {
             setIsModalOpen(true);
@@ -59,7 +89,7 @@ export const BtnBorrowBook = ({ book }) => {
           {title()}
         </Button>
       </Tooltip>
-      {(!isBorrowing || !isForVIP) && (
+      {!disabled && (
         <ModalBorrowBook
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}

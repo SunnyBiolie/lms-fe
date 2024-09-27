@@ -110,7 +110,7 @@ export const TableBooks = ({
       render: (publisher, record) => {
         if (currentAccount.role === "ADMIN") return publisher;
         else
-          return record[Table_Book[7]] - record._count[Table_Book.Transactions];
+          return record[Table_Book.quantity] - record._count[Table_Book.Transactions];
       },
     },
     {

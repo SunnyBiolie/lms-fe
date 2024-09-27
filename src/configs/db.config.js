@@ -43,7 +43,7 @@ export const Table_Book = {
   publicationDate: "publicationDate",
   5: "pages",
   6: "imageLink",
-  7: "quantity",
+  quantity: "quantity",
   8: "createdAt",
   9: "Categories",
   isSpecial: "isSpecial",
@@ -97,4 +97,39 @@ export const Table_Report = {
 
   ReportAccounts: "ReportAccounts",
   ReportBooks: "ReportBooks",
+  MembershipLogs: "MembershipLogs",
+};
+
+export const Table_RpAccount = {
+  id: "id",
+  reportId: "reportId",
+  accountId: "accountId",
+  borrowCount: "borrowCount",
+  overdueCount: "overdueCount",
+  isViewedByUser: "isViewedByUser",
+
+  Report: "Report",
+  Account: "Account",
+};
+
+export const Table_RpBook = {
+  id: "id",
+  reportId: "reportId",
+  accountId: "accountId",
+  borrowedCount: "borrowedCount",
+
+  Report: "Report",
+  Book: "Book",
+};
+
+export const Table_MembershipLogs = {
+  id: "id",
+  accountId: "accountId",
+  reportId: "reportId",
+  from: "from",
+  to: "to",
+  createdAt: "createdAt",
+
+  Account: "Account",
+  Report: "Report",
 };

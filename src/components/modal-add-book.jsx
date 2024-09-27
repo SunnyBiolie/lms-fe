@@ -167,7 +167,7 @@ export const ModalAddBook = ({
           />
         </Form.Item>
         <Form.Item
-          name={Table_Book[7]}
+          name={Table_Book.quantity}
           label="Number of books"
           initialValue={rules.initQuantityOfBooks}
           rules={[

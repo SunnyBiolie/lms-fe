@@ -79,6 +79,7 @@ export const apiReportsRoute = {
   getAll: `${apiRoute.reports}/get-all`,
   create: `${apiRoute.reports}/create`,
   calculateMembership: `${apiRoute.reports}/calculate-membership`,
+  detail: `${apiRoute.reports}/detail`,
 };
 
 export default apiRoot;

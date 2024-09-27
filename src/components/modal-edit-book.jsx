@@ -162,7 +162,7 @@ export const ModalEditBook = ({
               />
             </Form.Item>
             <Form.Item
-              name={[Table_Book[7]]}
+              name={[Table_Book.quantity]}
               label="Number of books"
               initialValue={data.bookData.allQuantity}
               rules={[

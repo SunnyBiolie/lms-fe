@@ -33,7 +33,7 @@ export const TabDetail = ({ bookData }) => {
         style: "currency",
         currency: "VND",
       }),
-      ["Quantity"]: bookData[Table_Book[7]],
+      ["Quantity"]: bookData[Table_Book.quantity],
     };
   };
 

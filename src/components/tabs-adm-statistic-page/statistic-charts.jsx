@@ -18,24 +18,21 @@ import {
   YAxis,
 } from "recharts";
 
-export function StatisticCharts() {
+export function StatisticCharts({ reports }) {
   const mutationGetHistoriesByDateRange = useMutation({
     mutationFn: getHistoriesByDateRangeService,
   });
   const [data, setData] = useState();
-  const [isLoading, setIsLoading] = useState(false);
   const [filter, setFilter] = useState();
 
   const [topBook, setTopBook] = useState("5");
-  const [type, setType] = useState("book");
+  const [type, setType] = useState("year");
 
   const fetchTransactions = async (values = {}) => {
-    setIsLoading(true);
     const axiosResponse = await mutationGetHistoriesByDateRange.mutateAsync(
       values
     );
     setData(axiosResponse.data.data);
-    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -48,6 +45,7 @@ export function StatisticCharts() {
   };
 
   const handleValuesChange = (values) => {
+    console.log(dayjs(values.range).format("DD/MM/YYYY"));
     if (values.range) {
       fetchTransactions(values);
     }
@@ -61,16 +59,6 @@ export function StatisticCharts() {
         default:
           throw new Error("Invalid value");
       }
-    }
-  };
-
-  const handleFieldsChange = (changedFields) => {
-    if (
-      changedFields[0] &&
-      changedFields[0].name.includes("range") &&
-      changedFields[0].value === null
-    ) {
-      fetchTransactions();
     }
   };
 
@@ -128,23 +116,23 @@ export function StatisticCharts() {
           xl={{ span: 6, push: 18 }}
           className="section"
         >
-          <Form
-            name="form_statistic"
-            onValuesChange={handleValuesChange}
-            onFieldsChange={handleFieldsChange}
-          >
+          <Form name="form_statistic" onValuesChange={handleValuesChange}>
             <Row gutter={24}>
               <Col span={24}>
                 <Segmented
                   defaultValue={type}
                   options={[
                     {
-                      label: "Book",
-                      value: "book",
+                      label: "Year",
+                      value: "year",
                     },
                     {
-                      label: "Category",
-                      value: "category",
+                      label: "Quarter",
+                      value: "quarter",
+                    },
+                    {
+                      label: "Month",
+                      value: "month",
                     },
                   ]}
                   onChange={handleTypeChange}
@@ -153,33 +141,9 @@ export function StatisticCharts() {
               </Col>
               <Col span={24}>
                 <Form.Item name="range">
-                  <DatePicker.RangePicker
-                    format="DD/MM/YYYY"
-                    disabledDate={(current) => {
-                      return current && current > dayjs().endOf("day");
-                    }}
-                    className="w-full"
-                  />
+                  <DatePicker picker="quarter" />
                 </Form.Item>
               </Col>
-              {type === "book" && (
-                <Col span={24}>
-                  <Form.Item name="top-of-book" initialValue={"5"}>
-                    <Select
-                      options={[
-                        {
-                          value: "5",
-                          label: "Top 5",
-                        },
-                        {
-                          value: "10",
-                          label: "Top 10",
-                        },
-                      ]}
-                    />
-                  </Form.Item>
-                </Col>
-              )}
             </Row>
           </Form>
         </Col>
@@ -189,7 +153,7 @@ export function StatisticCharts() {
           xl={{ span: 18, pull: 6 }}
           style={{ position: "relative", padding: "20px" }}
         >
-          {isLoading ? (
+          {mutationGetHistoriesByDateRange.isLoading ? (
             <div
               style={{
                 position: "absolute",

@@ -1,27 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { Button, Flex, Space, Typography } from "antd";
-import { getAllReportsService } from "@/services/reports/get-all";
-import { checkToLogOut } from "@/lib/check-to-log-out";
 import { Table_Report } from "@/configs/db.config";
 import { ButtonReport } from "./button-report";
 
-export const ReportAction = () => {
+export const ReportAction = ({ response, refetch }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const {
-    isLoading,
-    error,
-    data: response,
-  } = useQuery({
-    queryKey: ["all-reports"],
-    queryFn: getAllReportsService,
-  });
-
-  if (isLoading) return <></>;
-  if (error) {
-    return checkToLogOut(error);
-  }
 
   const lastReport = response.data.data[0];
   const month = lastReport[Table_Report.month];
@@ -31,7 +14,7 @@ export const ReportAction = () => {
     const view = searchParams.get("view");
 
     if (view === "charts") {
-      setSearchParams({ view: "all-reports" }, { replace: true });
+      setSearchParams({}, { replace: true });
     } else setSearchParams({ view: "charts" }, { replace: true });
   };
 
@@ -49,7 +32,7 @@ export const ReportAction = () => {
             ? "All reports"
             : "View charts"}
         </Button>
-        <ButtonReport lastReport={lastReport} />
+        <ButtonReport lastReport={lastReport} refetch={refetch} />
       </Space>
     </Flex>
   );
