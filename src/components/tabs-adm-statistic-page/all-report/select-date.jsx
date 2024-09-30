@@ -6,7 +6,9 @@ import { Table_Report } from "@/configs/db.config";
 // eslint-disable-next-line no-unused-vars
 const useStyles = createStyles(({ _, css }) => ({
   navigator: css`
-    min-width: 150px;
+    width: 20%;
+    min-width: 160px;
+    max-width: 210px;
   `,
 }));
 

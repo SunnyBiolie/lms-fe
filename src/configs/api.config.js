@@ -80,6 +80,7 @@ export const apiReportsRoute = {
   create: `${apiRoute.reports}/create`,
   calculateMembership: `${apiRoute.reports}/calculate-membership`,
   detail: `${apiRoute.reports}/detail`,
+  getByDate: `${apiRoute.reports}/get-by-date`,
 };
 
 export default apiRoot;

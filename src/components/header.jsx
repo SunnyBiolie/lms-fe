@@ -1,7 +1,19 @@
 import { Table_Account } from "@/configs/db.config";
+import { routeAuth } from "@/configs/route.config";
 import { useCurrentAccount } from "@/hooks/use-current-account";
+import { logOutService } from "@/services/auth/log-out";
 import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Layout, List, Popover, Space, theme, Typography } from "antd";
+import { useMutation } from "@tanstack/react-query";
+import {
+  Avatar,
+  Layout,
+  List,
+  Popover,
+  Space,
+  Tag,
+  theme,
+  Typography,
+} from "antd";
 import { createStyles } from "antd-style";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -34,6 +46,13 @@ export const Header = () => {
   const { styles } = useStyles();
   const { token } = theme.useToken();
 
+  const mutationLogOut = useMutation({
+    mutationFn: logOutService,
+    onSuccess: () => {
+      window.location.href = routeAuth.logIn.pathname;
+    },
+  });
+
   const { currentAccount } = useCurrentAccount();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -47,6 +66,10 @@ export const Header = () => {
     setIsOpen(false);
   };
 
+  const handleLogOut = () => {
+    mutationLogOut.mutate();
+  };
+
   return (
     <Layout.Header
       className={styles.header}
@@ -56,6 +79,7 @@ export const Header = () => {
         <Typography.Text strong>
           Hello, {currentAccount[Table_Account.fullName]}
         </Typography.Text>
+        <Tag color="orange">{currentAccount[Table_Account.role]}</Tag>
         <Popover
           destroyTooltipOnHide
           trigger="click"
@@ -63,7 +87,7 @@ export const Header = () => {
           placement="bottomRight"
           onOpenChange={handleOpenChange}
           className="cursor-pointer"
-          color="#333"
+          color="#fefefe"
           content={
             <List
               dataSource={[
@@ -72,7 +96,7 @@ export const Header = () => {
                     <Link
                       to={"/profile"}
                       onClick={closePopover}
-                      className="link-text"
+                      className="link-text w-full cursor-pointer"
                     >
                       Manage account
                     </Link>
@@ -83,10 +107,21 @@ export const Header = () => {
                     <Link
                       to={"/profile?tab=change-pwd"}
                       onClick={closePopover}
-                      className="link-text"
+                      className="link-text w-full cursor-pointer"
                     >
                       Change password
                     </Link>
+                  ),
+                },
+                {
+                  title: (
+                    <Typography.Text
+                      type="text"
+                      onClick={handleLogOut}
+                      className="w-full cursor-pointer link-text"
+                    >
+                      Log out
+                    </Typography.Text>
                   ),
                 },
               ]}

@@ -54,8 +54,8 @@ export const TableManageAccounts = () => {
       dataIndex: "email",
     },
     {
-      title: "Phone number",
-      dataIndex: "phoneNumber",
+      title: "Role",
+      dataIndex: "role",
       width: 160,
     },
     {

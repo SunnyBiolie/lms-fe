@@ -50,6 +50,7 @@ export const ButtonReport = ({ lastReport, refetch }) => {
         onSuccess: (res) => {
           console.log(res.data.data);
           calculateMembership(res.data.data.Report);
+          refetch();
         },
         onError: (err) => {
           msgApi("error", err.response.data.message);
@@ -77,7 +78,6 @@ export const ButtonReport = ({ lastReport, refetch }) => {
 
   const handleViewAllReports = () => {
     if (mutationCalculateMembership.data) {
-      refetch();
       setSearchParams({ year: "2024", month: "8" }, { replace: true });
       closeModal();
     }

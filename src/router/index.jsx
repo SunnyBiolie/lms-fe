@@ -31,7 +31,7 @@ const router = createBrowserRouter(
           <Route path="admin" element={<AdminLayout />}>
             <Route path="book-management" element={<BookManagementPage />} />
             <Route path="user-management" element={<AccountManagementPage />} />
-            <Route path="statistic" element={<StatisticPage />} />
+            <Route path="statistics" element={<StatisticPage />} />
             <Route
               path="transaction-management"
               element={<TransactionManagementPage />}

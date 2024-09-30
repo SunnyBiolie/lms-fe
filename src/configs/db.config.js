@@ -45,7 +45,7 @@ export const Table_Book = {
   6: "imageLink",
   quantity: "quantity",
   8: "createdAt",
-  9: "Categories",
+  Categories: "Categories",
   isSpecial: "isSpecial",
   price: "price",
   Transactions: "Transactions",
@@ -115,6 +115,7 @@ export const Table_RpAccount = {
 export const Table_RpBook = {
   id: "id",
   reportId: "reportId",
+  bookId: "bookId",
   accountId: "accountId",
   borrowedCount: "borrowedCount",
 

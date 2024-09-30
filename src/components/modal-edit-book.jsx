@@ -25,7 +25,7 @@ export const ModalEditBook = ({
     if (data && isModalOpen) {
       form.setFieldsValue({
         ...data.bookData,
-        Categories: data.bookData[Table_Book[9]].map((item) => {
+        Categories: data.bookData[Table_Book.Categories].map((item) => {
           const id = listOfCategories.findIndex(
             (cat) => cat.label.toLowerCase() === item.name.toLowerCase()
           );
@@ -129,7 +129,7 @@ export const ModalEditBook = ({
               <Input />
             </Form.Item>
             <Form.Item
-              name={[Table_Book[9]]}
+              name={[Table_Book.Categories]}
               label="Categories"
               rules={[
                 {

@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Space } from "antd";
+import { Flex, Space } from "antd";
 import { checkToLogOut } from "@/lib/check-to-log-out";
 import { getAllReportsService } from "@/services/reports/get-all";
 import { AllReports } from "@/components/tabs-adm-statistic-page/all-reports";
@@ -10,7 +10,7 @@ import { StatisticCharts } from "@/components/tabs-adm-statistic-page/statistic-
 export default function StatisticPage() {
   const [searchParams] = useSearchParams();
 
-  const { isLoading, error, data, refetch } = useQuery({
+  const { isLoading, error, data, refetch, isRefetching } = useQuery({
     queryKey: ["all-reports"],
     queryFn: getAllReportsService,
   });
@@ -23,13 +23,19 @@ export default function StatisticPage() {
   const reports = data.data.data;
 
   return (
-    <Space direction="vertical" size="middle" className="h-full w-full">
+    <Flex
+      vertical
+      gap={12}
+      direction="vertical"
+      size="middle"
+      className="h-full w-full"
+    >
       <ReportAction response={data} refetch={refetch} />
       {searchParams.get("view") === "charts" ? (
-        <StatisticCharts reports={reports} />
+        <StatisticCharts />
       ) : (
         <AllReports reports={reports} />
       )}
-    </Space>
+    </Flex>
   );
 }

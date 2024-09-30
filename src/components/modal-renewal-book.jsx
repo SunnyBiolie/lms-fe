@@ -2,11 +2,16 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useMutation } from "@tanstack/react-query";
 import { DatePicker, Form, Modal } from "antd";
-import { rules } from "@/configs/admin.config";
 import { useAntDesign } from "@/hooks/use-ant-design";
 import { getRenewalsByTransactionIdService } from "@/services/renewals/get-by-transaction-id";
-import { Table_Transaction } from "@/configs/db.config";
+import { Table_Account, Table_Transaction } from "@/configs/db.config";
 import { createRenewalService } from "@/services/renewals/create";
+import { useCurrentAccount } from "@/hooks/use-current-account";
+import {
+  bookRenewDaysForMember,
+  bookRenewDaysForUser,
+  bookRenewDaysForVip,
+} from "@/configs/membership.config";
 
 export const ModalRenewalBook = ({
   isModalOpen,
@@ -15,6 +20,7 @@ export const ModalRenewalBook = ({
   loadListBorrowing,
 }) => {
   const { msgApi } = useAntDesign();
+  const { currentAccount } = useCurrentAccount();
   const [form] = Form.useForm();
   const mutationGetRenewalByTransactionId = useMutation({
     mutationFn: getRenewalsByTransactionIdService,
@@ -86,6 +92,15 @@ export const ModalRenewalBook = ({
       : borrowingRecord[Table_Transaction.dueDate]
   );
 
+  const maxDateOfBorrow =
+    currentAccount[Table_Account.role] === "USER"
+      ? bookRenewDaysForUser
+      : currentAccount[Table_Account.role] === "MEMBER"
+      ? bookRenewDaysForMember
+      : currentAccount[Table_Account.role] === "VIP"
+      ? bookRenewDaysForVip
+      : 3;
+
   return (
     <Modal
       destroyOnClose
@@ -113,12 +128,12 @@ export const ModalRenewalBook = ({
               required: true,
             },
           ]}
-          initialValue={dayjs(Date.now() + 86400000 * rules.maxDateOfBorrow)}
-          tooltip={`The limit starts from the last due date and extends to ${rules.maxDateOfBorrow} days from today`}
+          initialValue={dayjs(Date.now() + 86400000 * maxDateOfBorrow)}
+          tooltip={`The limit starts from the last due date and extends to ${maxDateOfBorrow} days from today`}
         >
           <DatePicker
             minDate={minDate}
-            maxDate={dayjs(Date.now() + 86400000 * rules.maxDateOfBorrow)}
+            maxDate={dayjs(Date.now() + 86400000 * maxDateOfBorrow)}
           />
         </Form.Item>
       </Form>

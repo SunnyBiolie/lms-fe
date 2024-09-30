@@ -97,12 +97,12 @@ body {
 }
 
 .link-text {
-  color: #e1e1e1;
+  color: #111;
   transition: all 0.2s linear;
 }
 
 .link-text:hover {
-  color: #fff;
+  color: #000;
   text-decoration: underline;
 }
 

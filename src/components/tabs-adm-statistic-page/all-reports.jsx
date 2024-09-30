@@ -17,7 +17,12 @@ import { SelectDate } from "./all-report/select-date";
 
 // eslint-disable-next-line no-unused-vars
 const useStyles = createStyles(({ _, css }) => ({
-  container: css``,
+  container: css`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+  `,
 }));
 
 export const AllReports = ({ reports }) => {
@@ -56,12 +61,12 @@ export const AllReports = ({ reports }) => {
   };
 
   return (
-    <Flex gap={8} className={cx(styles.container)}>
-      <div className="section w-full">
+    <Flex gap={8}>
+      <div className={cx(styles.container, "section w-full")}>
         {mutationDetailReport.isPending ? (
           <Spin />
         ) : reportDetail ? (
-          <>
+          <Flex vertical className="w-full">
             <Typography.Paragraph>
               Working on reports in{" "}
               {Intl.DateTimeFormat("en", { month: "long" }).format(
@@ -152,7 +157,7 @@ export const AllReports = ({ reports }) => {
                 },
               ]}
             />
-          </>
+          </Flex>
         ) : (
           "Select time to display data"
         )}

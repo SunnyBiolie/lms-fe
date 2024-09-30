@@ -1,4 +1,4 @@
-import { Flex, Tabs } from "antd";
+import { Col, Flex, Row, Tabs } from "antd";
 import { FormChangeProfile } from "@/components/tabs-profile-page/form-change-profile";
 import { FormChangePassword } from "@/components/tabs-profile-page/form-change-pwd";
 import { BtnDeleteAccount } from "@/components/tabs-profile-page/btn-delete-account";
@@ -23,17 +23,23 @@ export default function ProfilePage() {
       defaultActiveKey={searchParams.get("tab")}
       onTabClick={handleTabClick}
       activeKey={searchParams.get("tab") || "profile"}
+      className="section"
       items={[
         {
           label: "Profile",
           key: "profile",
           children: (
-            <Flex justify="center">
-              <FormChangeProfile
-                account={currentAccount}
-                onAfterSaveChange={handleAfterSaveChange}
-              />
-            </Flex>
+            <Row gutter={28}>
+              <Col span={12}>
+                
+              </Col>
+              <Col span={12}>
+                <FormChangeProfile
+                  account={currentAccount}
+                  onAfterSaveChange={handleAfterSaveChange}
+                />
+              </Col>
+            </Row>
           ),
         },
         {

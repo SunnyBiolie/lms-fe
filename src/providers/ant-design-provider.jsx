@@ -36,12 +36,12 @@ export default function AntDesignProvider({ children }) {
             itemBg: "transparent",
             // darkItemSelectedBg: "#fb3453",
             // darkItemHoverBg: "#3b3b3b",
-            colorBorder: "transparent",
+            // colorBorder: "transparent",
           },
           Layout: {
             siderBg: "transparent",
             triggerBg: "transparent",
-            triggerColor: "#fb3453"
+            triggerColor: "#111",
           },
           Steps: {
             colorText: "rgba(255, 255, 255, 0.88)",

@@ -30,7 +30,7 @@ export const ReportAction = ({ response, refetch }) => {
         <Button onClick={changeView}>
           {searchParams.get("view") === "charts"
             ? "All reports"
-            : "View charts"}
+            : "View statistics"}
         </Button>
         <ButtonReport lastReport={lastReport} refetch={refetch} />
       </Space>

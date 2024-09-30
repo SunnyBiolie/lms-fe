@@ -56,7 +56,7 @@ export const TableBooks = ({
     },
     {
       title: "Categories",
-      dataIndex: Table_Book[9],
+      dataIndex: Table_Book.Categories,
       width: 250,
       render: (categories) => {
         const formatedCategories = categories.map((c) => c.name);
