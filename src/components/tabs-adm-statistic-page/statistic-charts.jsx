@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { getStatisticByDateService } from "@/services/reports/get-by-date";
 import {
@@ -21,6 +21,10 @@ import {
   Table_RpBook,
 } from "@/configs/db.config";
 import { checkToLogOut } from "@/lib/check-to-log-out";
+import { MyTable } from "../my/my-table";
+import dayjs from "dayjs";
+
+const { Paragraph } = Typography;
 
 export function StatisticCharts() {
   const { msgApi } = useAntDesign();
@@ -31,9 +35,9 @@ export function StatisticCharts() {
 
   const [form] = Form.useForm();
   const [time, setTime] = useState("year");
-  const [statistic, setStatistic] = useState();
   const [accountsStatistic, setAccountsStatistic] = useState();
   const [booksStatistic, setBooksStatistic] = useState();
+  const [tableData, setTableData] = useState();
 
   const handleTypeChange = (value) => {
     setTime(value);
@@ -61,7 +65,6 @@ export function StatisticCharts() {
       {
         onSuccess: (res) => {
           const resData = res.data.data;
-          setStatistic(resData);
           const statAccounts = calRpAcc(resData);
           statAccounts.sort(
             (a, b) =>
@@ -206,6 +209,36 @@ export function StatisticCharts() {
     );
   };
 
+  useEffect(() => {
+    if (!accountsStatistic || accountsStatistic.length === 0 || !booksStatistic)
+      return;
+
+    setTableData([
+      {
+        label: "Account",
+        name: accountsStatistic[0][Table_RpAccount.Account][
+          Table_Account.fullName
+        ],
+        times: accountsStatistic[0][Table_RpAccount.borrowCount],
+      },
+      {
+        label: "Book",
+        name: booksStatistic.title.name,
+        times: booksStatistic.title.value,
+      },
+      {
+        label: "Author",
+        name: booksStatistic.author.name,
+        times: booksStatistic.author.value,
+      },
+      {
+        label: "Category",
+        name: booksStatistic.category.name,
+        times: booksStatistic.category.value,
+      },
+    ]);
+  }, [accountsStatistic, booksStatistic]);
+
   return (
     <>
       <Row className="h-full w-full">
@@ -252,7 +285,21 @@ export function StatisticCharts() {
               </Col>
               <Col span={24}>
                 <Form.Item name="time">
-                  <DatePicker picker={time} />
+                  <DatePicker
+                    picker={time}
+                    cellRender={(current, { originNode, type }) => {
+                      if (type === "quarter")
+                        return (
+                          <div style={{ margin: "8px 0" }}>
+                            <p style={{ margin: 0 }}>Quarter</p>
+                            <p style={{ margin: 0 }}>
+                              {dayjs(current).format("Q")}
+                            </p>
+                          </div>
+                        );
+                      else return originNode;
+                    }}
+                  />
                 </Form.Item>
               </Col>
             </Row>
@@ -271,42 +318,28 @@ export function StatisticCharts() {
             <Spin />
           ) : (
             <Flex vertical className="section">
-              {accountsStatistic && accountsStatistic.length > 0 && (
-                <Typography.Paragraph>
-                  <Typography.Text strong>
-                    {
-                      accountsStatistic[0][Table_RpAccount.Account][
-                        Table_Account.fullName
-                      ]
-                    }
-                  </Typography.Text>{" "}
-                  borrowed the most books:{" "}
-                  {accountsStatistic[0][Table_RpAccount.borrowCount]}
-                </Typography.Paragraph>
-              )}
-              {booksStatistic ? (
+              {accountsStatistic &&
+              accountsStatistic.length > 0 &&
+              booksStatistic ? (
                 <>
-                  <Typography.Paragraph>
-                    Most borrowed book is{" "}
-                    <Typography.Text strong>
-                      {booksStatistic.title.name}
-                    </Typography.Text>
-                    : {booksStatistic.title.value} times
-                  </Typography.Paragraph>
-                  <Typography.Paragraph>
-                    <Typography.Text strong>
-                      {booksStatistic.author.name}
-                    </Typography.Text>{" "}
-                    is the most popular author: {booksStatistic.author.value}{" "}
-                    times
-                  </Typography.Paragraph>
-                  <Typography.Paragraph>
-                    The most popular category is{" "}
-                    <Typography.Text strong>
-                      {booksStatistic.category.name}
-                    </Typography.Text>
-                    : {booksStatistic.category.value} times
-                  </Typography.Paragraph>
+                  <Paragraph strong>Top of month:</Paragraph>
+                  <MyTable
+                    data={tableData}
+                    items={[
+                      {
+                        title: "Label",
+                        dataIndex: "label",
+                      },
+                      {
+                        title: "Name",
+                        dataIndex: "name",
+                      },
+                      {
+                        title: "Times",
+                        dataIndex: "times",
+                      },
+                    ]}
+                  />
                 </>
               ) : (
                 <Empty />

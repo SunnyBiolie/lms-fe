@@ -1,7 +1,9 @@
 import {
   BookOutlined,
   FundOutlined,
+  HistoryOutlined,
   ReconciliationOutlined,
+  TableOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 
@@ -18,10 +20,12 @@ export const routeUser = {
   dashboard: {
     pathname: "/",
     label: "Dashboard",
+    Icon: TableOutlined,
   },
   history: {
     pathname: "/history",
     label: "History",
+    Icon: HistoryOutlined,
   },
 };
 

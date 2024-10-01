@@ -19,6 +19,7 @@ const adminItem = Object.values(routeAdmin).map((route) => ({
 const userItem = Object.values(routeUser).map((route) => ({
   label: <Link to={route.pathname}>{route.label}</Link>,
   key: route.pathname,
+  icon: <route.Icon />,
 }));
 
 export const NavigationBar = () => {
@@ -29,7 +30,6 @@ export const NavigationBar = () => {
 
   return (
     <Flex vertical className="h-full" style={{ padding: "12px 12px 24px" }}>
-      <div style={{ height: "64px", lineHeight: "64px", flexShrink: 0 }}></div>
       <Flex vertical justify="space-between" className="h-full">
         <Menu
           selectedKeys={[location.pathname]}

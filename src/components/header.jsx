@@ -1,37 +1,29 @@
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
+import { Avatar, Layout, List, Popover, Space, Tag, Typography } from "antd";
+import { createStyles } from "antd-style";
+import { UserOutlined } from "@ant-design/icons";
 import { Table_Account } from "@/configs/db.config";
 import { routeAuth } from "@/configs/route.config";
 import { useCurrentAccount } from "@/hooks/use-current-account";
 import { logOutService } from "@/services/auth/log-out";
-import { UserOutlined } from "@ant-design/icons";
-import { useMutation } from "@tanstack/react-query";
-import {
-  Avatar,
-  Layout,
-  List,
-  Popover,
-  Space,
-  Tag,
-  theme,
-  Typography,
-} from "antd";
-import { createStyles } from "antd-style";
-import { useState } from "react";
-import { Link } from "react-router-dom";
 
 // eslint-disable-next-line no-unused-vars
 const useStyles = createStyles(({ _, css }) => ({
   header: css`
-    background-color: transparent;
-    // border-bottom: 1px solid #636363;
+    border-bottom: 1px solid #e1e1e1;
     padding: 0 16px;
-    text-align: center;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 1000;
-    background-color: #000;
+    background-color: rgba(245, 245, 245, 0.5);
+    backdrop-filter: blur(8px);
   `,
   avatar: css`
     background-color: #f1f1f1;
@@ -42,9 +34,10 @@ const useStyles = createStyles(({ _, css }) => ({
   `,
 }));
 
+const { Text } = Typography;
+
 export const Header = () => {
   const { styles } = useStyles();
-  const { token } = theme.useToken();
 
   const mutationLogOut = useMutation({
     mutationFn: logOutService,
@@ -71,15 +64,14 @@ export const Header = () => {
   };
 
   return (
-    <Layout.Header
-      className={styles.header}
-      style={{ backgroundColor: token.colorBgLayout }}
-    >
+    <Layout.Header className={styles.header}>
       <Space size="middle">
-        <Typography.Text strong>
-          Hello, {currentAccount[Table_Account.fullName]}
-        </Typography.Text>
-        <Tag color="orange">{currentAccount[Table_Account.role]}</Tag>
+        <Space size="small">
+          <Text>
+            Hello, <Text strong>{currentAccount[Table_Account.fullName]}</Text>
+          </Text>
+          <Tag color="cyan">{currentAccount[Table_Account.role]}</Tag>
+        </Space>
         <Popover
           destroyTooltipOnHide
           trigger="click"
@@ -115,13 +107,13 @@ export const Header = () => {
                 },
                 {
                   title: (
-                    <Typography.Text
+                    <Text
                       type="text"
                       onClick={handleLogOut}
                       className="w-full cursor-pointer link-text"
                     >
                       Log out
-                    </Typography.Text>
+                    </Text>
                   ),
                 },
               ]}

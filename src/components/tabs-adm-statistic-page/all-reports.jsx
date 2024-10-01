@@ -7,13 +7,13 @@ import {
   Table_Book,
   Table_MembershipLogs,
   Table_Report,
-  Table_RpAccount,
   Table_RpBook,
 } from "@/configs/db.config";
 import { detailReportService } from "@/services/reports/detail";
 import { useAntDesign } from "@/hooks/use-ant-design";
 import { checkToLogOut } from "@/lib/check-to-log-out";
 import { SelectDate } from "./all-report/select-date";
+import { TabReportAccounts } from "./all-report/tab-rp-accounts";
 
 // eslint-disable-next-line no-unused-vars
 const useStyles = createStyles(({ _, css }) => ({
@@ -24,6 +24,8 @@ const useStyles = createStyles(({ _, css }) => ({
     min-height: 200px;
   `,
 }));
+
+const { Paragraph } = Typography;
 
 export const AllReports = ({ reports }) => {
   const { styles, cx } = useStyles();
@@ -61,108 +63,88 @@ export const AllReports = ({ reports }) => {
   };
 
   return (
-    <Flex gap={8}>
-      <div className={cx(styles.container, "section w-full")}>
-        {mutationDetailReport.isPending ? (
-          <Spin />
-        ) : reportDetail ? (
-          <Flex vertical className="w-full">
-            <Typography.Paragraph>
-              Working on reports in{" "}
-              {Intl.DateTimeFormat("en", { month: "long" }).format(
-                new Date(
-                  reportDetail.report[Table_Report.year],
-                  reportDetail.report[Table_Report.month] - 1
-                )
-              )}
-              , {reportDetail.report[Table_Report.year]}
-            </Typography.Paragraph>
-            <Tabs
-              items={[
-                {
-                  key: "accounts",
-                  label: "Accounts",
-                  children: (
-                    <Table
-                      size="small"
-                      dataSource={reportDetail[Table_Report.ReportAccounts]}
-                      columns={[
-                        {
-                          title: "Full name",
-                          dataIndex: Table_RpAccount.Account,
-                          render: (value) => {
-                            return value[Table_Account.fullName];
+    <Flex vertical>
+      <Paragraph>Current view: All reports</Paragraph>
+      <Flex gap={8}>
+        <div className={cx(styles.container, "section w-full")}>
+          {mutationDetailReport.isPending ? (
+            <Spin />
+          ) : reportDetail ? (
+            <Flex vertical className="w-full">
+              <Paragraph>
+                Working on reports in{" "}
+                {Intl.DateTimeFormat("en", { month: "long" }).format(
+                  new Date(
+                    reportDetail.report[Table_Report.year],
+                    reportDetail.report[Table_Report.month] - 1
+                  )
+                )}
+                , {reportDetail.report[Table_Report.year]}
+              </Paragraph>
+              <Tabs
+                items={[
+                  {
+                    key: "accounts",
+                    label: "Accounts",
+                    children: <TabReportAccounts reportDetail={reportDetail} />,
+                  },
+                  {
+                    key: "books",
+                    label: "Books",
+                    children: (
+                      <Table
+                        size="small"
+                        dataSource={reportDetail[Table_Report.ReportBooks]}
+                        columns={[
+                          {
+                            title: "Title",
+                            dataIndex: Table_RpBook.Book,
+                            render: (value) => {
+                              return value[Table_Book.title];
+                            },
                           },
-                        },
-                        {
-                          title: "Borrow count",
-                          dataIndex: Table_RpAccount.borrowCount,
-                        },
-                        {
-                          title: "Overdue count",
-                          dataIndex: Table_RpAccount.overdueCount,
-                        },
-                      ]}
-                      rowKey={(item) => item.id}
-                    ></Table>
-                  ),
-                },
-                {
-                  key: "books",
-                  label: "Books",
-                  children: (
-                    <Table
-                      size="small"
-                      dataSource={reportDetail[Table_Report.ReportBooks]}
-                      columns={[
-                        {
-                          title: "Title",
-                          dataIndex: Table_RpBook.Book,
-                          render: (value) => {
-                            return value[Table_Book.title];
+                          {
+                            title: "Borrow count",
+                            dataIndex: Table_RpBook.borrowedCount,
                           },
-                        },
-                        {
-                          title: "Borrow count",
-                          dataIndex: Table_RpBook.borrowedCount,
-                        },
-                      ]}
-                      rowKey={(item) => item.id}
-                    ></Table>
-                  ),
-                },
-                {
-                  key: "membership",
-                  label: "Membership",
-                  children: (
-                    <Table
-                      size="small"
-                      dataSource={reportDetail[Table_Report.MembershipLogs]}
-                      columns={[
-                        {
-                          title: "Full name",
-                          dataIndex: Table_MembershipLogs.Account,
-                          render: (value) => {
-                            return value[Table_Account.fullName];
+                        ]}
+                        rowKey={(item) => item.id}
+                      ></Table>
+                    ),
+                  },
+                  {
+                    key: "membership",
+                    label: "Membership",
+                    children: (
+                      <Table
+                        size="small"
+                        dataSource={reportDetail[Table_Report.MembershipLogs]}
+                        columns={[
+                          {
+                            title: "Full name",
+                            dataIndex: Table_MembershipLogs.Account,
+                            render: (value) => {
+                              return value[Table_Account.fullName];
+                            },
                           },
-                        },
-                        {
-                          title: "Upgraded to",
-                          dataIndex: Table_MembershipLogs.to,
-                        },
-                      ]}
-                      rowKey={(item) => item.id}
-                    ></Table>
-                  ),
-                },
-              ]}
-            />
-          </Flex>
-        ) : (
-          "Select time to display data"
-        )}
-      </div>
-      <SelectDate reports={reports} onSelect={viewDetailOfReport} />
+                          {
+                            title: "Upgraded to",
+                            dataIndex: Table_MembershipLogs.to,
+                          },
+                        ]}
+                        rowKey={(item) => item.id}
+                      ></Table>
+                    ),
+                  },
+                ]}
+              />
+            </Flex>
+          ) : (
+            "Select time to display data"
+          )}
+        </div>
+        <SelectDate reports={reports} onSelect={viewDetailOfReport} />
+      </Flex>
     </Flex>
   );
 };

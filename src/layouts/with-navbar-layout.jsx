@@ -1,29 +1,36 @@
+import { useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Layout } from "antd";
-import { useCurrentAccount } from "@/hooks/use-current-account";
-import { NavigationBar } from "@/components/navigation-bar";
-import { useRouteProtected } from "@/hooks/use-route-protected";
 import { createStyles } from "antd-style";
-import BooksProvider from "@/providers/books-provider";
-import { Header } from "@/components/header";
 import TransactionsProvider from "@/providers/transactions-provider";
-import { DoubleLeftOutlined } from "@ant-design/icons";
+import BooksProvider from "@/providers/books-provider";
+import { useCurrentAccount } from "@/hooks/use-current-account";
+import { useRouteProtected } from "@/hooks/use-route-protected";
+import { NavigationBar } from "@/components/navigation-bar";
+import { Header } from "@/components/header";
 
 // eslint-disable-next-line no-unused-vars
 const useStyles = createStyles(({ _, css }) => ({
   layout: css`
-    width: calc(100%);
+    width: 100%;
+    min-height: 100%;
+    overflow: auto;
+  `,
+  body: css`
+    margin-top: var(--header-height);
   `,
   content: css`
-    min-height: 360px;
     padding: 16px;
     margin: 12px;
     margin-bottom: 0px;
     background-color: #eee;
     border-radius: 8px 8px 0 0;
+    overflow: visible;
   `,
-  c: css``,
 }));
+
+const { Sider, Content } = Layout;
 
 export default function WithNavBarLayout() {
   const { styles } = useStyles();
@@ -31,29 +38,52 @@ export default function WithNavBarLayout() {
   const { currentAccount } = useCurrentAccount();
   const { inProtectedRoutes } = useRouteProtected();
 
+  const [collapsed, setCollapsed] = useState(false);
+
   if (!currentAccount) return;
 
   if (inProtectedRoutes && currentAccount.role !== "ADMIN") {
     return <Navigate to={"/"} replace />;
   }
 
+  const handleSiderCollapse = (collapsed) => {
+    if (collapsed) setCollapsed(true);
+    else setCollapsed(false);
+  };
+
   return (
     <BooksProvider>
       <TransactionsProvider>
         <Layout className={styles.layout}>
-          <Layout.Sider
-            width={200}
-            collapsible
-            trigger={<DoubleLeftOutlined />}
-            style={{ height: "100vh", position: "sticky", left: 0, top: 0 }}
-          >
-            <NavigationBar />
-          </Layout.Sider>
-          <Layout>
-            <Header />
-            <Layout.Content className={styles.content}>
+          <Header />
+          <Layout className={styles.body}>
+            <Sider
+              breakpoint="md"
+              collapsed={collapsed}
+              collapsible
+              trigger={
+                collapsed ? (
+                  <MenuUnfoldOutlined style={{ fontSize: 16 }} />
+                ) : (
+                  <MenuFoldOutlined style={{ fontSize: 16 }} />
+                )
+              }
+              style={{
+                position: "fixed",
+              }}
+              onCollapse={handleSiderCollapse}
+            >
+              <NavigationBar />
+            </Sider>
+            <Content
+              className={styles.content}
+              style={{
+                marginLeft: collapsed ? "80px" : "200px",
+                transition: ".2s all linear",
+              }}
+            >
               <Outlet />
-            </Layout.Content>
+            </Content>
           </Layout>
         </Layout>
       </TransactionsProvider>

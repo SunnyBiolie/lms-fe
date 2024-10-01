@@ -7,8 +7,8 @@ import { Table_Report } from "@/configs/db.config";
 const useStyles = createStyles(({ _, css }) => ({
   navigator: css`
     width: 20%;
-    min-width: 160px;
-    max-width: 210px;
+    min-width: 180px;
+    max-width: 220px;
   `,
 }));
 
