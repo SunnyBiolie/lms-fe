@@ -15,18 +15,17 @@ const useStyles = createStyles(({ _, css }) => ({
   layout: css`
     width: 100%;
     min-height: 100%;
-    overflow: auto;
   `,
   body: css`
     margin-top: var(--header-height);
   `,
   content: css`
     padding: 16px;
-    margin: 12px;
-    margin-bottom: 0px;
+    margin: 16px;
+    margin-bottom: 20px;
     background-color: #eee;
-    border-radius: 8px 8px 0 0;
-    overflow: visible;
+    // border-radius: 8px 8px 0 0;
+    border-radius: 8px;
   `,
 }));
 
@@ -63,9 +62,13 @@ export default function WithNavBarLayout() {
               collapsible
               trigger={
                 collapsed ? (
-                  <MenuUnfoldOutlined style={{ fontSize: 16 }} />
+                  <MenuUnfoldOutlined
+                    style={{ fontSize: 16, color: "#72BF78" }}
+                  />
                 ) : (
-                  <MenuFoldOutlined style={{ fontSize: 16 }} />
+                  <MenuFoldOutlined
+                    style={{ fontSize: 16, color: "#72BF78" }}
+                  />
                 )
               }
               style={{

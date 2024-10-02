@@ -73,6 +73,7 @@ export const apiRenewalsRoute = {
 export const apiHistoriesRoute = {
   getByAccountId: `${apiRoute.histories}/get-by-account-id`,
   getByDateRange: `${apiRoute.histories}/get-by-date-range`,
+  getOverdue: `${apiRoute.histories}/get-overdue`,
 };
 
 export const apiReportsRoute = {

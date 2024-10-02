@@ -241,6 +241,9 @@ export function StatisticCharts() {
 
   return (
     <>
+      <Paragraph strong underline style={{ padding: "8px 16px" }}>
+        Current view: View statistics
+      </Paragraph>
       <Row className="h-full w-full">
         <Col
           span={24}

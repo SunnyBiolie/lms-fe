@@ -89,6 +89,12 @@ export const Table_Renewal = {
   Transaction: "Transaction",
 };
 
+export const Table_History = {
+  bookTitle: "bookTitle",
+  dueDates: "dueDates",
+  returnedAt: "returnedAt",
+};
+
 export const Table_Report = {
   id: "id",
   month: "month",

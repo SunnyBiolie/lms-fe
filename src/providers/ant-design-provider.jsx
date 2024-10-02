@@ -28,7 +28,7 @@ export default function AntDesignProvider({ children }) {
       theme={{
         // algorithm: theme.defaultAlgorithm,
         token: {
-          colorPrimary: "#fb3453",
+          colorPrimary: "#72BF78",
           colorBgLayout: "#f5f5f5",
         },
         components: {
@@ -46,6 +46,10 @@ export default function AntDesignProvider({ children }) {
           Steps: {
             colorText: "rgba(255, 255, 255, 0.88)",
             colorTextDescription: "rgba(255, 255, 255, 0.45)",
+          },
+          Table: {
+            headerBg: "#72BF78",
+            headerColor: "#fff",
           },
         },
       }}

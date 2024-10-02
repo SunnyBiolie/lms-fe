@@ -4,6 +4,7 @@ import { getBooksWithConditionsService } from "@/services/books/get-w-conditions
 import { table } from "@/configs/admin.config";
 import { getCategoriesWithConditionsService } from "@/services/categories/get-w-conditions";
 import { useAntDesign } from "@/hooks/use-ant-design";
+import { checkToLogOut } from "@/lib/check-to-log-out";
 
 export const BooksContext = createContext();
 
@@ -62,6 +63,9 @@ export default function BooksProvider({ children }) {
                 : paginationParams.current,
             total: axiosResponse.data.total,
           });
+        },
+        onError: (err) => {
+          checkToLogOut(err);
         },
         onSettled: () => {
           setIsLoading(false);

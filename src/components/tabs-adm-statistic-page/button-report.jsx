@@ -48,7 +48,6 @@ export const ButtonReport = ({ lastReport, refetch }) => {
       },
       {
         onSuccess: (res) => {
-          console.log(res.data.data);
           calculateMembership(res.data.data.Report);
           refetch();
         },
@@ -66,8 +65,8 @@ export const ButtonReport = ({ lastReport, refetch }) => {
         report,
       },
       {
-        onSuccess: (res) => {
-          console.log(res.data.data);
+        onSuccess: () => {
+          msgApi("success", "All progress is complete");
         },
         onError: (err) => {
           msgApi("error", err.response.data.message);

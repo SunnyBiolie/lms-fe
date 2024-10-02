@@ -3,12 +3,19 @@ import { createStyles } from "antd-style";
 import { Select, Space, Typography } from "antd";
 import { Table_Report } from "@/configs/db.config";
 
+const { Text } = Typography;
+
 // eslint-disable-next-line no-unused-vars
 const useStyles = createStyles(({ _, css }) => ({
   navigator: css`
     width: 20%;
     min-width: 180px;
     max-width: 220px;
+    position: sticky;
+    top: calc(var(--header-height) + 12px);
+    left: 100px;
+    bottom: 0;
+    height: fit-content;
   `,
 }));
 
@@ -50,7 +57,7 @@ export const SelectDate = ({ reports, onSelect }) => {
       size="small"
       className={cx(styles.navigator, "section")}
     >
-      <Typography.Text strong>Year</Typography.Text>
+      <Text strong>Year</Text>
       <Select
         size="small"
         placeholder="Year"
@@ -58,7 +65,7 @@ export const SelectDate = ({ reports, onSelect }) => {
         className="w-full"
         onChange={handleChangeYear}
       />
-      <Typography.Text strong>Month</Typography.Text>
+      <Text strong>Month</Text>
       <Select
         value={selectedMonth}
         size="small"

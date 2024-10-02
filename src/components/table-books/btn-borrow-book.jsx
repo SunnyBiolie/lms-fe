@@ -29,18 +29,18 @@ export const BtnBorrowBook = ({ book }) => {
     const available =
       book[Table_Book.quantity] - book._count[Table_Book.Transactions];
     let result = true;
-    if (available <= bookNumberPriorForMember) {
-      switch (currentAccount[Table_Account.role]) {
-        case "USER":
-          result = false;
-          break;
-      }
-    } else if (available <= bookNumberPriorForVip) {
+    if (available <= bookNumberPriorForVip) {
       switch (currentAccount[Table_Account.role]) {
         case "USER":
           result = false;
           break;
         case "MEMBER":
+          result = false;
+          break;
+      }
+    } else if (available <= bookNumberPriorForMember) {
+      switch (currentAccount[Table_Account.role]) {
+        case "USER":
           result = false;
           break;
       }

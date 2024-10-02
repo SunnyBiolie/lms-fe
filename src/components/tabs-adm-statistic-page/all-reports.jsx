@@ -52,7 +52,6 @@ export const AllReports = ({ reports }) => {
             [Table_Report.MembershipLogs]:
               res.data.data[Table_Report.MembershipLogs],
           });
-          console.log(res.data.data);
         },
         onError: (err) => {
           msgApi("error", err.response.data.message);
@@ -64,14 +63,16 @@ export const AllReports = ({ reports }) => {
 
   return (
     <Flex vertical>
-      <Paragraph>Current view: All reports</Paragraph>
+      <Paragraph strong underline style={{ padding: "8px 16px" }}>
+        Current view: All reports
+      </Paragraph>
       <Flex gap={8}>
         <div className={cx(styles.container, "section w-full")}>
           {mutationDetailReport.isPending ? (
             <Spin />
           ) : reportDetail ? (
             <Flex vertical className="w-full">
-              <Paragraph>
+              <Paragraph strong>
                 Working on reports in{" "}
                 {Intl.DateTimeFormat("en", { month: "long" }).format(
                   new Date(
@@ -95,6 +96,11 @@ export const AllReports = ({ reports }) => {
                       <Table
                         size="small"
                         dataSource={reportDetail[Table_Report.ReportBooks]}
+                        pagination={{
+                          position: ["bottomCenter"],
+                          hideOnSinglePage: true,
+                          pageSize: 5,
+                        }}
                         columns={[
                           {
                             title: "Title",
@@ -119,6 +125,11 @@ export const AllReports = ({ reports }) => {
                       <Table
                         size="small"
                         dataSource={reportDetail[Table_Report.MembershipLogs]}
+                        pagination={{
+                          position: ["bottomCenter"],
+                          hideOnSinglePage: true,
+                          pageSize: 5,
+                        }}
                         columns={[
                           {
                             title: "Full name",

@@ -65,7 +65,7 @@ export const TableBooks = ({
           <>
             {formatedCategories.map((cat, index) => {
               return (
-                <Tag key={index} className="category-tag">
+                <Tag key={index} className="category-tag" color="#A0D683">
                   {cat}
                 </Tag>
               );
@@ -77,7 +77,7 @@ export const TableBooks = ({
     {
       title: (
         <Flex align="center" justify="center">
-          Is Special
+          Is special
         </Flex>
       ),
       dataIndex: Table_Book.isSpecial,
@@ -110,7 +110,9 @@ export const TableBooks = ({
       render: (publisher, record) => {
         if (currentAccount.role === "ADMIN") return publisher;
         else
-          return record[Table_Book.quantity] - record._count[Table_Book.Transactions];
+          return (
+            record[Table_Book.quantity] - record._count[Table_Book.Transactions]
+          );
       },
     },
     {
@@ -177,6 +179,7 @@ export const TableBooks = ({
   return (
     <>
       <Table
+        // bordered
         loading={isLoading}
         dataSource={listOfBooks}
         columns={columns}
