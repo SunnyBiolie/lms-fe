@@ -1,60 +1,84 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useMutation } from "@tanstack/react-query";
-import { Button, DatePicker, Flex, Form, Input } from "antd";
-import { createStyles } from "antd-style";
+import {
+  Button,
+  DatePicker,
+  Descriptions,
+  Flex,
+  Form,
+  Input,
+  Space,
+  Typography,
+} from "antd";
 import { Table_Account } from "@/configs/db.config";
 import {
+  maxFullNameLength,
+  minFullNameLength,
   Rule_email,
   Rule_phoneNumber,
   Rule_Required,
+  ruleMaxLength,
+  ruleMinLength,
+  ruleNotBlank,
+  ruleRequired,
 } from "@/configs/rules.config";
 import { editAccountInforService } from "@/services/accounts/edit-infor";
 import { useAntDesign } from "@/hooks/use-ant-design";
+import { useCurrentAccount } from "@/hooks/use-current-account";
 
-// eslint-disable-next-line no-unused-vars
-const useStyles = createStyles(({ _, css }) => ({
-  form: css`
-    width: 100%;
-    max-width: 500px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  `,
-}));
+const { Text } = Typography;
 
-export const FormChangeProfile = ({ account, onAfterSaveChange }) => {
-  const { styles } = useStyles();
+export const FormChangeProfileInfo = ({ onAfterSaveChange }) => {
   const { msgApi } = useAntDesign();
+  const { currentAccount } = useCurrentAccount();
   const [form] = Form.useForm();
   const mutationEditAccountInfor = useMutation({
     mutationFn: editAccountInforService,
   });
 
   const [editing, setEditing] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
+  const [disabled, setDisabled] = useState(true);
 
-  useEffect(() => {
-    form.setFieldsValue({
-      ...account,
-      [Table_Account.birthDate]: dayjs(account[Table_Account.birthDate]),
-    });
-  }, [account, form]);
-
-  const handleStartEdit = () => {
+  const startEdit = () => {
     setEditing(true);
   };
 
-  const handleStopEdit = () => {
+  const stopEdit = () => {
     setEditing(false);
   };
 
+  const handleValuesChange = (changedValues, values) => {
+    for (const key of Object.keys(values)) {
+      if (key === Table_Account.birthDate) {
+        if (
+          dayjs(form.getFieldValue(key)).format() !==
+          dayjs(currentAccount[key]).format()
+        ) {
+          return setDisabled(false);
+        }
+      } else {
+        if (form.getFieldValue(key) !== currentAccount[key]) {
+          return setDisabled(false);
+        }
+      }
+    }
+    return setDisabled(true);
+  };
+
+  const submitForm = () => {
+    // form.submit();
+    console.log(
+      dayjs(form.getFieldValue("birthDate")).format() ===
+        dayjs(currentAccount.birthDate).format()
+    );
+  };
+
   const handleFormSubmit = (values) => {
-    setIsSaving(true);
     mutationEditAccountInfor.mutate(
       {
         ...values,
-        id: account.id,
+        id: currentAccount.id,
       },
       {
         onSuccess: (axiosResponse) => {
@@ -65,68 +89,184 @@ export const FormChangeProfile = ({ account, onAfterSaveChange }) => {
         onError: (axiosError) => {
           msgApi("success", axiosError.response.data.message);
         },
-        onSettled: () => setIsSaving(false),
       }
     );
   };
 
   return (
-    <Form
-      disabled={!editing || isSaving}
-      form={form}
-      name="change-profile"
-      layout="vertical"
-      variant="filled"
-      className={styles.form}
-      onFinish={handleFormSubmit}
-    >
-      <div className={""}>
-        <Form.Item
-          name={Table_Account.fullName}
-          label="Fullname"
-          rules={Rule_Required}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name={Table_Account.address}
-          label="Address"
-          rules={Rule_Required}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name={Table_Account.phoneNumber}
-          label="Phone number"
-          rules={Rule_phoneNumber}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item name={Table_Account.email} label="Email" rules={Rule_email}>
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name={Table_Account.birthDate}
-          label="Date of birth"
-          rules={Rule_Required}
-        >
-          <DatePicker maxDate={dayjs(Date.now())} format={"DD/MM/YYYY"} />
-        </Form.Item>
-      </div>
-      <Flex justify="center" align="center" gap={8}>
-        {editing ? (
-          <>
-            <Button onClick={handleStopEdit}>Cancel</Button>
-            <Button type="primary" loading={isSaving} htmlType="submit">
-              Save
-            </Button>
-          </>
-        ) : (
-          <Button disabled={editing} type="primary" onClick={handleStartEdit}>
-            Edit
+    <Flex vertical gap={28} justify="center" align="flex-end">
+      <Form
+        form={form}
+        layout="inline"
+        variant="borderless"
+        size="small"
+        initialValues={{
+          ...currentAccount,
+          [Table_Account.birthDate]: dayjs(
+            currentAccount[Table_Account.birthDate]
+          ),
+        }}
+        className="w-full"
+        disabled={!editing || mutationEditAccountInfor.isPending}
+        onFinish={handleFormSubmit}
+        onValuesChange={handleValuesChange}
+      >
+        <Descriptions
+          title="Public Profile"
+          size="middle"
+          bordered
+          style={{ flexGrow: 1 }}
+          column={{ xs: 1, sm: 1, md: 2, lg: 2, xl: 4, xxl: 4 }}
+          items={[
+            {
+              key: Table_Account.userName,
+              label: <Text className="no-wrap">User name</Text>,
+              children: (
+                <Text
+                  style={{
+                    padding: "0 7px",
+                    textWrap: "nowrap",
+                    cursor: "default",
+                  }}
+                  disabled
+                >
+                  {currentAccount[Table_Account.userName]}
+                </Text>
+              ),
+              span: {
+                md: 1,
+                xl: 1,
+                xxl: 1,
+              },
+            },
+            {
+              key: Table_Account.role,
+              label: <Text className="no-wrap">Role</Text>,
+              children: (
+                <Text
+                  style={{
+                    padding: "0 7px",
+                    textWrap: "nowrap",
+                    cursor: "default",
+                  }}
+                  disabled
+                >
+                  {currentAccount[Table_Account.role]}
+                </Text>
+              ),
+              span: {
+                md: 1,
+                xl: 1,
+                xxl: 1,
+              },
+            },
+            {
+              key: Table_Account.fullName,
+              label: <Text className="no-wrap">Full name</Text>,
+              children: (
+                <Form.Item
+                  name={Table_Account.fullName}
+                  rules={[
+                    ruleRequired(),
+                    ruleNotBlank(),
+                    ruleMinLength(minFullNameLength),
+                    ruleMaxLength(maxFullNameLength),
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+              ),
+
+              span: {
+                md: 2,
+                lg: 2,
+                xl: 2,
+                xxl: 2,
+              },
+            },
+            {
+              key: Table_Account.address,
+              label: <Text className="no-wrap">Address</Text>,
+              children: (
+                <Form.Item name={Table_Account.address}>
+                  <Input />
+                </Form.Item>
+              ),
+              span: {
+                md: 2,
+                lg: 2,
+                xl: 2,
+                xxl: 2,
+              },
+            },
+            {
+              key: Table_Account.phoneNumber,
+              label: <Text className="no-wrap">Phone number</Text>,
+              children: (
+                <Form.Item name={Table_Account.phoneNumber}>
+                  <Input />
+                </Form.Item>
+              ),
+              span: {
+                md: 2,
+                lg: 2,
+                xl: 2,
+                xxl: 2,
+              },
+            },
+            {
+              key: Table_Account.email,
+              label: <Text className="no-wrap">Email</Text>,
+              children: (
+                <Form.Item name={Table_Account.email}>
+                  <Input />
+                </Form.Item>
+              ),
+              span: {
+                md: 2,
+                lg: 2,
+                xl: 2,
+                xxl: 2,
+              },
+            },
+            {
+              key: Table_Account.birthDate,
+              label: <Text className="no-wrap">Birthday</Text>,
+              children: (
+                <Form.Item name={Table_Account.birthDate}>
+                  <DatePicker format={"DD/MM/YYYY"} />
+                </Form.Item>
+              ),
+              span: {
+                md: 2,
+                lg: 2,
+                xl: 2,
+                xxl: 2,
+              },
+            },
+          ]}
+        />
+      </Form>
+      {!editing ? (
+        <Button onClick={startEdit}>Edit profile</Button>
+      ) : (
+        <Space>
+          <Button
+            onClick={stopEdit}
+            disabled={mutationEditAccountInfor.isPending}
+          >
+            Cancel
           </Button>
-        )}
-      </Flex>
-    </Form>
+          <Button
+            type="primary"
+            onClick={submitForm}
+            loading={mutationEditAccountInfor.isPending}
+            disabled={disabled}
+          >
+            Update profile
+          </Button>
+        </Space>
+      )}
+    </Flex>
   );
 };

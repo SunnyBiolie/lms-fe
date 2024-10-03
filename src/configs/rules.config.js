@@ -30,9 +30,11 @@ export const Rule_email = [
 
 export const maxCategoryLength = 24;
 
-export const maxAddressLength = 50;
+export const maxAddressLength = 64;
 export const minUserNameLength = 3;
 export const maxUserNameLength = 16;
+export const minFullNameLength = 3;
+export const maxFullNameLength = 64;
 export const minPasswordLength = 4;
 export const maxPasswordLength = 16;
 export const minBookTitleLength = 3;
@@ -62,6 +64,7 @@ export const ruleMaxLength = (max = 24) => ({
 
 export const ruleNotBlank = () => ({
   whitespace: true,
+  message: `This filed cannot be a blank character`,
 });
 
 export const bookPriceForVIP = 1000000;

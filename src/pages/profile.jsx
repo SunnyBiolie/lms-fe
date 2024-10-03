@@ -1,14 +1,16 @@
-import { Col, Flex, Row, Tabs } from "antd";
-import { FormChangeProfile } from "@/components/tabs-profile-page/form-change-profile";
+import { useSearchParams } from "react-router-dom";
+import { Flex, Grid, Tabs } from "antd";
+import { FormChangeProfileInfo } from "@/components/tabs-profile-page/form-change-profile";
 import { FormChangePassword } from "@/components/tabs-profile-page/form-change-pwd";
 import { BtnDeleteAccount } from "@/components/tabs-profile-page/btn-delete-account";
-import { useSearchParams } from "react-router-dom";
 import { useCurrentAccount } from "@/hooks/use-current-account";
+
+const { useBreakpoint } = Grid;
 
 export default function ProfilePage() {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const { currentAccount, setCurrentAccount } = useCurrentAccount();
+  const screens = useBreakpoint();
+  const { setCurrentAccount } = useCurrentAccount();
 
   const handleTabClick = (key) => {
     setSearchParams({ tab: key }, { replace: true });
@@ -20,6 +22,8 @@ export default function ProfilePage() {
 
   return (
     <Tabs
+      tabPosition={screens.lg ? "right" : "top"}
+      size="small"
       defaultActiveKey={searchParams.get("tab")}
       onTabClick={handleTabClick}
       activeKey={searchParams.get("tab") || "profile"}
@@ -29,17 +33,7 @@ export default function ProfilePage() {
           label: "Profile",
           key: "profile",
           children: (
-            <Row gutter={28}>
-              <Col span={12}>
-                
-              </Col>
-              <Col span={12}>
-                <FormChangeProfile
-                  account={currentAccount}
-                  onAfterSaveChange={handleAfterSaveChange}
-                />
-              </Col>
-            </Row>
+            <FormChangeProfileInfo onAfterSaveChange={handleAfterSaveChange} />
           ),
         },
         {

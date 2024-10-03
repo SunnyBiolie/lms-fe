@@ -1,5 +1,6 @@
 import {
   Button,
+  Checkbox,
   Col,
   DatePicker,
   Flex,
@@ -122,6 +123,11 @@ export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
                   style={{ width: "100%" }}
                   maxDate={maxPublicationYear}
                 />
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }}>
+              <Form.Item name="isSpecial" valuePropName="checked">
+                <Checkbox>a</Checkbox>
               </Form.Item>
             </Col>
           </Row>
