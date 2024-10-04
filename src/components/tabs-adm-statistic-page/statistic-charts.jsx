@@ -148,7 +148,6 @@ export function StatisticCharts() {
               temp.push(item.name)
             );
           });
-          temp.map;
           const uniqueBooksCates = [...new Set(temp)];
           const statCates = uniqueBooksCates.map((cate) => {
             const arr = mergedReportBooks.filter((rpBook) => {
@@ -325,7 +324,7 @@ export function StatisticCharts() {
               accountsStatistic.length > 0 &&
               booksStatistic ? (
                 <>
-                  <Paragraph strong>Top of month:</Paragraph>
+                  {/* <Paragraph strong>Top of :</Paragraph> */}
                   <MyTable
                     data={tableData}
                     items={[

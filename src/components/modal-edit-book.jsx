@@ -50,7 +50,7 @@ export const ModalEditBook = ({
     setIsLoading(true);
     mutationEditBook.mutate(
       {
-        id: data.bookData[Table_Book[0]],
+        id: data.bookData[Table_Book.id],
         ...values,
       },
       {
@@ -117,7 +117,7 @@ export const ModalEditBook = ({
               <Input />
             </Form.Item>
             <Form.Item
-              name={[Table_Book[3]]}
+              name={[Table_Book.publisher]}
               label="Publisher"
               rules={[
                 {
@@ -179,7 +179,7 @@ export const ModalEditBook = ({
                 className="w-full"
               />
             </Form.Item>
-            <Form.Item name={[Table_Book[5]]} label="Pages">
+            <Form.Item name={[Table_Book.pages]} label="Pages">
               <InputNumber className="w-full" />
             </Form.Item>
           </>

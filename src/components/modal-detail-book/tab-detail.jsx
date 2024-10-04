@@ -26,7 +26,7 @@ export const TabDetail = ({ bookData }) => {
     return {
       ["Title"]: bookData[Table_Book.title],
       ["Author"]: bookData[Table_Book.author],
-      ["Publisher"]: bookData[Table_Book[3]],
+      ["Publisher"]: bookData[Table_Book.publisher],
       ["Categories"]: bookData[Table_Book.Categories],
       ["Year Of Publication"]: bookData[Table_Book.publicationDate],
       ["Value"]: bookData[Table_Book.price].toLocaleString("it-IT", {

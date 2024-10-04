@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Drawer } from "antd";
-import { FormChangeProfileInfo } from "../tabs-profile-page/form-change-profile";
+import { FormChangeProfileInfo } from "../tabs-profile-page/form-change-profile-info";
 
 export const BtnEditAccount = ({ account, fetchListAccounts }) => {
   const [open, setOpen] = useState(false);

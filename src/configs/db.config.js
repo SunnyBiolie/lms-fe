@@ -36,12 +36,12 @@ export const Table_Account = {
  * @field 10: Transactions
  */
 export const Table_Book = {
-  0: "id",
+  id: "id",
   title: "title",
   author: "author",
-  3: "publisher",
+  publisher: "publisher",
   publicationDate: "publicationDate",
-  5: "pages",
+  pages: "pages",
   6: "imageLink",
   quantity: "quantity",
   8: "createdAt",

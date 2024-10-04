@@ -1,11 +1,13 @@
-import { createContext, useCallback, useState } from "react";
-import { ConfigProvider, theme, message } from "antd";
+import { createContext, useCallback } from "react";
+import { ConfigProvider, message } from "antd";
 
 export const AntDesignContext = createContext();
 
+const colorPrimary = "#15B392";
+const colorSecondary = "#72BF78"; // "#54C392"
+
 export default function AntDesignProvider({ children }) {
   const [globalMessageApi, contextHolder] = message.useMessage();
-  const [currentTheme, setCurrentTheme] = useState("light");
 
   const msgApi = useCallback(
     (type, content) => {
@@ -17,8 +19,6 @@ export default function AntDesignProvider({ children }) {
     [globalMessageApi]
   );
 
-  const lightTheme = {};
-
   const value = {
     msgApi,
   };
@@ -28,8 +28,10 @@ export default function AntDesignProvider({ children }) {
       theme={{
         // algorithm: theme.defaultAlgorithm,
         token: {
-          colorPrimary: "#72BF78",
           colorBgLayout: "#f5f5f5",
+          colorPrimary: colorPrimary,
+          colorSecondary: colorSecondary,
+          colorMyHighlight: "#019879",
         },
         components: {
           Menu: {
@@ -48,7 +50,7 @@ export default function AntDesignProvider({ children }) {
             colorTextDescription: "rgba(255, 255, 255, 0.45)",
           },
           Table: {
-            headerBg: "#72BF78",
+            headerBg: colorPrimary,
             headerColor: "#fff",
           },
         },

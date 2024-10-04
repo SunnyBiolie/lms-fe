@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import dayjs from "dayjs";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -13,11 +13,12 @@ import {
 } from "antd";
 import { Table_Account } from "@/configs/db.config";
 import {
+  maxAddressLength,
   maxFullNameLength,
+  minAddressLength,
   minFullNameLength,
   Rule_email,
   Rule_phoneNumber,
-  Rule_Required,
   ruleMaxLength,
   ruleMinLength,
   ruleNotBlank,
@@ -25,13 +26,11 @@ import {
 } from "@/configs/rules.config";
 import { editAccountInforService } from "@/services/accounts/edit-infor";
 import { useAntDesign } from "@/hooks/use-ant-design";
-import { useCurrentAccount } from "@/hooks/use-current-account";
 
 const { Text } = Typography;
 
-export const FormChangeProfileInfo = ({ onAfterSaveChange }) => {
+export const FormChangeProfileInfo = ({ account, onAfterSaveChange, type }) => {
   const { msgApi } = useAntDesign();
-  const { currentAccount } = useCurrentAccount();
   const [form] = Form.useForm();
   const mutationEditAccountInfor = useMutation({
     mutationFn: editAccountInforService,
@@ -46,19 +45,20 @@ export const FormChangeProfileInfo = ({ onAfterSaveChange }) => {
 
   const stopEdit = () => {
     setEditing(false);
+    form.resetFields();
   };
 
-  const handleValuesChange = (changedValues, values) => {
+  const handleValuesChange = (_, values) => {
     for (const key of Object.keys(values)) {
       if (key === Table_Account.birthDate) {
         if (
           dayjs(form.getFieldValue(key)).format() !==
-          dayjs(currentAccount[key]).format()
+          dayjs(account[key]).format()
         ) {
           return setDisabled(false);
         }
       } else {
-        if (form.getFieldValue(key) !== currentAccount[key]) {
+        if (form.getFieldValue(key) !== account[key]) {
           return setDisabled(false);
         }
       }
@@ -67,18 +67,14 @@ export const FormChangeProfileInfo = ({ onAfterSaveChange }) => {
   };
 
   const submitForm = () => {
-    // form.submit();
-    console.log(
-      dayjs(form.getFieldValue("birthDate")).format() ===
-        dayjs(currentAccount.birthDate).format()
-    );
+    form.submit();
   };
 
   const handleFormSubmit = (values) => {
     mutationEditAccountInfor.mutate(
       {
         ...values,
-        id: currentAccount.id,
+        id: account.id,
       },
       {
         onSuccess: (axiosResponse) => {
@@ -93,6 +89,14 @@ export const FormChangeProfileInfo = ({ onAfterSaveChange }) => {
     );
   };
 
+  const title = type === "owner" ? "Public Profile" : "";
+  const size = type === "owner" ? "middle" : "small";
+  const layout = type === "owner" ? "horizontal" : "vertical";
+  const columns =
+    type === "owner"
+      ? { xs: 1, sm: 1, md: 2, lg: 2, xl: 4, xxl: 4 }
+      : { xs: 1, sm: 1, md: 1, lg: 1, xl: 1, xxl: 1 };
+
   return (
     <Flex vertical gap={28} justify="center" align="flex-end">
       <Form
@@ -101,10 +105,8 @@ export const FormChangeProfileInfo = ({ onAfterSaveChange }) => {
         variant="borderless"
         size="small"
         initialValues={{
-          ...currentAccount,
-          [Table_Account.birthDate]: dayjs(
-            currentAccount[Table_Account.birthDate]
-          ),
+          ...account,
+          [Table_Account.birthDate]: dayjs(account[Table_Account.birthDate]),
         }}
         className="w-full"
         disabled={!editing || mutationEditAccountInfor.isPending}
@@ -112,11 +114,12 @@ export const FormChangeProfileInfo = ({ onAfterSaveChange }) => {
         onValuesChange={handleValuesChange}
       >
         <Descriptions
-          title="Public Profile"
-          size="middle"
+          title={title}
+          size={size}
+          layout={layout}
           bordered
           style={{ flexGrow: 1 }}
-          column={{ xs: 1, sm: 1, md: 2, lg: 2, xl: 4, xxl: 4 }}
+          column={columns}
           items={[
             {
               key: Table_Account.userName,
@@ -130,7 +133,7 @@ export const FormChangeProfileInfo = ({ onAfterSaveChange }) => {
                   }}
                   disabled
                 >
-                  {currentAccount[Table_Account.userName]}
+                  {account[Table_Account.userName]}
                 </Text>
               ),
               span: {
@@ -151,7 +154,7 @@ export const FormChangeProfileInfo = ({ onAfterSaveChange }) => {
                   }}
                   disabled
                 >
-                  {currentAccount[Table_Account.role]}
+                  {account[Table_Account.role]}
                 </Text>
               ),
               span: {
@@ -188,7 +191,15 @@ export const FormChangeProfileInfo = ({ onAfterSaveChange }) => {
               key: Table_Account.address,
               label: <Text className="no-wrap">Address</Text>,
               children: (
-                <Form.Item name={Table_Account.address}>
+                <Form.Item
+                  name={Table_Account.address}
+                  rules={[
+                    ruleRequired(),
+                    ruleNotBlank(),
+                    ruleMinLength(minAddressLength),
+                    ruleMaxLength(maxAddressLength),
+                  ]}
+                >
                   <Input />
                 </Form.Item>
               ),
@@ -203,7 +214,10 @@ export const FormChangeProfileInfo = ({ onAfterSaveChange }) => {
               key: Table_Account.phoneNumber,
               label: <Text className="no-wrap">Phone number</Text>,
               children: (
-                <Form.Item name={Table_Account.phoneNumber}>
+                <Form.Item
+                  name={Table_Account.phoneNumber}
+                  rules={Rule_phoneNumber}
+                >
                   <Input />
                 </Form.Item>
               ),
@@ -218,7 +232,7 @@ export const FormChangeProfileInfo = ({ onAfterSaveChange }) => {
               key: Table_Account.email,
               label: <Text className="no-wrap">Email</Text>,
               children: (
-                <Form.Item name={Table_Account.email}>
+                <Form.Item name={Table_Account.email} rules={Rule_email}>
                   <Input />
                 </Form.Item>
               ),

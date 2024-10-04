@@ -5,6 +5,7 @@ import { getAccountsByRoleService } from "@/services/accounts/get-by-role";
 import { useAntDesign } from "@/hooks/use-ant-design";
 import { BtnEditAccount } from "./table-manage-accounts/btn-edit-account";
 import { BtnMoreAction } from "./table-manage-accounts/btn-more-action";
+import { checkToLogOut } from "@/lib/check-to-log-out";
 
 export const TableManageAccounts = () => {
   const { msgApi } = useAntDesign();
@@ -27,6 +28,7 @@ export const TableManageAccounts = () => {
         },
         onError: (err) => {
           msgApi("error", err.response.data.message);
+          checkToLogOut(err);
         },
       }
     );
@@ -37,8 +39,6 @@ export const TableManageAccounts = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  if (!listAccounts) return;
 
   const columns = [
     {
@@ -88,6 +88,7 @@ export const TableManageAccounts = () => {
         scroll={{
           x: 1000,
         }}
+        loading={mutationGetAccountsByRole.isPending}
       />
     </>
   );

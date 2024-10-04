@@ -1,6 +1,5 @@
 import {
   Button,
-  Checkbox,
   Col,
   DatePicker,
   Flex,
@@ -23,6 +22,7 @@ import {
 import { SearchOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { Table_Book } from "@/configs/db.config";
+import { CustomSelect } from "./my/custom-select";
 
 export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
   const [form] = Form.useForm();
@@ -45,7 +45,6 @@ export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
 
   const handleFinish = (values) => {
     setSearchValues(values);
-    console.log(values);
   };
 
   if (!listOfCategories) return <Skeleton active />;
@@ -105,6 +104,7 @@ export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
                   optionFilterProp="label"
                   suffixIcon={"Max 3"}
                 ></Select>
+                {/* <CustomSelect maxCount={3} options={listOfCategories} /> */}
               </Form.Item>
             </Col>
             <Col xs={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }}>
@@ -125,11 +125,11 @@ export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
                 />
               </Form.Item>
             </Col>
-            <Col xs={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }}>
+            {/* <Col xs={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }}>
               <Form.Item name="isSpecial" valuePropName="checked">
                 <Checkbox>a</Checkbox>
               </Form.Item>
-            </Col>
+            </Col> */}
           </Row>
           <Row>
             <Flex
@@ -175,9 +175,20 @@ export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
                 },
               ]}
             ></Select>
-            <Form.Item name={normalModeInput} className="w-full">
-              <Input></Input>
-            </Form.Item>
+            {normalModeInput === "categories" ? (
+              <CustomSelect
+                formItem={{
+                  name: normalModeInput,
+                  className: "w-full",
+                }}
+                maxCount={3}
+                options={listOfCategories}
+              />
+            ) : (
+              <Form.Item name={normalModeInput} className="w-full">
+                <Input />
+              </Form.Item>
+            )}
             <Button
               icon={<SearchOutlined />}
               type="primary"

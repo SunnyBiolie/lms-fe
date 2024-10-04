@@ -125,7 +125,7 @@ export const ModalAddBook = ({
           <Input />
         </Form.Item>
         <Form.Item
-          name={Table_Book[3]}
+          name={Table_Book.publisher}
           label="Publisher"
           rules={[
             ruleRequired(),
@@ -224,7 +224,7 @@ export const ModalAddBook = ({
           </Col>
         </Row>
         <Form.Item
-          name={Table_Book[5]}
+          name={Table_Book.pages}
           label="Number of pages"
           rules={[
             {

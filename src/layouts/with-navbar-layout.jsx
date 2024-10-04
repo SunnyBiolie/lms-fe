@@ -10,8 +10,7 @@ import { useRouteProtected } from "@/hooks/use-route-protected";
 import { NavigationBar } from "@/components/navigation-bar";
 import { Header } from "@/components/header";
 
-// eslint-disable-next-line no-unused-vars
-const useStyles = createStyles(({ _, css }) => ({
+const useStyles = createStyles(({ css }) => ({
   layout: css`
     width: 100%;
     min-height: 100%;
@@ -22,9 +21,7 @@ const useStyles = createStyles(({ _, css }) => ({
   content: css`
     padding: 16px;
     margin: 16px;
-    margin-bottom: 20px;
     background-color: #eee;
-    // border-radius: 8px 8px 0 0;
     border-radius: 8px;
   `,
 }));
@@ -32,7 +29,7 @@ const useStyles = createStyles(({ _, css }) => ({
 const { Sider, Content } = Layout;
 
 export default function WithNavBarLayout() {
-  const { styles } = useStyles();
+  const { styles, theme } = useStyles();
 
   const { currentAccount } = useCurrentAccount();
   const { inProtectedRoutes } = useRouteProtected();
@@ -63,11 +60,11 @@ export default function WithNavBarLayout() {
               trigger={
                 collapsed ? (
                   <MenuUnfoldOutlined
-                    style={{ fontSize: 16, color: "#72BF78" }}
+                    style={{ fontSize: 16, color: theme.colorPrimary }}
                   />
                 ) : (
                   <MenuFoldOutlined
-                    style={{ fontSize: 16, color: "#72BF78" }}
+                    style={{ fontSize: 16, color: theme.colorPrimary }}
                   />
                 )
               }

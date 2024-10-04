@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { Avatar, Layout, List, Popover, Space, Tag, Typography } from "antd";
+import { Avatar, Badge, Layout, List, Popover, Space, Typography } from "antd";
 import { createStyles } from "antd-style";
 import { UserOutlined } from "@ant-design/icons";
 import { Table_Account } from "@/configs/db.config";
@@ -9,8 +9,7 @@ import { routeAuth } from "@/configs/route.config";
 import { useCurrentAccount } from "@/hooks/use-current-account";
 import { logOutService } from "@/services/auth/log-out";
 
-// eslint-disable-next-line no-unused-vars
-const useStyles = createStyles(({ _, css }) => ({
+const useStyles = createStyles(({ token, css }) => ({
   header: css`
     border-bottom: 1px solid #e1e1e1;
     padding: 0 16px;
@@ -22,23 +21,22 @@ const useStyles = createStyles(({ _, css }) => ({
     left: 0;
     right: 0;
     z-index: 1000;
-    background-color: rgba(245, 245, 245, 0.5);
+    background-color: rgba(245, 245, 245, 0.25);
     backdrop-filter: blur(8px);
   `,
   avatar: css`
-    background-color: #f1f1f1;
-    border: 1px solid var(--primary);
+    background-color: transparent;
+    border: 1px solid ${token.colorSecondary};
   `,
   icon: css`
-    color: var(--primary);
+    color: ${token.colorSecondary};
   `,
 }));
 
 const { Text } = Typography;
 
 export const Header = () => {
-  const { styles } = useStyles();
-
+  const { styles, theme } = useStyles();
   const mutationLogOut = useMutation({
     mutationFn: logOutService,
     onSuccess: () => {
@@ -67,10 +65,12 @@ export const Header = () => {
     <Layout.Header className={styles.header}>
       <Space size="middle">
         <Space size="small">
-          <Text>
-            Hello, <Text strong>{currentAccount[Table_Account.fullName]}</Text>
-          </Text>
-          <Tag color="cyan">{currentAccount[Table_Account.role]}</Tag>
+          <Text>Hello </Text>
+          <Badge
+            count={currentAccount[Table_Account.role]}
+            color={theme.colorSecondary}
+          ></Badge>
+          <Text strong>{currentAccount[Table_Account.fullName]}</Text>
         </Space>
         <Popover
           destroyTooltipOnHide

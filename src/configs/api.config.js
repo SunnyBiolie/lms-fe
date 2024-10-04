@@ -35,6 +35,7 @@ export const apiBooksRoute = {
   edit: `${apiRoute.books}/edit`,
   delete: `${apiRoute.books}/delete`,
   get: `${apiRoute.books}/get`,
+  getById: `${apiRoute.books}/get-by-id`,
 };
 
 export const apiCategoriesRoute = {

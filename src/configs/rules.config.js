@@ -30,6 +30,7 @@ export const Rule_email = [
 
 export const maxCategoryLength = 24;
 
+export const minAddressLength = 8;
 export const maxAddressLength = 64;
 export const minUserNameLength = 3;
 export const maxUserNameLength = 16;

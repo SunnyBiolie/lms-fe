@@ -18,6 +18,8 @@ import TestPage from "@/pages/test";
 import StatisticPage from "@/pages/statistic";
 import AccountManagementPage from "@/pages/account-management";
 import TransactionManagementPage from "@/pages/transaction-management";
+import BookPage from "@/pages/book";
+import NotFoundPage from "@/pages/404";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -42,10 +44,11 @@ const router = createBrowserRouter(
             <Route path="/history" element={<HistoryPage />} />
           </Route>
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="book/:id" element={<BookPage />} />
         </Route>
         <Route path="/test" element={<TestPage />} />
       </Route>
-      <Route path="*" element={<>404</>}></Route>
+      <Route path="*" element={<NotFoundPage />}></Route>
     </Route>
   )
 );

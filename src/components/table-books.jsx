@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { Button, Flex, Skeleton, Space, Table, Tag, Tooltip } from "antd";
 import { EditOutlined, EyeOutlined, StarFilled } from "@ant-design/icons";
+import { Table_Book } from "@/configs/db.config";
 import { useBooks } from "@/hooks/use-books";
 import { useCurrentAccount } from "@/hooks/use-current-account";
 import { ModalDetailBook } from "./table-books/modal-detail-book";
 import { ModalEditBook } from "./modal-edit-book";
-import { Table_Book } from "@/configs/db.config";
 import { BtnDeleteBook } from "./table-books/btn-delete-book";
 import { BtnBorrowBook } from "./table-books/btn-borrow-book";
+import { useNavigate } from "react-router-dom";
 
 export const TableBooks = ({
   listOfCategories,
@@ -16,6 +17,7 @@ export const TableBooks = ({
 }) => {
   const { total, current, pageSize } = paginationParams;
 
+  const navigate = useNavigate();
   const { currentAccount } = useCurrentAccount();
   const { isLoading, listOfBooks, loadListOfBooks } = useBooks();
 
@@ -33,7 +35,7 @@ export const TableBooks = ({
   const columns = [
     {
       title: "#",
-      dataIndex: Table_Book[0],
+      dataIndex: Table_Book.id,
       width: 50,
       fixed: "left",
       render: (_, __, index) => {
@@ -65,7 +67,7 @@ export const TableBooks = ({
           <>
             {formatedCategories.map((cat, index) => {
               return (
-                <Tag key={index} className="category-tag" color="#A0D683">
+                <Tag key={index} className="category-tag" color="#999">
                   {cat}
                 </Tag>
               );
@@ -105,7 +107,7 @@ export const TableBooks = ({
     // },
     {
       title: currentAccount.role === "ADMIN" ? "Publisher" : "Avaliable",
-      dataIndex: Table_Book[3],
+      dataIndex: Table_Book.publisher,
       width: currentAccount.role === "ADMIN" ? 220 : 100,
       render: (publisher, record) => {
         if (currentAccount.role === "ADMIN") return publisher;
@@ -127,10 +129,11 @@ export const TableBooks = ({
               size="small"
               type="text"
               onClick={() => {
-                setIsModalDetailOpen(true);
-                setModalData({
-                  bookData: record,
-                });
+                navigate(`/book/${record[Table_Book.id]}`);
+                // setIsModalDetailOpen(true);
+                // setModalData({
+                //   bookData: record,
+                // });
               }}
               icon={<EyeOutlined />}
             />
@@ -163,7 +166,7 @@ export const TableBooks = ({
                     current === Math.ceil(total / pageSize) &&
                     total % (pageSize * (current - 1)) === 1
                   }
-                  bookId={record[Table_Book[0]]}
+                  bookId={record[Table_Book.id]}
                   loadListOfBooks={loadListOfBooks}
                 />
               </>
