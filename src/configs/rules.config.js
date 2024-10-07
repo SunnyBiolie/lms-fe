@@ -69,3 +69,102 @@ export const ruleNotBlank = () => ({
 });
 
 export const bookPriceForVIP = 1000000;
+
+export const formRule_bookTitle = [
+  {
+    required: true,
+    message: "Please enter book title",
+  },
+  ruleMinLength(minBookTitleLength),
+  ruleMaxLength(maxBookTitleLength),
+];
+
+export const formRule_authorName = [
+  {
+    required: true,
+    message: "Please enter author name",
+  },
+  ruleMinLength(minAuthorLength),
+  ruleMaxLength(maxAuthorLength),
+];
+
+export const formRule_publisher = [
+  {
+    required: true,
+    message: "Please enter author name",
+  },
+  ruleMinLength(minPublisherLength),
+  ruleMaxLength(maxPublisherLength),
+];
+
+export const formRule_categories = [
+  {
+    required: true,
+    message: "Please enter at least one category",
+  },
+];
+
+export const formRule_publicationYear = [
+  {
+    required: true,
+    message: "Please enter publication year",
+  },
+];
+
+export const minNumberOfPages = 20;
+export const maxNumberOfPages = 100000;
+
+export const formRule_bookPages = [
+  {
+    required: true,
+    message: "Please enter number of pages",
+  },
+  {
+    min: minNumberOfPages,
+    type: "number",
+  },
+  {
+    max: maxNumberOfPages,
+    type: "number",
+  },
+];
+
+export const formRule_bookPrice = [
+  {
+    required: true,
+    message: "Please enter price of book",
+  },
+  {
+    min: minBookPrice,
+    type: "number",
+  },
+  {
+    max: maxBookPrice,
+    type: "number",
+  },
+];
+
+export const minQuantityOfBooks = 1;
+export const maxQuantityOfBooks = 50;
+
+export const formRule_bookQuantity = [
+  {
+    required: true,
+    message: "Please enter total quantity",
+  },
+  {
+    min: minQuantityOfBooks,
+    type: "number",
+  },
+  {
+    max: maxQuantityOfBooks,
+    type: "number",
+  },
+];
+
+export const formRule_specialBook = [
+  {
+    required: true,
+    message: "Please select if book is special or not",
+  },
+];
