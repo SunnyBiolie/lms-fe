@@ -1,10 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Col, Empty, Row, Skeleton, Spin } from "antd";
+import { Empty, Flex, Skeleton } from "antd";
 import { getBookByIdService } from "@/services/books/get-by-id";
 import { checkToLogOut } from "@/lib/check-to-log-out";
 import { DescriptionsBookInfor } from "@/components/page-book/descriptions-infor";
-import { ActionBook } from "@/components/page-book/action-book";
+import { ListBooks } from "@/components/reusable/list-books";
+import { Table_Book } from "@/configs/db.config";
+import { getListBooksByAuthor } from "@/services/books/get-by-author";
 
 export default function BookPage() {
   const params = useParams();
@@ -29,13 +31,30 @@ export default function BookPage() {
   if (!book) return <Empty description={"Book does not exist"} />;
 
   return (
-    <Row gutter={8}>
-      <Col span={24}>
-        <DescriptionsBookInfor book={book} refetch={refetch} />
-      </Col>
-      {/* <Col span={4}>
-        <ActionBook />
-      </Col> */}
-    </Row>
+    <Flex vertical gap={16}>
+      <DescriptionsBookInfor book={book} refetch={refetch} />
+      <SectionSameAuthor book={book} />
+    </Flex>
   );
 }
+
+const SectionSameAuthor = ({ book }) => {
+  const { isFetching, data, error } = useQuery({
+    queryKey: ["list-books-same-author"],
+    queryFn: () =>
+      getListBooksByAuthor({
+        params: {
+          author: book[Table_Book.author],
+        },
+      }),
+    refetchOnWindowFocus: false,
+    retry: 2,
+  });
+
+  if (isFetching) return <Skeleton className="section" />;
+  if (error) return checkToLogOut(error);
+
+  const books = data.data.data;
+
+  return <ListBooks title={"Same author"} books={books} />;
+};

@@ -74,7 +74,10 @@ export const ModalEditBook = ({ book, open, onClose, refetch }) => {
   const handleFinishForm = (values) => {
     const reqData = {
       ...values,
-      id: book[Table_Book.id],
+      [Table_Book.id]: book[Table_Book.id],
+      [Table_Book.Categories]: values[Table_Book.Categories].map(
+        (item) => item.value
+      ),
     };
     mutationEditBook.mutate(reqData, {
       onSuccess: (res) => {

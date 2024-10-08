@@ -1,16 +1,15 @@
-import { Button, Space, Typography } from "antd";
-import {
-  Table_Account,
-  Table_Book,
-  Table_Transaction,
-} from "@/configs/db.config";
+import { useState } from "react";
+import { Button, Typography } from "antd";
+import { Table_Account, Table_Book } from "@/configs/db.config";
 import { bookPriceForVIP } from "@/configs/rules.config";
-import { useCurrentAccount } from "@/hooks/use-current-account";
 import {
   bookNumberPriorForMember,
   bookNumberPriorForVip,
 } from "@/configs/membership.config";
+import { useCurrentAccount } from "@/hooks/use-current-account";
 import { useTransactions } from "@/hooks/use-transactions";
+import { ModalBorrowBook } from "../table-books/modal-borrow-book";
+import { BtnCancelReq } from "./btn-cancel-req";
 
 const { Text } = Typography;
 
@@ -18,6 +17,42 @@ export const BtnBorrowBook = ({ book }) => {
   const { currentBorrowing, passRequesting } = useTransactions();
   const { currentAccount } = useCurrentAccount();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  if (!currentAccount || !currentBorrowing || !passRequesting) return;
+
+  const renderFailedCheck = checkDisplayBorrowBtn(
+    book,
+    currentAccount,
+    currentBorrowing,
+    passRequesting
+  );
+
+  // eslint-disable-next-line no-extra-boolean-cast
+  if (!!renderFailedCheck) return renderFailedCheck;
+
+  const openModal = () => setIsModalOpen(true);
+
+  return (
+    <>
+      <Button type="primary" onClick={openModal}>
+        Borrow
+      </Button>
+      <ModalBorrowBook
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        book={book}
+      />
+    </>
+  );
+};
+
+const checkDisplayBorrowBtn = (
+  book,
+  currentAccount,
+  currentBorrowing,
+  passRequesting
+) => {
   const VipOnly =
     (book[Table_Book.isSpecial] || book[Table_Book.price] > bookPriceForVIP) &&
     currentAccount[Table_Account.role] !== "VIP";
@@ -60,9 +95,7 @@ export const BtnBorrowBook = ({ book }) => {
     );
 
   const isBorrowing =
-    currentBorrowing.findIndex(
-      (t) => t.bookId === book.id && t[Table_Transaction.receivedFrom] !== null
-    ) !== -1;
+    currentBorrowing.findIndex((t) => t.bookId === book.id) !== -1;
 
   if (isBorrowing)
     return (
@@ -71,20 +104,8 @@ export const BtnBorrowBook = ({ book }) => {
       </Text>
     );
 
-  const isRequesting =
-    passRequesting.findIndex(
-      (t) => t.bookId === book.id && t[Table_Transaction.receivedFrom] === null
-    ) !== -1;
+  const reqIndex = passRequesting.findIndex((t) => t.bookId === book.id);
 
-  if (isRequesting)
-    return (
-      <Space direction="vertical" align="end">
-        <Text italic underline>
-          You are requesting this book to be passed on by other users
-        </Text>
-        <Button danger>Cancel request</Button>
-      </Space>
-    );
-
-  return <Button>Borrow</Button>;
+  if (reqIndex !== -1)
+    return <BtnCancelReq request={passRequesting[reqIndex]} />;
 };

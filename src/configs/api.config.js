@@ -27,6 +27,7 @@ export const apiAccountsRoute = {
   getById: `${apiRoute.accounts}/get-by-id`,
   resetPassword: `${apiRoute.accounts}/reset-pwd`,
   adminDelete: `${apiRoute.accounts}/admin-delete`,
+  toggleLikeBook: `${apiRoute.accounts}/toggle-like-book`,
 };
 
 export const apiBooksRoute = {
@@ -36,6 +37,7 @@ export const apiBooksRoute = {
   delete: `${apiRoute.books}/delete`,
   get: `${apiRoute.books}/get`,
   getById: `${apiRoute.books}/get-by-id`,
+  getByAuthor: `${apiRoute.books}/get-by-author`,
 };
 
 export const apiCategoriesRoute = {

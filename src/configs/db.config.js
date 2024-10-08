@@ -49,6 +49,7 @@ export const Table_Book = {
   isSpecial: "isSpecial",
   price: "price",
   Transactions: "Transactions",
+  LikedBy: "LikedBy",
 };
 
 export const Table_Category = {

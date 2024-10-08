@@ -1,30 +1,17 @@
-import { useState } from "react";
-import { Button, Flex, Skeleton, Space, Table, Tag, Tooltip } from "antd";
-import { EditOutlined, EyeOutlined, StarFilled } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import { Button, Flex, Skeleton, Table, Tag, theme } from "antd";
+import { CheckCircleOutlined, EyeOutlined } from "@ant-design/icons";
 import { Table_Book } from "@/configs/db.config";
 import { useBooks } from "@/hooks/use-books";
 import { useCurrentAccount } from "@/hooks/use-current-account";
-import { ModalDetailBook } from "./table-books/modal-detail-book";
-import { ModalEditBook } from "./modal-edit-book";
-import { BtnDeleteBook } from "./table-books/btn-delete-book";
-import { BtnBorrowBook } from "./table-books/btn-borrow-book";
-import { useNavigate } from "react-router-dom";
 
-export const TableBooks = ({
-  listOfCategories,
-  paginationParams,
-  setPaginationParams,
-}) => {
-  const { total, current, pageSize } = paginationParams;
+export const TableBooks = ({ paginationParams, setPaginationParams }) => {
+  const { token } = theme.useToken();
+  const { current, pageSize } = paginationParams;
 
   const navigate = useNavigate();
   const { currentAccount } = useCurrentAccount();
-  const { isLoading, listOfBooks, loadListOfBooks } = useBooks();
-
-  const [modalData, setModalData] = useState();
-
-  const [isModalDetailOpen, setIsModalDetailOpen] = useState(false);
-  const [isModalEditOpen, setIsModalEditOpen] = useState(false);
+  const { isLoading, listOfBooks } = useBooks();
 
   if (!currentAccount || !listOfBooks) return <Skeleton active />;
 
@@ -88,7 +75,9 @@ export const TableBooks = ({
         return (
           value && (
             <Flex align="center" justify="center">
-              <StarFilled style={{ color: "#fbdb14", fontSize: "16px" }} />
+              <CheckCircleOutlined
+                style={{ color: token.colorSecondary, fontSize: "16px" }}
+              />
             </Flex>
           )
         );
@@ -121,59 +110,17 @@ export const TableBooks = ({
       title: "Action",
       key: "action",
       fixed: "right",
-      width: 140,
+      width: 80,
       render: (_, record) => {
         return (
-          <Space>
-            <Button
-              size="small"
-              type="text"
-              onClick={() => {
-                navigate(`/book/${record[Table_Book.id]}`);
-                // setIsModalDetailOpen(true);
-                // setModalData({
-                //   bookData: record,
-                // });
-              }}
-              icon={<EyeOutlined />}
-            />
-            {currentAccount.role === "ADMIN" ? (
-              <>
-                <Tooltip
-                  title={
-                    record._count[Table_Book.Transactions] > 0
-                      ? "This book is being borrowed"
-                      : ""
-                  }
-                  placement="topLeft"
-                >
-                  <Button
-                    disabled={record._count[Table_Book.Transactions] > 0}
-                    size="small"
-                    type="default"
-                    icon={<EditOutlined />}
-                    onClick={() => {
-                      setIsModalEditOpen(true);
-                      setModalData({
-                        bookData: record,
-                      });
-                    }}
-                  />
-                </Tooltip>
-                <BtnDeleteBook
-                  disabled={record._count[Table_Book.Transactions] > 0}
-                  isLast={
-                    current === Math.ceil(total / pageSize) &&
-                    total % (pageSize * (current - 1)) === 1
-                  }
-                  bookId={record[Table_Book.id]}
-                  loadListOfBooks={loadListOfBooks}
-                />
-              </>
-            ) : (
-              <BtnBorrowBook book={record} />
-            )}
-          </Space>
+          <Button
+            size="small"
+            icon={<EyeOutlined />}
+            iconPosition="end"
+            onClick={() => {
+              navigate(`/book/${record[Table_Book.id]}`);
+            }}
+          />
         );
       },
     },
@@ -182,7 +129,7 @@ export const TableBooks = ({
   return (
     <>
       <Table
-        // bordered
+        bordered
         loading={isLoading}
         dataSource={listOfBooks}
         columns={columns}
@@ -200,23 +147,6 @@ export const TableBooks = ({
         onChange={handleTableChange}
         rowKey={(record) => record.id}
       />
-      <ModalDetailBook
-        isModalOpen={isModalDetailOpen}
-        setIsModalOpen={setIsModalDetailOpen}
-        data={modalData}
-      />
-      {currentAccount.role === "ADMIN" ? (
-        <>
-          <ModalEditBook
-            isModalOpen={isModalEditOpen}
-            setIsModalOpen={setIsModalEditOpen}
-            listOfCategories={listOfCategories}
-            data={modalData}
-          />
-        </>
-      ) : (
-        <></>
-      )}
     </>
   );
 };
