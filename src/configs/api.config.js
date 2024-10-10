@@ -38,6 +38,7 @@ export const apiBooksRoute = {
   get: `${apiRoute.books}/get`,
   getById: `${apiRoute.books}/get-by-id`,
   getByAuthor: `${apiRoute.books}/get-by-author`,
+  getRelativesByCategories: `${apiRoute.books}/get-relatives-by-categories`,
 };
 
 export const apiCategoriesRoute = {

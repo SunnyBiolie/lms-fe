@@ -1,4 +1,12 @@
-import { Button, Descriptions, Divider, Flex, Space, Typography } from "antd";
+import {
+  Button,
+  Descriptions,
+  Divider,
+  Flex,
+  Row,
+  Space,
+  Typography,
+} from "antd";
 import { Table_Account, Table_Book, Table_Category } from "@/configs/db.config";
 import dayjs from "dayjs";
 import { EditOutlined } from "@ant-design/icons";
@@ -32,30 +40,31 @@ export const DescriptionsBookInfor = ({ book, refetch }) => {
 
   return (
     <>
-      <Flex vertical align="end" className="section">
-        <Descriptions
-          title="Book information"
-          className="w-full"
-          extra={
-            <ActionWithBook
-              isAdmin={isAdmin}
-              openModalEdit={openModalEdit}
-              borrowingCount={borrowingCount}
-              book={book}
-              refetch={refetch}
-            />
-          }
-          items={descriptionsItems}
-        />
-        {!isAdmin && (
-          <>
-            <Divider />
-            <Space>
-              <BtnBorrowBook book={book} />
-            </Space>
-          </>
-        )}
-      </Flex>
+      <Row className="section">
+        <Flex vertical align="end" style={{ flex: 1 }}>
+          <Descriptions
+            title="Book information"
+            extra={
+              <ActionWithBook
+                isAdmin={isAdmin}
+                openModalEdit={openModalEdit}
+                borrowingCount={borrowingCount}
+                book={book}
+                refetch={refetch}
+              />
+            }
+            items={descriptionsItems}
+          />
+          {!isAdmin && (
+            <>
+              <Divider />
+              <Space>
+                <BtnBorrowBook book={book} />
+              </Space>
+            </>
+          )}
+        </Flex>
+      </Row>
       {borrowingCount === 0 && isAdmin && (
         <ModalEditBook
           book={book}

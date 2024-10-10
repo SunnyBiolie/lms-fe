@@ -20,6 +20,7 @@ import AccountManagementPage from "@/pages/account-management";
 import TransactionManagementPage from "@/pages/transaction-management";
 import BookPage from "@/pages/book";
 import NotFoundPage from "@/pages/404";
+import { SearchBooksPage } from "@/pages/search-books";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -45,6 +46,7 @@ const router = createBrowserRouter(
           </Route>
           <Route path="profile" element={<ProfilePage />} />
           <Route path="book/:id" element={<BookPage />} />
+          <Route path="search" element={<SearchBooksPage />} />
         </Route>
         <Route path="/test" element={<TestPage />} />
       </Route>

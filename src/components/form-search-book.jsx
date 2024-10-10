@@ -20,23 +20,35 @@ import {
   ruleMaxLength,
 } from "@/configs/rules.config";
 import { SearchOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table_Book } from "@/configs/db.config";
 import { CustomSelect } from "./my/custom-select";
+import { useSearchParams } from "react-router-dom";
+import { useDebounce } from "@/hooks/use-debounce";
+
+const singleSearchFields = [
+  Table_Book.title,
+  Table_Book.author,
+  "categories",
+  Table_Book.publisher,
+];
 
 export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
   const [form] = Form.useForm();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [isAdvancedMode, setIsAdvancedMode] = useState(false);
   const [normalModeInput, setNormalModeInput] = useState(Table_Book.title);
+  const [normalSearchValue, setNormalSearchValue] = useState();
+  const debouncedValue = useDebounce(normalSearchValue, 500);
 
   const handleChangeMode = (isAdvanced) => {
     setIsAdvancedMode(isAdvanced);
-    handleReset();
   };
 
   const handleNormalModeValueChange = (value) => {
     setNormalModeInput(value);
+    // handleReset();
   };
 
   const handleReset = () => {
@@ -44,7 +56,50 @@ export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
   };
 
   const handleFinish = (values) => {
+    console.log(values);
     setSearchValues(values);
+  };
+
+  useEffect(() => {
+    if (!listOfCategories) return;
+
+    if (!debouncedValue) {
+      // eslint-disable-next-line no-extra-boolean-cast
+      if (!!searchParams.size) {
+        for (const field of singleSearchFields) {
+          if (searchParams.has(field)) {
+            if (field === "categories") {
+              const values = searchParams.getAll(field).map((f) => ({
+                value: +f,
+              }));
+              form.setFieldValue(field, values);
+              console.log({ [field]: searchParams.getAll(field) });
+
+              setSearchValues({ [field]: searchParams.getAll(field) });
+            } else {
+              const value = searchParams.get(field);
+              form.setFieldValue(field, value);
+
+              setSearchValues({ [field]: value });
+            }
+            setNormalModeInput(field);
+            break;
+          }
+        }
+      }
+      return;
+    }
+
+    setSearchParams({ [normalModeInput]: debouncedValue[normalModeInput] });
+    setSearchValues(debouncedValue);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listOfCategories, debouncedValue]);
+
+  const handleFormValuesChange = (changedValues) => {
+    if (!isAdvancedMode) {
+      setNormalSearchValue(changedValues);
+    }
   };
 
   if (!listOfCategories) return <Skeleton active />;
@@ -57,6 +112,7 @@ export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
       size="small"
       onFinish={handleFinish}
       className="section"
+      onValuesChange={handleFormValuesChange}
     >
       <Row
         align="middle"
@@ -96,16 +152,14 @@ export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
               </Form.Item>
             </Col>
             <Col xs={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }}>
-              <Form.Item name="categories" label="Categories">
-                <Select
-                  mode="multiple"
-                  options={listOfCategories}
-                  maxCount={3}
-                  optionFilterProp="label"
-                  suffixIcon={"Max 3"}
-                ></Select>
-                {/* <CustomSelect maxCount={3} options={listOfCategories} /> */}
-              </Form.Item>
+              <CustomSelect
+                formItem={{
+                  name: "categories",
+                  label: "Categories",
+                }}
+                maxCount={3}
+                options={listOfCategories}
+              />
             </Col>
             <Col xs={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }}>
               <Form.Item
@@ -125,11 +179,6 @@ export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
                 />
               </Form.Item>
             </Col>
-            {/* <Col xs={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }}>
-              <Form.Item name="isSpecial" valuePropName="checked">
-                <Checkbox>a</Checkbox>
-              </Form.Item>
-            </Col> */}
           </Row>
           <Row>
             <Flex
@@ -151,6 +200,7 @@ export const FormSearchBook = ({ listOfCategories, setSearchValues }) => {
         <Row align="middle" justify="center">
           <Space.Compact size="middle" className="w-full">
             <Select
+              value={normalModeInput}
               defaultValue={normalModeInput}
               style={{
                 width: 140,

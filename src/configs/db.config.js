@@ -42,7 +42,7 @@ export const Table_Book = {
   publisher: "publisher",
   publicationDate: "publicationDate",
   pages: "pages",
-  6: "imageLink",
+  imageLink: "imageLink",
   quantity: "quantity",
   8: "createdAt",
   Categories: "Categories",
