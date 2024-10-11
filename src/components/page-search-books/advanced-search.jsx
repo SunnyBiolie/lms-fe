@@ -11,15 +11,25 @@ import { CustomSelect } from "../my/custom-select";
 
 const { RangePicker } = DatePicker;
 
-export const AdvancedSearchBooks = ({ form }) => {
+export const AdvancedSearchBooks = ({ setSearchValues }) => {
   const { listOfCategories } = useBooks();
+  const [form] = Form.useForm();
 
   const resetForm = () => {
     form.resetFields();
   };
 
+  const handleFinish = (values) => {
+    setSearchValues(values);
+  };
+
   return (
-    <>
+    <Form
+      form={form}
+      name="form-advanced-search"
+      layout="vertical"
+      onFinish={handleFinish}
+    >
       <Row gutter={{ xs: 8, md: 16 }}>
         <Col xs={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }}>
           <Form.Item
@@ -83,6 +93,6 @@ export const AdvancedSearchBooks = ({ form }) => {
           </Button>
         </Flex>
       </Row>
-    </>
+    </Form>
   );
 };

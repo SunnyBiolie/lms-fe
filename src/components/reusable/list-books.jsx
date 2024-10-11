@@ -1,5 +1,5 @@
 import { noImage } from "@/assets/no-imge";
-import { Table_Book } from "@/configs/db.config";
+import { Table_Book, Table_Category } from "@/configs/db.config";
 import { Flex, Image, Tag, Typography } from "antd";
 import { createStyles } from "antd-style";
 import { Link } from "react-router-dom";
@@ -49,12 +49,13 @@ const BookCard = ({ book, author }) => {
   return (
     <Flex vertical gap={12} className={cx(styles.card)}>
       <Image
-        src={`${book[Table_Book.imageLink]}?tr=ar-4-5,w-200`}
+        src={`${book[Table_Book.imageLink]}?tr=ar-3-4,w-200`}
         preview={{
           destroyOnClose: true,
           src: book[Table_Book.imageLink],
         }}
         fallback={noImage}
+        style={{ borderRadius: "4px" }}
       />
       <Link to={`/book/${book[Table_Book.id]}`}>
         <Text strong>{book[Table_Book.title]}</Text>
@@ -62,9 +63,12 @@ const BookCard = ({ book, author }) => {
       {author && <Text italic>by {book[Table_Book.author]}</Text>}
       <Text>
         {book[Table_Book.Categories].map((cate, index) => (
-          <Tag key={index} className="capitalize">
-            {cate.name}
-          </Tag>
+          <Link
+            key={index}
+            to={`/search?categories=${cate[Table_Category.id]}`}
+          >
+            <Tag className="capitalize">{cate[Table_Category.name]}</Tag>
+          </Link>
         ))}
       </Text>
     </Flex>

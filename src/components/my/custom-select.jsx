@@ -19,6 +19,7 @@ export const CustomSelect = ({ formItem, maxCount, options }) => {
       name={formItem.name}
       label={formItem.label}
       className={formItem.className}
+      initialValue={formItem.initialValue}
     >
       <Select
         mode="multiple"
