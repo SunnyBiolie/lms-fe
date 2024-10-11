@@ -74,18 +74,28 @@ export const BasicSearchBooks = ({ setSearchValues }) => {
   const debouncedValue = useDebounce(searchValue);
 
   useEffect(() => {
-    if (!debouncedValue) {
+    if (!debouncedValue || !listOfCategories) {
       return;
     }
-    setSearchParams({ [searchBy]: debouncedValue[searchBy] });
     if (!debouncedValue[searchBy]) {
+      setSearchParams({});
       setSearchValues(undefined);
     } else {
-      setSearchValues(debouncedValue);
+      if (searchBy === Table_Book.Categories.toLowerCase()) {
+        console.log(debouncedValue);
+        const valid = debouncedValue[searchBy].filter((id) =>
+          listOfCategories.find((c) => c.value === id)
+        );
+        setSearchParams({ [searchBy]: valid });
+        setSearchValues({ [searchBy]: valid });
+      } else {
+        setSearchParams({ [searchBy]: debouncedValue[searchBy] });
+        setSearchValues(debouncedValue);
+      }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedValue]);
+  }, [debouncedValue, listOfCategories]);
 
   if (!listOfCategories)
     return <Skeleton active round paragraph={{ rows: 2 }} title={false} />;

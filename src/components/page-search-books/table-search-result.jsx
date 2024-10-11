@@ -7,8 +7,8 @@ import {
   Button,
   Descriptions,
   Flex,
+  Spin,
   Table,
-  Tag,
   theme,
   Typography,
 } from "antd";
@@ -16,6 +16,7 @@ import { createStyles } from "antd-style";
 import dayjs from "dayjs";
 import { memo } from "react";
 import { Link } from "react-router-dom";
+import { ListCategories } from "../reusable/list-categories";
 
 export const TableSearchResult = ({
   loading,
@@ -32,6 +33,7 @@ export const TableSearchResult = ({
     setPaginationParams({ current, pageSize });
   };
 
+  if (!data && loading) return <Spin className="w-full" />;
   if (!data) return;
 
   const { current, pageSize } = data.pagination;
@@ -70,19 +72,20 @@ export const TableSearchResult = ({
             dataIndex: Table_Book.Categories,
             width: 250,
             render: (categories) => {
-              const formatedCategories = categories.map((c) => c.name);
+              return <ListCategories categories={categories} isTag />;
+              // const formatedCategories = categories.map((c) => c.name);
 
-              return (
-                <>
-                  {formatedCategories.map((cat, index) => {
-                    return (
-                      <Tag key={index} className="category-tag" color="#999">
-                        {cat}
-                      </Tag>
-                    );
-                  })}
-                </>
-              );
+              // return (
+              //   <>
+              //     {formatedCategories.map((cat, index) => {
+              //       return (
+              //         <Tag key={index} className="category-tag" color="#999">
+              //           {cat}
+              //         </Tag>
+              //       );
+              //     })}
+              //   </>
+              // );
             },
           },
           {
@@ -158,6 +161,9 @@ export const TableSearchResult = ({
           total: data.total,
         }}
         onChange={handleChange}
+        scroll={{
+          x: 1200,
+        }}
       />
     </div>
   );
@@ -176,7 +182,7 @@ const TableTitle = memo(function TableTitle({ searchValues, data }) {
   const { styles } = useStyles();
   const { listOfCategories } = useBooks();
 
-  const keys = Object.keys(searchValues);
+  const keys = Object.keys(searchValues || {});
   let items = [];
 
   keys.forEach((key) => {

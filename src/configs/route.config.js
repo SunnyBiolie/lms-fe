@@ -1,6 +1,7 @@
 import {
   BookOutlined,
   FundOutlined,
+  HeartOutlined,
   HistoryOutlined,
   ReconciliationOutlined,
   SearchOutlined,
@@ -27,6 +28,11 @@ export const routeUser = {
     pathname: "/search",
     label: "Search",
     Icon: SearchOutlined,
+  },
+  favorites: {
+    pathname: "/favorites",
+    label: "Favorites",
+    Icon: HeartOutlined,
   },
   history: {
     pathname: "/history",

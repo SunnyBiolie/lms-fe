@@ -37,14 +37,14 @@ export default function BookPage() {
         <Skeleton
           active
           paragraph={{
-            rows: 6,
+            rows: 3,
           }}
           className="section"
         />
         <Skeleton
           active
           paragraph={{
-            rows: 6,
+            rows: 4
           }}
           className="section"
         />

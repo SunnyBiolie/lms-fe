@@ -40,6 +40,8 @@ export const apiBooksRoute = {
   getByAuthor: `${apiRoute.books}/get-by-author`,
   getRelativesByCategories: `${apiRoute.books}/get-relatives-by-categories`,
   search: `${apiRoute.books}/search`,
+  getLikedByAccId: `${apiRoute.books}/get-liked-by-acc-id`,
+  getAll: `${apiRoute.books}/get-all`,
 };
 
 export const apiCategoriesRoute = {
