@@ -1,10 +1,12 @@
 import { createContext, useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { Flex, Spin } from "antd";
+import { Flex, Spin, Typography } from "antd";
 import { routeAuth } from "@/configs/route.config";
 import { accessTokenService } from "@/services/auth/access-token";
 import { useRouteAuth } from "@/hooks/use-route-auth";
+
+const { Title } = Typography;
 
 export const CurrentAccountContext = createContext();
 
@@ -50,11 +52,13 @@ export default function CurrentAccountProvider({ children }) {
   if (currentAccount === undefined) {
     return (
       <Flex
+        vertical
         justify="center"
         align="center"
-        style={{ width: "100vw", height: "100vh", backgroundColor: "#121314" }}
+        style={{ width: "100%", height: "100%", backgroundColor: "#F1F1F1" }}
       >
         <Spin />
+        <Title level={5}>Loading...</Title>
       </Flex>
     );
   }

@@ -1,15 +1,3 @@
-/**
- * @field 0: id
- * @field 1: fullName
- * @field 2: address
- * @field 3: phoneNumber
- * @field 4: email
- * @field 5: birthDate
- * @field 6: userName
- * @field 7: passWord
- * @field 8: role
- * @field 9: Transactions
- */
 export const Table_Account = {
   id: "id",
   fullName: "fullName",
@@ -22,19 +10,6 @@ export const Table_Account = {
   Transactions: "Transactions",
 };
 
-/**
- * @field 0: id
- * @field 1: title
- * @field 2: author
- * @field 3: publisher
- * @field 4: publicationDate
- * @field 5: pages
- * @field 6: imageLink
- * @field 7: quantity
- * @field 8: createdAt
- * @field 9: Categories
- * @field 10: Transactions
- */
 export const Table_Book = {
   id: "id",
   title: "title",
@@ -58,16 +33,6 @@ export const Table_Category = {
   Books: "Books",
 };
 
-/**
- * @field 0: id
- * @field 1: accountId
- * @field 2: bookId
- * @field 3: borrowedAt
- * @field 4: dueDates
- * @field 5: returnedAt
- * @field 6: Account
- * @field 7: Book
- */
 export const Table_Transaction = {
   id: "id",
   1: "accountId",
@@ -140,4 +105,11 @@ export const Table_MembershipLogs = {
 
   Account: "Account",
   Report: "Report",
+};
+
+export const Field_Account_Role = {
+  admin: "ADMIN",
+  user: "USER",
+  member: "MEMBER",
+  vip: "VIP",
 };

@@ -30,13 +30,12 @@ export default function TransactionManagementPage() {
   };
 
   return (
-    <>
+    <div className="section">
       <Tabs
         items={items}
-        type="card"
         defaultActiveKey={searchParams.get("tab")}
         onTabClick={handleTabClick}
       />
-    </>
+    </div>
   );
 }

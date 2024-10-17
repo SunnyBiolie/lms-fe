@@ -7,11 +7,12 @@ import {
   maxPublisherLength,
   ruleMaxLength,
 } from "@/configs/rules.config";
-import { CustomSelect } from "../my/custom-select";
+import { validSearchParams } from "@/lib/valid-search-params";
+import { CustomSelect } from "@/components/my/custom-select";
 
 const { RangePicker } = DatePicker;
 
-export const AdvancedSearchBooks = ({ setSearchValues }) => {
+export const AdvancedSearchBooks = ({ onSearch }) => {
   const { listOfCategories } = useBooks();
   const [form] = Form.useForm();
 
@@ -20,7 +21,8 @@ export const AdvancedSearchBooks = ({ setSearchValues }) => {
   };
 
   const handleFinish = (values) => {
-    setSearchValues(values);
+    const validParams = validSearchParams(values);
+    onSearch(validParams);
   };
 
   return (

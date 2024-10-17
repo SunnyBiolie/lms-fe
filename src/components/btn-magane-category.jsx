@@ -72,7 +72,7 @@ export const BtnManageCategory = () => {
 
   return (
     <>
-      <Button onClick={handleOpenModal}>Category Management</Button>
+      <Button onClick={handleOpenModal}>Manage categories</Button>
       <Modal
         destroyOnClose
         title="Category Management"

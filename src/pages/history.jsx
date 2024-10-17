@@ -33,7 +33,7 @@ export default function HistoryPage() {
   };
 
   return (
-    <>
+    <div className="section">
       <Tabs
         defaultActiveKey={searchParams.get("tab")}
         items={[
@@ -60,6 +60,6 @@ export default function HistoryPage() {
         ]}
         onTabClick={handleTabClick}
       />
-    </>
+    </div>
   );
 }

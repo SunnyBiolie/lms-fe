@@ -15,6 +15,10 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
+// # Note:
+// categories: { id: number, name: string }[]
+// isLink: boolean
+// isTag: boolean
 export const ListCategories = memo(function ListCategories({
   categories,
   isLink,
@@ -35,7 +39,7 @@ export const ListCategories = memo(function ListCategories({
                 {capitalize(cate[Table_Category.name])}
               </Content>
             </Wrapper>
-            {!isTag && index < categories.length - 1 && `, `}
+            {!isTag && index < categories.length - 1 && <span>,&nbsp;</span>}
           </Fragment>
         );
       })}

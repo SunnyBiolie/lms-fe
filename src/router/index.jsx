@@ -16,7 +16,7 @@ import HistoryPage from "@/pages/history";
 import ProfilePage from "@/pages/profile";
 import TestPage from "@/pages/test";
 import StatisticPage from "@/pages/statistic";
-import AccountManagementPage from "@/pages/account-management";
+import AccountManagementPage from "@/pages/adm-acc-management";
 import TransactionManagementPage from "@/pages/transaction-management";
 import BookPage from "@/pages/book";
 import NotFoundPage from "@/pages/404";
@@ -45,10 +45,10 @@ const router = createBrowserRouter(
             <Route path="/" element={<DashboardPage />} />
             <Route path="/favorites" element={<FavoritesPage />} />
             <Route path="/history" element={<HistoryPage />} />
+            <Route path="search" element={<SearchBooksPage />} />
           </Route>
           <Route path="profile" element={<ProfilePage />} />
           <Route path="book/:id" element={<BookPage />} />
-          <Route path="search" element={<SearchBooksPage />} />
           <Route path="/test" element={<TestPage />} />
         </Route>
       </Route>

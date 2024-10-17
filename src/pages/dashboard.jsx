@@ -1,10 +1,10 @@
+import { TableAllBooks } from "@/components/reusable/table-all-books";
 import { Space } from "antd";
-import { TableAllBooks } from "@/components/reusable/tbl-all-books";
 
 export default function DashboardPage() {
   return (
     <>
-      <Space direction="vertical" size="middle" style={{ width: "100%" }} className="section">
+      <Space direction="vertical" size="middle" style={{ width: "100%" }}>
         <TableAllBooks />
       </Space>
     </>

@@ -1,13 +1,13 @@
 import { useState } from "react";
-// import { useSearchParams } from "react-router-dom";
-import { Col, Empty, Form, Row, Select } from "antd";
 import { useMutation } from "@tanstack/react-query";
+import { Col, Empty, Form, Row, Select } from "antd";
 import { getTransWithConditionsService } from "@/services/transaction/get-w-conditions";
 import { getAdmSearchTransOptsService } from "@/services/transaction/get-adm-search-trans-opts";
 import { useAntDesign } from "@/hooks/use-ant-design";
 import { TblAdmBrwByAccId } from "./tbl-adm-brw-by-acc-id";
 import { TblAdmBrwByBookId } from "./tbl-adm-brw-by-book-id";
 import { TblAdmReq } from "./tbl-adm-req";
+import { createStyles } from "antd-style";
 
 const byOptions = [
   {
@@ -20,9 +20,18 @@ const byOptions = [
   },
 ];
 
+const useStyles = createStyles(({ css }) => ({
+  searchZone: css`
+    padding: 16px 0;
+  `,
+  empty: css`
+    padding: 16px 0;
+  `,
+}));
+
 export const FormAdmSearchTrans = ({ type }) => {
+  const { styles } = useStyles();
   const { msgApi } = useAntDesign();
-  // const [searchParams, setSearchParams] = useSearchParams();
   const [form] = Form.useForm();
   const [by, setBy] = useState();
   const [valueOpts, setValueOpts] = useState();
@@ -85,19 +94,23 @@ export const FormAdmSearchTrans = ({ type }) => {
   };
 
   return (
-    <div>
+    <>
       <Form
         form={form}
         name={`form-admin-search-${type}`}
-        className="section mb-4"
+        className={styles.searchZone}
       >
         <Row gutter={24}>
-          <Col span={24} lg={{ span: 6 }}>
+          <Col span={24} lg={{ span: 8 }}>
             <Form.Item name="by" label="Search by">
-              <Select options={byOptions} onSelect={getSearchOpts}></Select>
+              <Select
+                options={byOptions}
+                onSelect={getSearchOpts}
+                placeholder="Account or Book"
+              ></Select>
             </Form.Item>
           </Col>
-          <Col span={24} lg={{ span: 8 }}>
+          <Col span={24} lg={{ span: 10 }}>
             <Form.Item name="id" label="Value">
               <Select
                 showSearch
@@ -107,10 +120,10 @@ export const FormAdmSearchTrans = ({ type }) => {
                 onSelect={searchTransactionWithConditions}
                 placeholder={
                   !by
-                    ? ""
+                    ? "Missing search by"
                     : mutationGetAdmSearchTransOpts.isPending
-                    ? "Loading"
-                    : "Select to display"
+                    ? "Loading..."
+                    : "Select to display data"
                 }
                 optionFilterProp="label"
               ></Select>
@@ -118,8 +131,11 @@ export const FormAdmSearchTrans = ({ type }) => {
           </Col>
         </Row>
       </Form>
-      {!by ? (
-        <Empty />
+      {!tableData ? (
+        <Empty
+          description="Nothing to show. Please wait until you select your search criteria"
+          className={styles.empty}
+        />
       ) : type === "borrowing" ? (
         by === "account" ? (
           <TblAdmBrwByAccId
@@ -133,17 +149,10 @@ export const FormAdmSearchTrans = ({ type }) => {
           />
         )
       ) : type === "requesting" ? (
-        by === "account" ? (
-          <TblAdmReq
-            tableData={tableData}
-            loading={mutationGetTransWithConditions.isPending}
-          />
-        ) : (
-          <TblAdmReq
-            tableData={tableData}
-            loading={mutationGetTransWithConditions.isPending}
-          />
-        )
+        <TblAdmReq
+          tableData={tableData}
+          loading={mutationGetTransWithConditions.isPending}
+        />
       ) : by === "account" ? (
         <TblAdmBrwByAccId
           tableData={tableData}
@@ -157,6 +166,6 @@ export const FormAdmSearchTrans = ({ type }) => {
           type={type}
         />
       )}
-    </div>
+    </>
   );
 };

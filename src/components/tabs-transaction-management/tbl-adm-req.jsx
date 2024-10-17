@@ -39,6 +39,7 @@ export const TblAdmReq = ({ tableData, loading }) => {
       dataSource={tableData}
       rowKey={(item) => item.id}
       loading={loading}
+      
     />
   );
 };

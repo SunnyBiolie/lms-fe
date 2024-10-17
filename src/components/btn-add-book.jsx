@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { useBooks } from "@/hooks/use-books";
 import { ModalAddBook } from "./modal-add-book";
 
-export const BtnAddBook = () => {
-  const { loadListOfBooks, listOfCategories } = useBooks();
-
+export const BtnAddBook = ({ onAfterAddSuccess }) => {
   const [isModalAddBookOpen, setIsModalAddBookOpen] = useState(false);
 
   const openModalAddBook = () => {
@@ -18,8 +15,8 @@ export const BtnAddBook = () => {
   };
 
   const okModalAddBook = () => {
-    loadListOfBooks("goToFirst");
     closeModalAddBook(false);
+    onAfterAddSuccess();
   };
 
   return (
@@ -29,7 +26,6 @@ export const BtnAddBook = () => {
       </Button>
       <ModalAddBook
         isModalOpen={isModalAddBookOpen}
-        listOfCategories={listOfCategories}
         onOk={okModalAddBook}
         onCancel={closeModalAddBook}
       />

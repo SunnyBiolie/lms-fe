@@ -1,7 +1,5 @@
 import { createContext, useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { getBooksWithConditionsService } from "@/services/books/get-w-conditions";
-import { table } from "@/configs/admin.config";
 import { getCategoriesWithConditionsService } from "@/services/categories/get-w-conditions";
 import { useAntDesign } from "@/hooks/use-ant-design";
 import { checkToLogOut } from "@/lib/check-to-log-out";
@@ -11,68 +9,12 @@ export const BooksContext = createContext();
 export default function BooksProvider({ children }) {
   const { msgApi } = useAntDesign();
 
-  const mutationGetBooks = useMutation({
-    mutationFn: getBooksWithConditionsService,
-  });
   const mutationGetCategoriesWithConditions = useMutation({
     mutationFn: getCategoriesWithConditionsService,
   });
 
   const [listOfCategories, setListOfCategories] = useState();
   const [isLoadingCate, setIsLoadingCate] = useState(false);
-
-  const [searchValues, setSearchValues] = useState();
-  const [paginationParams, setPaginationParams] = useState({
-    current: table.defaultCurrent,
-    pageSize: table.defaultPageSize,
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [listOfBooks, setListOfBooks] = useState();
-
-  const loadListOfBooks = (type = "paginate") => {
-    setIsLoading(true);
-
-    mutationGetBooks.mutate(
-      {
-        type,
-        searchValues: {
-          ...searchValues,
-        },
-        paginationParams: {
-          ...paginationParams,
-          current:
-            type === "deleteLastItem"
-              ? paginationParams.current - 1 >= 0
-                ? paginationParams.current - 1
-                : 0
-              : paginationParams.current,
-        },
-      },
-      {
-        onSuccess: (axiosResponse) => {
-          setListOfBooks(axiosResponse.data.listBooks);
-          setPaginationParams({
-            ...paginationParams,
-            current:
-              type === "goToFirst"
-                ? 1
-                : type === "deleteLastItem"
-                ? paginationParams.current - 1 >= 0
-                  ? paginationParams.current - 1
-                  : 0
-                : paginationParams.current,
-            total: axiosResponse.data.total,
-          });
-        },
-        onError: (err) => {
-          checkToLogOut(err);
-        },
-        onSettled: () => {
-          setIsLoading(false);
-        },
-      }
-    );
-  };
 
   const loadListCategories = () => {
     setIsLoadingCate(true);
@@ -95,23 +37,12 @@ export default function BooksProvider({ children }) {
         },
         onError: (axiosError) => {
           msgApi("error", axiosError.response.data.message);
+          checkToLogOut(axiosError);
         },
         onSettled: () => setIsLoadingCate(false),
       }
     );
   };
-
-  useEffect(() => {
-    loadListOfBooks();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paginationParams.current, paginationParams.pageSize]);
-
-  useEffect(() => {
-    loadListOfBooks("goToFirst");
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchValues]);
 
   useEffect(() => {
     loadListCategories();
@@ -120,12 +51,6 @@ export default function BooksProvider({ children }) {
   }, []);
 
   const contextValue = {
-    isLoading,
-    listOfBooks,
-    loadListOfBooks,
-    setSearchValues,
-    paginationParams,
-    setPaginationParams,
     isLoadingCate,
     listOfCategories,
     loadListCategories,

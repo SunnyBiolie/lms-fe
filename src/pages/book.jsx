@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Empty, Flex, Skeleton } from "antd";
+import { Empty, Flex, Skeleton, Spin } from "antd";
 import { getBookByIdService } from "@/services/books/get-by-id";
 import { checkToLogOut } from "@/lib/check-to-log-out";
 import { DescriptionsBookInfor } from "@/components/page-book/descriptions-infor";
@@ -24,9 +24,16 @@ export default function BookPage() {
     retry: 2,
   });
 
-  if (isFetching)
-    return (
-      <Flex vertical gap={16}>
+  if (error) return checkToLogOut(error);
+
+  const book = data && data.data.data;
+
+  if (!isFetching && !book)
+    return <Empty description={"Book does not exist"} />;
+
+  return (
+    <Flex vertical gap={16}>
+      {isFetching ? (
         <Skeleton
           active
           paragraph={{
@@ -34,31 +41,9 @@ export default function BookPage() {
           }}
           className="section"
         />
-        <Skeleton
-          active
-          paragraph={{
-            rows: 3,
-          }}
-          className="section"
-        />
-        <Skeleton
-          active
-          paragraph={{
-            rows: 4
-          }}
-          className="section"
-        />
-      </Flex>
-    );
-  if (error) return checkToLogOut(error);
-
-  const book = data.data.data;
-
-  if (!book) return <Empty description={"Book does not exist"} />;
-
-  return (
-    <Flex vertical gap={16}>
-      <DescriptionsBookInfor book={book} refetch={refetch} />
+      ) : (
+        <DescriptionsBookInfor book={book} refetch={refetch} />
+      )}
       <SectionSameAuthor book={book} />
       <SectionRelativeBooks book={book} />
     </Flex>
@@ -78,16 +63,17 @@ const SectionSameAuthor = ({ book }) => {
     retry: 2,
   });
 
-  if (isFetching)
+  if (!book)
     return (
       <Skeleton
         active
         paragraph={{
-          rows: 6,
+          rows: 3,
         }}
         className="section"
       />
     );
+  if (isFetching) return <Spin className="section" />;
   if (error) return checkToLogOut(error);
 
   const resData = data.data.data;
@@ -109,16 +95,18 @@ const SectionRelativeBooks = ({ book }) => {
     retry: 2,
   });
 
-  if (isFetching)
+  if (!book)
     return (
       <Skeleton
         active
         paragraph={{
-          rows: 6,
+          rows: 3,
         }}
         className="section"
       />
     );
+  if (isFetching) return <Spin className="section" />;
+
   if (error) return checkToLogOut(error);
 
   const resData = data.data.data;
