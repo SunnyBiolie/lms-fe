@@ -61,9 +61,11 @@ export const TableRequesting = ({ borrowingRecord, disabled }) => {
 
   return (
     <Table
+      showHeader={false}
       columns={columns}
       dataSource={listRequesting}
       rowKey={(tran) => tran.id}
+      pagination={{ hideOnSinglePage: true }}
     />
   );
 };

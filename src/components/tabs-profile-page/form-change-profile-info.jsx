@@ -89,7 +89,6 @@ export const FormChangeProfileInfo = ({ account, onAfterSaveChange, type }) => {
     );
   };
 
-  const title = type === "owner" ? "Public Profile" : "";
   const size = type === "owner" ? "middle" : "small";
   const layout = type === "owner" ? "horizontal" : "vertical";
   const columns =
@@ -114,7 +113,6 @@ export const FormChangeProfileInfo = ({ account, onAfterSaveChange, type }) => {
         onValuesChange={handleValuesChange}
       >
         <Descriptions
-          title={title}
           size={size}
           layout={layout}
           bordered

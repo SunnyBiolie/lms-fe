@@ -1,43 +1,46 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Flex, Table, Typography } from "antd";
+import { Button, Flex, Table, Tag, Tooltip, Typography } from "antd";
 import {
-  CheckCircleOutlined,
-  CloseCircleOutlined,
+  // CheckCircleOutlined,
+  // CloseCircleOutlined,
   DeleteOutlined,
   EditOutlined,
   LinkOutlined,
 } from "@ant-design/icons";
-import { createStyles } from "antd-style";
+// import { createStyles } from "antd-style";
 import { capitalize } from "@/lib/capitalize";
-import {
-  Field_Account_Role,
-  Table_Account,
-  Table_Book,
-} from "@/configs/db.config";
+import { Table_Account, Table_Book } from "@/configs/db.config";
 import { useCurrentAccount } from "@/hooks/use-current-account";
 // import { noImage } from "@/assets/no-imge";
 import { ListCategories } from "./list-categories";
 import { ModalEditBook } from "../page-book/modal-edit-book";
+import { useTransactions } from "@/hooks/use-transactions";
+import { bookPriceForVIP } from "@/configs/rules.config";
+import {
+  bookNumberPriorForMember,
+  bookNumberPriorForVip,
+} from "@/configs/membership.config";
+import { BtnDeleteBook } from "../table-books/btn-delete-book";
 
 const { Text } = Typography;
 
-const useStyles = createStyles(({ token, css }) => ({
-  coverImage: css`
-    height: 64px;
-    aspect-ratio: 3/4;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-  `,
-  iconIsSpecialYes: css`
-    color: ${token.colorSecondary};
-    font-size: 20px;
-  `,
-  iconIsSpecialNo: css`
-    color: #ccc;
-    font-size: 20px;
-  `,
-}));
+// const useStyles = createStyles(({ token, css }) => ({
+//   coverImage: css`
+//     height: 64px;
+//     aspect-ratio: 3/4;
+//     border-radius: 4px;
+//     border: 1px solid #ccc;
+//   `,
+//   iconIsSpecialYes: css`
+//     color: ${token.colorSecondary};
+//     font-size: 20px;
+//   `,
+//   iconIsSpecialNo: css`
+//     color: #ccc;
+//     font-size: 20px;
+//   `,
+// }));
 
 // # NOTE:
 // isLoading: boolean
@@ -45,10 +48,8 @@ const useStyles = createStyles(({ token, css }) => ({
 // refetch(type: "paginate" | "afterEdit", data: { page: number, pageSize: number })
 // title: () => ReactNode
 export const TableBooks = ({ isLoading, data, refetch, title }) => {
-  const { styles } = useStyles();
-  const { currentAccount } = useCurrentAccount();
-  const isAdmin =
-    currentAccount[Table_Account.role] === Field_Account_Role.admin;
+  // const { styles } = useStyles();
+  const { isAdmin } = useCurrentAccount();
 
   const [isModalEditOpen, setIsModalEditOpen] = useState(false);
   const [currentBook, setCurrentBook] = useState();
@@ -105,18 +106,25 @@ export const TableBooks = ({ isLoading, data, refetch, title }) => {
       title: capitalize(Table_Book.publisher),
       dataIndex: Table_Book.publisher,
     },
+    // {
+    //   title: "Is special",
+    //   dataIndex: Table_Book.isSpecial,
+    //   render: (value) => {
+    //     return value ? (
+    //       <CheckCircleOutlined className={styles.iconIsSpecialYes} />
+    //     ) : (
+    //       <CloseCircleOutlined className={styles.iconIsSpecialNo} />
+    //     );
+    //   },
+    //   width: 120,
+    //   align: "center",
+    // },
     {
-      title: "Is special",
-      dataIndex: Table_Book.isSpecial,
-      render: (value) => {
-        return value ? (
-          <CheckCircleOutlined className={styles.iconIsSpecialYes} />
-        ) : (
-          <CloseCircleOutlined className={styles.iconIsSpecialNo} />
-        );
+      title: "Status",
+      render: (_, record) => {
+        return <BookStatus book={record} />;
       },
-      width: 120,
-      align: "center",
+      width: 140,
     },
     {
       title: "Action",
@@ -134,7 +142,8 @@ export const TableBooks = ({ isLoading, data, refetch, title }) => {
                   size="small"
                   onClick={() => handleEditBook(record)}
                 />
-                <Button icon={<DeleteOutlined />} size="small" danger />
+                {/* <Button icon={<DeleteOutlined />} size="small" danger /> */}
+                {/* <BtnDeleteBook /> */}
               </>
             )}
           </Flex>
@@ -193,5 +202,107 @@ export const TableBooks = ({ isLoading, data, refetch, title }) => {
         />
       )}
     </>
+  );
+};
+
+export const BookStatus = ({ book }) => {
+  const { currentBorrowing, passRequesting } = useTransactions();
+  const { currentAccount, isAdmin } = useCurrentAccount();
+
+  if (!currentAccount) return;
+  if (isAdmin) {
+    const statusAdmin =
+      book._count[Table_Book.Transactions] === 0 ? (
+        <Tooltip title="">
+          <Tag color="green">Editable</Tag>
+        </Tooltip>
+      ) : (
+        <Tooltip title="This book has been borrowed by several accounts">
+          <Tag color="red">Borrowing</Tag>
+        </Tooltip>
+      );
+    return statusAdmin;
+  } else {
+    if (!currentBorrowing || !passRequesting) return;
+    const statusReader = checkDisplayBorrowBtn(
+      book,
+      currentAccount,
+      currentBorrowing,
+      passRequesting
+    );
+    return statusReader;
+  }
+};
+
+const checkDisplayBorrowBtn = (
+  book,
+  currentAccount,
+  currentBorrowing,
+  passRequesting
+) => {
+  const VipOnly =
+    (book[Table_Book.isSpecial] || book[Table_Book.price] > bookPriceForVIP) &&
+    currentAccount[Table_Account.role] !== "VIP";
+
+  if (VipOnly)
+    return (
+      <Tooltip title="This book is for VIP only">
+        <Tag color="red">VIP only</Tag>
+      </Tooltip>
+    );
+
+  const isPrior = (function calculatePriority() {
+    const available =
+      book[Table_Book.quantity] - book._count[Table_Book.Transactions];
+    let result = true;
+    if (available <= bookNumberPriorForVip) {
+      switch (currentAccount[Table_Account.role]) {
+        case "USER":
+          result = false;
+          break;
+        case "MEMBER":
+          result = false;
+          break;
+      }
+    } else if (available <= bookNumberPriorForMember) {
+      switch (currentAccount[Table_Account.role]) {
+        case "USER":
+          result = false;
+          break;
+      }
+    }
+    return result;
+  })();
+
+  if (!isPrior)
+    return (
+      <Tooltip title="You do not have priority for borrowing this book">
+        <Tag color="red">Priority</Tag>
+      </Tooltip>
+    );
+
+  const isBorrowing =
+    currentBorrowing.findIndex((t) => t.bookId === book.id) !== -1;
+
+  if (isBorrowing)
+    return (
+      <Tooltip title="You are borrowing this book">
+        <Tag color="blue">Borrowing</Tag>
+      </Tooltip>
+    );
+
+  const reqIndex = passRequesting.findIndex((t) => t.bookId === book.id);
+
+  if (reqIndex !== -1)
+    return (
+      <Tooltip title="You are requesting this book">
+        <Tag color="blue">Requesting</Tag>
+      </Tooltip>
+    );
+
+  return (
+    <Tooltip title="">
+      <Tag color="green">Available</Tag>
+    </Tooltip>
   );
 };

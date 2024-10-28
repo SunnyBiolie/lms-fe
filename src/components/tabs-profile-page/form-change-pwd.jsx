@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Flex, Form, Input } from "antd";
 import { Rule_Required } from "@/configs/rules.config";
@@ -13,10 +12,7 @@ export const FormChangePassword = () => {
   const [form] = Form.useForm();
   const mutationChangePwd = useMutation({ mutationFn: changePwdService });
 
-  const [loading, setLoading] = useState(false);
-
   const handleFormSubmit = async (values) => {
-    setLoading(true);
     mutationChangePwd.mutate(
       {
         ...values,
@@ -31,7 +27,6 @@ export const FormChangePassword = () => {
         onError: (axiosError) => {
           msgApi("error", axiosError.response.data.message);
         },
-        onSettled: () => setLoading(false),
       }
     );
   };
@@ -41,9 +36,9 @@ export const FormChangePassword = () => {
       form={form}
       name="change-pwd"
       layout="vertical"
-      disabled={loading}
+      disabled={mutationChangePwd.isPending}
       className="section w-full"
-      style={{ maxWidth: 300 }}
+      style={{ maxWidth: 360 }}
       onFinish={handleFormSubmit}
     >
       <Form.Item name="oldPwd" label="Old password" rules={Rule_Required}>
@@ -72,7 +67,11 @@ export const FormChangePassword = () => {
         <Input.Password />
       </Form.Item>
       <Flex justify="flex-end">
-        <Button loading={loading} type="primary" htmlType="submit">
+        <Button
+          loading={mutationChangePwd.isPending}
+          type="primary"
+          htmlType="submit"
+        >
           Change
         </Button>
       </Flex>

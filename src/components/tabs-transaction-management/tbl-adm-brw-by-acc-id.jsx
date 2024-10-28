@@ -1,4 +1,4 @@
-import { Table } from "antd";
+import { Table, Typography } from "antd";
 import { BtnAdmDetailTrans } from "./btn-adm-detail-trans";
 import {
   Table_Account,
@@ -6,11 +6,17 @@ import {
   Table_Transaction,
 } from "@/configs/db.config";
 
+const { Text } = Typography;
+
 export const TblAdmBrwByAccId = ({ tableData, loading, type }) => {
   const columns = [
     {
       title: "#",
       width: 50,
+      render: (_, __, index) => {
+        return <Text strong>{index + 1}</Text>;
+      },
+      align: "center",
     },
     {
       title: "Full name",
@@ -51,6 +57,12 @@ export const TblAdmBrwByAccId = ({ tableData, loading, type }) => {
       dataSource={tableData}
       rowKey={(item) => item.id}
       loading={loading}
+      pagination={{
+        hideOnSinglePage: true,
+      }}
+      title={() => <Text strong>
+        
+      </Text>}
     />
   );
 };

@@ -6,8 +6,7 @@ import { routeAuth } from "@/configs/route.config";
 import { FormUserInfor } from "@/components/form-user-infor";
 import { FormSighUp } from "@/components/form-sign-up";
 
-// eslint-disable-next-line no-unused-vars
-const useStyles = createStyles(({ _, css }) => ({
+const useStyles = createStyles(({ css }) => ({
   container: css`
     width: 50vw;
     min-width: 352px;

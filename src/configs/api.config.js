@@ -9,6 +9,7 @@ const apiRoute = {
   renewals: "/renewals",
   histories: "/histories",
   reports: "/reports",
+  test: "/test",
 };
 
 export const apiAuthRoute = {
@@ -55,7 +56,6 @@ export const apiTransactionsRoute = {
   create: `${apiRoute.transactions}/create`,
   getBorrowingByAccountId: `${apiRoute.transactions}/get-borrowing-by-account-id`,
   return: `${apiRoute.transactions}/return`,
-  renewal: `${apiRoute.transactions}/renewal`,
   getBorrowingByBookId: `${apiRoute.transactions}/get-borrowing-by-book-id`,
   countByBookId: `${apiRoute.transactions}/count-by-book-id`,
   getReturnedByAccountId: `${apiRoute.transactions}/get-returned-by-account-id`,
@@ -89,6 +89,10 @@ export const apiReportsRoute = {
   calculateMembership: `${apiRoute.reports}/calculate-membership`,
   detail: `${apiRoute.reports}/detail`,
   getByDate: `${apiRoute.reports}/get-by-date`,
+};
+
+export const apiTestRoute = {
+  number1: `${apiRoute.test}/number1`,
 };
 
 export default apiRoot;

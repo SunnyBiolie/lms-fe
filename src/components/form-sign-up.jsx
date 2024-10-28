@@ -30,6 +30,11 @@ const useStyles = createStyles(({ _, css }) => ({
     background-color: rgba(0, 0, 0, 0.3);
     z-index: 1;
   `,
+  result: css`
+    background-color: rgba(255, 255, 255, 0.75);
+    border-radius: 8px;
+    box-shadow: 0 0 24px 4px #fafafa40;
+  `,
 }));
 
 export const FormSighUp = ({ prevStep, userInfor }) => {
@@ -59,6 +64,7 @@ export const FormSighUp = ({ prevStep, userInfor }) => {
               <Link to={routeAuth.logIn}>Go to log in</Link>
             </Button>,
           ]}
+          className={styles.result}
         />
       ) : (
         <Form

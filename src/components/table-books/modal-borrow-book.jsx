@@ -7,7 +7,6 @@ import { Table_Book, Table_Transaction } from "@/configs/db.config";
 import { createBorrowingService } from "@/services/transaction/create";
 import { useCurrentAccount } from "@/hooks/use-current-account";
 import { useAntDesign } from "@/hooks/use-ant-design";
-import { useBooks } from "@/hooks/use-books";
 import { useTransactions } from "@/hooks/use-transactions";
 import { requestForPassService } from "@/services/transaction/req-for-pass";
 import { cancelPassReqService } from "@/services/transaction/cancel-pass-req";
@@ -15,7 +14,6 @@ import { cancelPassReqService } from "@/services/transaction/cancel-pass-req";
 export const ModalBorrowBook = ({ isModalOpen, setIsModalOpen, book }) => {
   const { msgApi } = useAntDesign();
   const { currentAccount } = useCurrentAccount();
-  const { loadListOfBooks } = useBooks();
   const { currentBorrowing, passRequesting, loadListCurrentBorrowing } =
     useTransactions();
   const [form] = Form.useForm();
@@ -66,8 +64,8 @@ export const ModalBorrowBook = ({ isModalOpen, setIsModalOpen, book }) => {
             {
               onSuccess: (res) => {
                 msgApi("success", res.data.message);
-                loadListCurrentBorrowing();
                 handleCancel();
+                loadListCurrentBorrowing();
               },
               onError: (err) => {
                 msgApi("error", err.response.data.message);
@@ -85,8 +83,8 @@ export const ModalBorrowBook = ({ isModalOpen, setIsModalOpen, book }) => {
             {
               onSuccess: (res) => {
                 msgApi("success", res.data.message);
-                loadListCurrentBorrowing();
                 handleCancel();
+                loadListCurrentBorrowing();
               },
               onError: (err) => {
                 msgApi("error", err.response.data.message);
@@ -112,9 +110,8 @@ export const ModalBorrowBook = ({ isModalOpen, setIsModalOpen, book }) => {
       {
         onSuccess: (axiosResponse) => {
           msgApi("success", axiosResponse.data.message);
-          loadListOfBooks();
-          loadListCurrentBorrowing();
           handleCancel();
+          loadListCurrentBorrowing();
         },
         onError: (axiosError) => {
           msgApi("error", axiosError.response.data.message);

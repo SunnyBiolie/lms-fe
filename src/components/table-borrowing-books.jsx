@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { Skeleton, Space, Table } from "antd";
+import { Skeleton, Space, Table, Typography } from "antd";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { getBooksService } from "@/services/books/get";
@@ -11,6 +11,8 @@ import {
 } from "@/configs/db.config";
 import { BtnRenewal } from "./table-borrowing-books/btn-renewal";
 import { BtnReturnBook } from "./table-borrowing-books/btn-return-book";
+
+const { Text } = Typography;
 
 export const TableBorrowingBooks = ({
   currentBorrowing,
@@ -66,7 +68,7 @@ export const TableBorrowingBooks = ({
       width: 250,
       render: (value) => {
         dayjs.extend(localizedFormat);
-        return dayjs(value).format("llll");
+        return dayjs(value).format("DD/MM/YYYY hh:mm:ss A");
       },
     },
     {
@@ -79,7 +81,7 @@ export const TableBorrowingBooks = ({
           record[Table_Transaction.Renewals].length > 0
             ? record[Table_Transaction.Renewals][0][Table_Renewal.dueDate]
             : value;
-        return dayjs(r).format("llll");
+        return dayjs(r).format("DD/MM/YYYY hh:mm:ss A");
       },
     },
     {
@@ -119,6 +121,7 @@ export const TableBorrowingBooks = ({
         pageSize: 10,
         hideOnSinglePage: true,
       }}
+      title={() => <Text strong>Table of borrowing</Text>}
     />
   );
 };

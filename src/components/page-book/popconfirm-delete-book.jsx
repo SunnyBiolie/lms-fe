@@ -19,7 +19,7 @@ export const PopConfirmDeleteBook = ({ book, borrowingCount, refetch }) => {
       },
       {
         onSuccess: (res) => {
-          msgApi("error", res.data.message);
+          msgApi("success", res.data.message);
           refetch();
         },
         onError: (err) => {

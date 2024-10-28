@@ -7,6 +7,7 @@ import { routeAuth, routeUser, routeAdmin } from "@/configs/route.config";
 import { logInService } from "@/services/auth/log-in";
 import { useAntDesign } from "@/hooks/use-ant-design";
 import { useCurrentAccount } from "@/hooks/use-current-account";
+import { Field_Account_Role, Table_Account } from "@/configs/db.config";
 
 // eslint-disable-next-line no-unused-vars
 const useStyles = createStyles(({ _, css }) => ({
@@ -30,7 +31,7 @@ export const FormLogIn = () => {
   const { styles, cx } = useStyles();
 
   const { msgApi } = useAntDesign();
-  const { setCurrentAccount } = useCurrentAccount();
+  const { setCurrentAccount, setIsAdmin } = useCurrentAccount();
 
   const [isLoading, setIsLoading] = useState(false);
   const [alert, setAlert] = useState();
@@ -48,12 +49,16 @@ export const FormLogIn = () => {
     mutationLogIn.mutate(values, {
       onSuccess: (axiosResponse) => {
         msgApi("success", axiosResponse.data.message);
-        setCurrentAccount(axiosResponse.data.accountInfo);
+        setCurrentAccount(axiosResponse.data.currentAccount);
+        setIsAdmin(
+          axiosResponse.data.currentAccount[Table_Account.role] ===
+            Field_Account_Role.admin
+        );
         if (searchParams.get("redirect-from")) {
           navigate(searchParams.get("redirect-from"));
         } else {
           navigate(
-            axiosResponse.data.accountInfo.role === "ADMIN"
+            axiosResponse.data.currentAccount.role === "ADMIN"
               ? routeAdmin.bookMangement.pathname
               : routeUser.dashboard.pathname
           );

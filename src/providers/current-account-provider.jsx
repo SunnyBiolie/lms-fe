@@ -5,6 +5,7 @@ import { Flex, Spin, Typography } from "antd";
 import { routeAuth } from "@/configs/route.config";
 import { accessTokenService } from "@/services/auth/access-token";
 import { useRouteAuth } from "@/hooks/use-route-auth";
+import { Field_Account_Role, Table_Account } from "@/configs/db.config";
 
 const { Title } = Typography;
 
@@ -12,6 +13,7 @@ export const CurrentAccountContext = createContext();
 
 export default function CurrentAccountProvider({ children }) {
   const [currentAccount, setCurrentAccount] = useState();
+  const [isAdmin, setIsAdmin] = useState();
   // const navigate = useNavigate();
 
   const { inAuthRoutes } = useRouteAuth();
@@ -25,6 +27,10 @@ export default function CurrentAccountProvider({ children }) {
       .then((axiosResponse) => {
         if (axiosResponse.data.currentAccount) {
           setCurrentAccount(axiosResponse.data.currentAccount);
+          setIsAdmin(
+            axiosResponse.data.currentAccount[Table_Account.role] ===
+              Field_Account_Role.admin
+          );
         } else {
           setCurrentAccount(null);
           if (axiosResponse.data.redirectToAuth && !inAuthRoutes) {
@@ -47,6 +53,8 @@ export default function CurrentAccountProvider({ children }) {
   const contextValue = {
     currentAccount,
     setCurrentAccount,
+    isAdmin,
+    setIsAdmin,
   };
 
   if (currentAccount === undefined) {

@@ -14,12 +14,12 @@ export default function TransactionManagementPage() {
       children: <FormAdmSearchTrans type={keys[0]} />,
     },
     {
-      key: "requesting",
+      key: keys[1],
       label: "Requesting",
       children: <FormAdmSearchTrans type={keys[1]} />,
     },
     {
-      key: "returned",
+      key: keys[2],
       label: "Returned",
       children: <FormAdmSearchTrans type={keys[2]} />,
     },

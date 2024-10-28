@@ -1,9 +1,11 @@
+import { useMutation } from "@tanstack/react-query";
+import { Button, Popconfirm, Table, Typography } from "antd";
 import { Table_Book } from "@/configs/db.config";
 import { useAntDesign } from "@/hooks/use-ant-design";
 import { useTransactions } from "@/hooks/use-transactions";
 import { cancelPassReqService } from "@/services/transaction/cancel-pass-req";
-import { useMutation } from "@tanstack/react-query";
-import { Button, Popconfirm, Table } from "antd";
+
+const { Text } = Typography;
 
 export const TableRequestingBook = () => {
   const { msgApi } = useAntDesign();
@@ -64,5 +66,13 @@ export const TableRequestingBook = () => {
     },
   ];
 
-  return <Table columns={columns} dataSource={passRequesting} rowKey={(item) => item.id} />;
+  return (
+    <Table
+      title={() => <Text strong>List of requesting</Text>}
+      columns={columns}
+      dataSource={passRequesting}
+      rowKey={(item) => item.id}
+      pagination={{ hideOnSinglePage: true }}
+    />
+  );
 };
